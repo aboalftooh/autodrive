@@ -1,0 +1,126 @@
+name: Unpack and build AutoDrive APK
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL_SECRET: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY_SECRET: ${{ secrets.SUPABASE_ANON_KEY }}
+      GOOGLE_SERVICES_JSON_SECRET: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Unpack project into repository root
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="$(find . -maxdepth 1 -type f -iname 'AutoDrive*.zip' | head -n 1)"
+          test -n "$ZIP"
+          rm -rf .unpacked
+          mkdir .unpacked
+          unzip -q "$ZIP" -d .unpacked
+          GRADLEW="$(find .unpacked -type f -name gradlew | head -n 1)"
+          test -n "$GRADLEW"
+          SRC_ROOT="$(dirname "$GRADLEW")"
+          rsync -a --exclude='.git' "$SRC_ROOT"/ ./
+          rm -rf .unpacked
+          echo "Project root: $SRC_ROOT"
+
+      - name: Ensure Supabase configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          touch local.properties
+          HAVE_URL=0
+          HAVE_KEY=0
+          if grep -RIl --exclude-dir=.git --exclude='*.zip' -E 'SUPABASE_URL|supabaseUrl|supabase_url|https://[^ ]+\.supabase\.co' . >/dev/null 2>&1; then HAVE_URL=1; fi
+          if grep -RIl --exclude-dir=.git --exclude='*.zip' -E 'SUPABASE_ANON_KEY|supabaseAnonKey|supabase_anon_key|anonKey' . >/dev/null 2>&1; then HAVE_KEY=1; fi
+          if [ "$HAVE_URL" -eq 0 ] && [ -n "${SUPABASE_URL_SECRET:-}" ]; then
+            printf '\nSUPABASE_URL=%s\n' "$SUPABASE_URL_SECRET" >> local.properties
+            HAVE_URL=1
+          fi
+          if [ "$HAVE_KEY" -eq 0 ] && [ -n "${SUPABASE_ANON_KEY_SECRET:-}" ]; then
+            printf '\nSUPABASE_ANON_KEY=%s\n' "$SUPABASE_ANON_KEY_SECRET" >> local.properties
+            HAVE_KEY=1
+          fi
+          echo "Supabase URL configured: $HAVE_URL"
+          echo "Supabase anon key configured: $HAVE_KEY"
+          test "$HAVE_URL" -eq 1
+          test "$HAVE_KEY" -eq 1
+
+      - name: Ensure Firebase google-services.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p app
+          if [ ! -f app/google-services.json ]; then
+            EXISTING="$(find . -type f -name google-services.json -not -path './.git/*' | head -n 1 || true)"
+            if [ -n "$EXISTING" ]; then
+              cp "$EXISTING" app/google-services.json
+            elif [ -n "${GOOGLE_SERVICES_JSON_SECRET:-}" ]; then
+              printf '%s' "$GOOGLE_SERVICES_JSON_SECRET" > app/google-services.json
+            fi
+          fi
+          test -s app/google-services.json
+          python3 - <<'PY'
+          import json
+          p='app/google-services.json'
+          with open(p, encoding='utf-8') as f:
+              d=json.load(f)
+          assert d.get('project_info', {}).get('project_id'), 'Firebase project_id missing'
+          assert d.get('client'), 'Firebase client missing'
+          print('Firebase config valid:', d['project_info']['project_id'])
+          PY
+
+      - name: Commit unpacked source and required config files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A ':!*.zip'
+          if ! git diff --cached --quiet; then
+            git commit -m "Unpack AutoDrive source and ensure build config [skip ci]"
+            git push origin HEAD:main
+          fi
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Build debug APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x gradlew
+          ./gradlew --no-daemon clean assembleDebug --stacktrace
+
+      - name: Verify APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="$(find app/build/outputs/apk/debug -type f -name '*.apk' | head -n 1)"
+          test -s "$APK"
+          echo "APK=$APK" >> "$GITHUB_ENV"
+          ls -lh "$APK"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoDrive-debug-apk
+          path: ${{ env.APK }}
+          if-no-files-found: error
+          retention-days: 14
