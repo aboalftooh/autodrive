@@ -1,0 +1,6 @@
+6973530b5445d50e4a4927f54723638c03b34896f841113b3f904b6f6f402d13  core/observability/src/main/kotlin/com/autodrive/app/core/observability/AppLogger.kt
+a959cf70c47e61e1e6386863ac4cc78326b9d95761c0e22b46fa0cb06970ff00  core/observability/src/main/kotlin/com/autodrive/app/core/observability/DiagnosticEvent.kt
+9f3dcd5e12cb7ad5400b86ca24c89783dca85697c4b4cc8b92ce90af0500b855  core/observability/src/main/kotlin/com/autodrive/app/core/observability/SensitiveDataRedactor.kt
+bf8dfa4044bf00e637b9fd7fb1946c9810ff6cf043009c53ba3da8fe0ccca972  core/sync/src/main/kotlin/com/autodrive/app/core/sync/diagnostics/SyncDiagnostics.kt
+c153691154ce5662524ffe0981d81f3b5d27d5aa20e146a8d7996a22ee849f5b  core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/DefaultSyncCoordinator.kt
+a3d0f607661dd8e376436ae93f485cc2ca694d8ae475678d86e2e30aa31a927c  core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/SyncManager.kt

@@ -1,0 +1,21 @@
+{
+  "assertions": [
+    "all_required_sensitive_keys_redacted",
+    "authorization_and_token_redaction",
+    "otp_password_secret_redaction",
+    "phone_account_bank_redaction",
+    "payload_content_note_redaction",
+    "amount_balance_commission_invoice_total_redaction",
+    "raw_scope_keys_redacted",
+    "scope_fingerprint_preserved",
+    "safe_operational_metrics_preserved",
+    "text_assignment_redaction",
+    "raw_throwable_message_not_forwarded",
+    "stack_preserved"
+  ],
+  "class": "KOTLIN_COMPONENT_RUNTIME",
+  "executed": true,
+  "gradleIndependent": true,
+  "passed": true,
+  "session": 73
+}

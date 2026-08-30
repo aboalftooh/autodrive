@@ -1,0 +1,3 @@
+# AutoDrive v66 report
+
+Static v66 closure completed with zero production mutation. 251 production Kotlin, 58 Compose-source, 56 runtime UI and exact 2 preview-only files are classified. Six historical Material candidates are fully resolved in the analysis layer with no new candidates. All historical/static gates passed twice with deterministic output. Runtime is blocked by `UnknownHostException: services.gradle.org`; build/tests/device/screenshots are NOT_RUN, Ratchet remains v65, and verdict is `STATIC_ZERO_DRIFT_COMPLETE / FINAL_RUNTIME_BLOCKED`. Target package: `AutoDrive-v66-final-static-runtime-blocked.zip`.

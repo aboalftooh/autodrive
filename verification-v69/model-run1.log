@@ -1,0 +1,16 @@
+PASS same_mutation_100_effect_once
+PASS changed_payload_conflicts
+PASS changed_command_conflicts
+PASS timeout_before_commit_no_effect
+PASS retry_after_precommit_timeout_applies_once
+PASS timeout_after_commit_replays
+PASS cross_scope_same_mutation_independent
+PASS receipt_revision_positive
+PASS receipt_revision_monotonic
+PASS typed_terminal_set
+PASS typed_retry_set
+PASS ambiguous_not_terminal
+PASS auth_not_terminal
+PASS already_committed_success_class
+PASS scoped_receipt_identity_unique
+SUMMARY 15/15 PASS

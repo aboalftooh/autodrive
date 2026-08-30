@@ -1,0 +1,164 @@
+{
+  "allPassed": false,
+  "fixturePassed": 35,
+  "fixtureTotal": 36,
+  "fixtures": [
+    {
+      "name": "01 profile entity+Outbox atomic success",
+      "passed": true
+    },
+    {
+      "name": "02 profile Outbox failure rolls back entity",
+      "passed": true
+    },
+    {
+      "name": "03 withdrawal entity+Outbox atomic success",
+      "passed": true
+    },
+    {
+      "name": "04 withdrawal Outbox failure rolls back entity",
+      "passed": true
+    },
+    {
+      "name": "05 chat text envelope+Outbox atomic success",
+      "passed": true
+    },
+    {
+      "name": "06 chat Outbox failure rolls back message/preview",
+      "passed": true
+    },
+    {
+      "name": "07 chat read+Outbox atomic success",
+      "passed": true
+    },
+    {
+      "name": "08 chat read Outbox failure rolls back read transition",
+      "passed": true
+    },
+    {
+      "name": "09 notification read+Outbox atomic success",
+      "passed": true
+    },
+    {
+      "name": "10 notification Outbox failure rolls back read transition",
+      "passed": true
+    },
+    {
+      "name": "11 no pending profile without Outbox",
+      "passed": true
+    },
+    {
+      "name": "12 no pending withdrawal without Outbox",
+      "passed": true
+    },
+    {
+      "name": "13 no pending chat send without Outbox",
+      "passed": true
+    },
+    {
+      "name": "14 no unsynced read receipt without Outbox",
+      "passed": true
+    },
+    {
+      "name": "15 scope A due query excludes B",
+      "passed": true
+    },
+    {
+      "name": "16 scope A cannot claim B",
+      "passed": true
+    },
+    {
+      "name": "17 scope A cannot finalize B",
+      "passed": true
+    },
+    {
+      "name": "18 leaseUntil independent from nextRetryAt",
+      "passed": true
+    },
+    {
+      "name": "19 expired lease recovery scoped",
+      "passed": true
+    },
+    {
+      "name": "20 process death after commit leaves both durable",
+      "passed": true
+    },
+    {
+      "name": "21 cancellation before commit leaves neither",
+      "passed": true
+    },
+    {
+      "name": "22 cancellation during send keeps recoverable intent",
+      "passed": true
+    },
+    {
+      "name": "23 logout A makes A operations non-executable",
+      "passed": true
+    },
+    {
+      "name": "24 logout A does not delete B operations",
+      "passed": true
+    },
+    {
+      "name": "25 login B cannot see/claim A",
+      "passed": true
+    },
+    {
+      "name": "26 legacy scoped row migration preserved",
+      "passed": true
+    },
+    {
+      "name": "27 legacy unresolvable row fails closed",
+      "passed": true
+    },
+    {
+      "name": "28 profile stale-pull guard regression",
+      "passed": true
+    },
+    {
+      "name": "29 notification read guard regression",
+      "passed": true
+    },
+    {
+      "name": "30 withdrawal client_request_id reconciliation scoped",
+      "passed": true
+    },
+    {
+      "name": "31 chat retry uses same mutationId",
+      "passed": true
+    },
+    {
+      "name": "32 duplicate local read API coalesces active intent",
+      "passed": true
+    },
+    {
+      "name": "33 worker with stale session cannot send",
+      "passed": true
+    },
+    {
+      "name": "34 media preparation failure creates no chat Outbox",
+      "passed": true
+    },
+    {
+      "name": "35 v67 generation fixtures unchanged semantically",
+      "passed": true
+    },
+    {
+      "name": "36 v67 cursor/push-before-pull foundation preserved",
+      "passed": false
+    }
+  ],
+  "structural": {
+    "insertIsAbort": true,
+    "logoutRoomTransaction": true,
+    "logoutScopedCursorCleanup": true,
+    "migration14To15": true,
+    "networkOutsideTransactions": true,
+    "noGlobalDelete": true,
+    "noStandaloneNotificationSender": true,
+    "outboxAllowlist": true,
+    "roomVersionAtLeast15": true,
+    "scopeFields": true,
+    "scopeIndexes": true
+  }
+}

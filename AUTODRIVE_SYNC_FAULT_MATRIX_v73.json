@@ -1,0 +1,635 @@
+{
+  "allRequiredRuntimeLevelsSatisfied": false,
+  "deterministic": true,
+  "faultScenarioCount": 20,
+  "faultScenarioPassCount": 20,
+  "modelPassCount": 20,
+  "scenarioCount": 20,
+  "scenarios": [
+    {
+      "assertions": [
+        {
+          "name": "entity_rolled_back",
+          "passed": true
+        },
+        {
+          "name": "outbox_rolled_back",
+          "passed": true
+        },
+        {
+          "name": "no_half_state",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "OUTBOX_AFTER_LOCAL_COMMIT_BEFORE_SEND",
+      "finalDeviceADigest": "bec1d7d1058fbba659679ab6055f72309cbf58cde47df640a5d033bd62c7a9f5",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 1,
+      "name": "Process death before local transaction commit",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "ANDROID_RUNTIME",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7301
+    },
+    {
+      "assertions": [
+        {
+          "name": "one_logical_effect",
+          "passed": true
+        },
+        {
+          "name": "same_receipt",
+          "passed": true
+        },
+        {
+          "name": "same_mutation_id",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "OUTBOX_AFTER_SERVER_COMMIT_BEFORE_RESPONSE",
+      "finalDeviceADigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "c6a8da140285b70ff605b8b52c8a8e8dfc0f4e55e49f3ca0e23bb9ba95b1e5e6",
+      "id": 2,
+      "name": "Server commit then response timeout",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "SERVER_LIVE",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7302
+    },
+    {
+      "assertions": [
+        {
+          "name": "precommit_durable",
+          "passed": true
+        },
+        {
+          "name": "same_mutation_reused",
+          "passed": true
+        },
+        {
+          "name": "ambiguous_commit_idempotent",
+          "passed": true
+        },
+        {
+          "name": "eventual_finalize",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "COORDINATOR_DURING_PUSH",
+      "finalDeviceADigest": "8e4c2bc4061bdc10898688a067daf63d6a1aa896b0fd23296f42a1eeabfe00d4",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "a4e67a901118b18174f51214d558435e65efa32e6e5a41dd2dd2b3c4ef8dc3e7",
+      "id": 3,
+      "name": "Network timeout during Push",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "SERVER_LIVE",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7303
+    },
+    {
+      "assertions": [
+        {
+          "name": "finalized_once",
+          "passed": true
+        },
+        {
+          "name": "no_duplicate_business_effect",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "OUTBOX_BEFORE_FINALIZE_LOCAL_RECEIPT",
+      "finalDeviceADigest": "d1897ea93b24bb2e594709c503afff364b2cb002723c2d28a997f494aaf3401d",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 4,
+      "name": "Duplicate server response",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "MODEL",
+      "requiredRuntimeSatisfied": true,
+      "runtimeClass": "MODEL",
+      "seed": 7304
+    },
+    {
+      "assertions": [
+        {
+          "name": "feed_catches_change",
+          "passed": true
+        },
+        {
+          "name": "realtime_not_authority",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "CHANGE_FEED_AFTER_FETCH_BEFORE_APPLY",
+      "finalDeviceADigest": "6cd44db810afb92c9289e213011337fe17b9de51e825ae23b1525367d4e30ef1",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "0338b69f646ed601218ba4215666f931bb12e09f8757d81176b8378ffb1ea3b6",
+      "id": 5,
+      "name": "Realtime event missing",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "MODEL",
+      "requiredRuntimeSatisfied": true,
+      "runtimeClass": "MODEL",
+      "seed": 7305
+    },
+    {
+      "assertions": [
+        {
+          "name": "deduped",
+          "passed": true
+        },
+        {
+          "name": "single_state",
+          "passed": true
+        },
+        {
+          "name": "cursor_monotonic",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "CHANGE_PAGE_AFTER_COMMIT_BEFORE_NEXT_FETCH",
+      "finalDeviceADigest": "c45a3814e1606759927180ca4d5329dd01d0c8e5be8b9abf9f795ddbc7169144",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 6,
+      "name": "Realtime event duplicated",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "MODEL",
+      "requiredRuntimeSatisfied": true,
+      "runtimeClass": "MODEL",
+      "seed": 7306
+    },
+    {
+      "assertions": [
+        {
+          "name": "trailing_generation",
+          "passed": true
+        },
+        {
+          "name": "drained",
+          "passed": true
+        },
+        {
+          "name": "hint_dropped_zero",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "COORDINATOR_DURING_PULL",
+      "finalDeviceADigest": "f877592a9f66e3da4b9e7cd4858e3a3180efdffe61f53c414bbe946915067280",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 7,
+      "name": "Hint during Pull",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "UNIT",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7307
+    },
+    {
+      "assertions": [
+        {
+          "name": "trailing_generation",
+          "passed": true
+        },
+        {
+          "name": "drained",
+          "passed": true
+        },
+        {
+          "name": "hint_dropped_zero",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "COORDINATOR_DURING_PUSH",
+      "finalDeviceADigest": "f8a605c29aea2eadcd98c8b03f4e5c6210ea3aa47ca47dd05be5931bd4500219",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 8,
+      "name": "Hint during Push",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "UNIT",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7308
+    },
+    {
+      "assertions": [
+        {
+          "name": "bootstrap_installed",
+          "passed": true
+        },
+        {
+          "name": "pending_intent_preserved",
+          "passed": true
+        },
+        {
+          "name": "delete_not_resurrected",
+          "passed": true
+        },
+        {
+          "name": "cursor_at_baseline",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "BOOTSTRAP_AFTER_BEGIN",
+      "finalDeviceADigest": "6251eb7477c3bbd548f03a68f2b94e369111f3602b3bc6542db27f351057c7cf",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "3654f4af74ce57e4a44c9d2887b8e19022b8204a640ed6010dd8ce0540506aae",
+      "id": 9,
+      "name": "Device offline beyond retention",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "END_TO_END",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7309
+    },
+    {
+      "assertions": [
+        {
+          "name": "same_projection",
+          "passed": true
+        },
+        {
+          "name": "inbox_dedupe",
+          "passed": true
+        },
+        {
+          "name": "cursor_not_regressed",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "CHANGE_PAGE_AFTER_COMMIT_BEFORE_NEXT_FETCH",
+      "finalDeviceADigest": "4010ef004834f6ee90b615289ef6097ae07fc2542827b869fe48a737e9115423",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 10,
+      "name": "Cursor page replayed twice",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "ANDROID_RUNTIME",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7310
+    },
+    {
+      "assertions": [
+        {
+          "name": "new_work_blocked",
+          "passed": true
+        },
+        {
+          "name": "late_write_blocked",
+          "passed": true
+        },
+        {
+          "name": "scope_cleared",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "LOGOUT_DURING_ACTIVE_SYNC",
+      "finalDeviceADigest": "f61f599f97b3582cfd8df9347447453e78c070a7a6a9f6d2b63470a2f0543fc6",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 11,
+      "name": "Logout during active sync",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "ANDROID_RUNTIME",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7311
+    },
+    {
+      "assertions": [
+        {
+          "name": "a_state_removed",
+          "passed": true
+        },
+        {
+          "name": "b_state_preserved",
+          "passed": true
+        },
+        {
+          "name": "late_a_callback_rejected",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "LOGOUT_DURING_ACTIVE_SYNC",
+      "finalDeviceADigest": "d305a1a82177174d33bcb705995063452eedf5756bc49084eb79cf6883fe0613",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 12,
+      "name": "Login B immediately after logout A",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "ANDROID_RUNTIME",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7312
+    },
+    {
+      "assertions": [
+        {
+          "name": "no_split_brain",
+          "passed": true
+        },
+        {
+          "name": "server_convergence",
+          "passed": true
+        },
+        {
+          "name": "no_duplicate_effect_ids",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "OUTBOX_AFTER_SERVER_COMMIT_BEFORE_RESPONSE",
+      "finalDeviceADigest": "b344074cf3cb30182bec42898fe3bd7f84d1c0981e58635d4d3ac23f02d98b5b",
+      "finalDeviceBDigest": "b344074cf3cb30182bec42898fe3bd7f84d1c0981e58635d4d3ac23f02d98b5b",
+      "finalServerDigest": "beec197fe7bf97944f75dd0e4e949a437488a43f90accb1374cdbabbaa0e2e99",
+      "id": 13,
+      "name": "Two devices modify same Entity",
+      "note": "Model uses arrival ordering only; authoritative live conflict policy remains a runtime gate.",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "SERVER_LIVE",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7313
+    },
+    {
+      "assertions": [
+        {
+          "name": "all_messages_recovered",
+          "passed": true
+        },
+        {
+          "name": "tail_present",
+          "passed": true
+        },
+        {
+          "name": "deterministic_order",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "CHANGE_PAGE_AFTER_COMMIT_BEFORE_NEXT_FETCH",
+      "finalDeviceADigest": "81e16545440253db56ab31559e915069c4e0c6c05b5de65682d8b5ac62ea1941",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "81e16545440253db56ab31559e915069c4e0c6c05b5de65682d8b5ac62ea1941",
+      "id": 14,
+      "name": "10k chat messages",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "UNIT",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7314
+    },
+    {
+      "assertions": [
+        {
+          "name": "same_server_entity",
+          "passed": true
+        },
+        {
+          "name": "single_effect",
+          "passed": true
+        },
+        {
+          "name": "mapping_finalized_once",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "OUTBOX_BEFORE_FINALIZE_LOCAL_RECEIPT",
+      "finalDeviceADigest": "b40bf41565829bc88f6d407bf67ddb1506da9e6847f46591ccd2dc80da0043c5",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "104947b1f49c3b0f28b5070e007cb1db4507d4c0236b40d3633967f40594d703",
+      "id": 15,
+      "name": "Primary-key reconciliation after timeout",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "SERVER_LIVE",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7315
+    },
+    {
+      "assertions": [
+        {
+          "name": "identity_stable",
+          "passed": true
+        },
+        {
+          "name": "recovery_success",
+          "passed": true
+        },
+        {
+          "name": "one_effect",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "WORKER_AFTER_LEASE_CLAIM",
+      "finalDeviceADigest": "74807ef8a3eddcf9e9791651898c697668959790c8ff4c1b87d37f333cd1891f",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "368ea12e6c872c3da7e99065e482fc22e5737105fa909d5456f35ccb522cb78e",
+      "id": 16,
+      "name": "Dead Letter recovery",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "UNIT",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7316
+    },
+    {
+      "assertions": [
+        {
+          "name": "no_half_group",
+          "passed": true
+        },
+        {
+          "name": "cursor_after_full_group",
+          "passed": true
+        },
+        {
+          "name": "payment_not_missing",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "CHANGE_GROUP_AFTER_ENTITY_APPLY_BEFORE_CURSOR_COMMIT",
+      "finalDeviceADigest": "10bceedf51e2c9067f7ea9b58884f59b1dbd78177cdea75adffb99113ee049ad",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 17,
+      "name": "Invoice Payment transaction group",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "ANDROID_RUNTIME",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7317
+    },
+    {
+      "assertions": [
+        {
+          "name": "gaps_accepted",
+          "passed": true
+        },
+        {
+          "name": "all_visible_events_applied",
+          "passed": true
+        },
+        {
+          "name": "no_plus_one_assumption",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "CHANGE_FEED_AFTER_FETCH_BEFORE_APPLY",
+      "finalDeviceADigest": "091ec6b14f4a30a9c9b603152f603e2e8af2b911809f482a761557f83fd8066a",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 18,
+      "name": "Server revision gap",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "SERVER_LIVE",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7318
+    },
+    {
+      "assertions": [
+        {
+          "name": "pending_preserved_during_install",
+          "passed": true
+        },
+        {
+          "name": "eventual_local_effect_present",
+          "passed": true
+        },
+        {
+          "name": "canonical_converged",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "BOOTSTRAP_BEFORE_INSTALL_COMMIT",
+      "finalDeviceADigest": "2459403c28944a63e6685bbc692a428a703ec12a7555ee543d48569b6d5f5650",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "8833fb6e6ebbfd67f911c0dfef2b1438dff6ddcc09b4852001dca80f7cac5a95",
+      "id": 19,
+      "name": "Bootstrap with pending local mutations",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "ANDROID_RUNTIME",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7319
+    },
+    {
+      "assertions": [
+        {
+          "name": "no_send_before_expiry",
+          "passed": true
+        },
+        {
+          "name": "expired_lease_recovers",
+          "passed": true
+        },
+        {
+          "name": "same_mutation_identity",
+          "passed": true
+        },
+        {
+          "name": "one_send_after_recovery",
+          "passed": true
+        }
+      ],
+      "executed": true,
+      "failureCode": null,
+      "faultPoint": "WORKER_AFTER_LEASE_CLAIM",
+      "finalDeviceADigest": "14c3cb455f99a490b9cd3bf020740375955722aa5920a866cacd2fc0d480b2ee",
+      "finalDeviceBDigest": null,
+      "finalServerDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "id": 20,
+      "name": "App restart during lease",
+      "note": "",
+      "passed": true,
+      "preconditions": "deterministic v73 protocol model",
+      "requiredRuntimeClass": "ANDROID_RUNTIME",
+      "requiredRuntimeSatisfied": false,
+      "runtimeClass": "MODEL",
+      "seed": 7320
+    }
+  ],
+  "session": 73
+}

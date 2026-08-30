@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 66,
+  "session": 66,
+  "checks": [
+    {
+      "id": "ALLOWLIST",
+      "status": "PASS",
+      "message": "zero-op mutation allowlist"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "ACCESSIBILITY_AUDIT_V65.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "ACCESSIBILITY_CONTRAST_MATRIX_v65.csv"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "ACCESSIBILITY_RUNTIME_MATRIX_v65.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "AutoDrive-v65-report.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_BASELINE_v59.json"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_BASELINE_v59.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_UI_COVERAGE_v59.csv"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_UI_COVERAGE_v65.csv"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_V1_CONTRACT_REGISTRY_v59.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_V65_ACCESSIBILITY_PRESTATE.json"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_V65_FINDINGS_LOCK.json"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_VERIFICATION_v65.json"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_VERIFICATION_v65.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "V65_MUTATION_ALLOWLIST.json"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "scripts/verify-v65-static.sh"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "tools/run_v64_historical_gate_v65.py"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "tools/test_designsystem_verification_v65.py"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "tools/verify_designsystem_v65_accessibility.py"
+    },
+    {
+      "id": "BUILD-CONFIG",
+      "status": "PASS",
+      "message": "20 build config files unchanged from frozen prestate"
+    },
+    {
+      "id": "COMPOSE",
+      "status": "PASS",
+      "message": "58 Compose-source files"
+    },
+    {
+      "id": "COVERAGE",
+      "status": "PASS",
+      "message": "56/56 runtime UI coverage exact"
+    },
+    {
+      "id": "EXCEPTIONS",
+      "status": "PASS",
+      "message": "exception ledger immutable/empty"
+    },
+    {
+      "id": "FINDINGS",
+      "status": "PASS",
+      "message": "0 static / 45 runtime obligations"
+    },
+    {
+      "id": "INPUT",
+      "status": "PASS",
+      "message": "input identity exact"
+    },
+    {
+      "id": "INVENTORY",
+      "status": "PASS",
+      "message": "251/251 classified"
+    },
+    {
+      "id": "INVENTORY",
+      "status": "PASS",
+      "message": "56 runtime + 2 preview"
+    },
+    {
+      "id": "MAPPING",
+      "status": "PASS",
+      "message": "primitive mapping immutable"
+    },
+    {
+      "id": "MATERIAL",
+      "status": "PASS",
+      "message": "exact six resolved; zero new"
+    },
+    {
+      "id": "MATERIAL",
+      "status": "PASS",
+      "message": "six semantic evidence records source-bound"
+    },
+    {
+      "id": "PRESTATE",
+      "status": "PASS",
+      "message": "prestate coverage/source digest exact"
+    },
+    {
+      "id": "PREVIEW",
+      "status": "PASS",
+      "message": "exact 2 preview files/digest"
+    },
+    {
+      "id": "PREVIEW",
+      "status": "PASS",
+      "message": "preview classification exact"
+    },
+    {
+      "id": "PROD",
+      "status": "PASS",
+      "message": "251 production Kotlin and accepted digest exact"
+    },
+    {
+      "id": "RATCHET",
+      "status": "PASS",
+      "message": "blocked/preaccept state remains v65/schema65"
+    },
+    {
+      "id": "RATCHET",
+      "status": "PASS",
+      "message": "confirmed=0"
+    },
+    {
+      "id": "RATCHET",
+      "status": "PASS",
+      "message": "exact historical six retained in accepted state"
+    },
+    {
+      "id": "REGISTRY",
+      "status": "PASS",
+      "message": "48 V1 contracts reconciled"
+    },
+    {
+      "id": "RUNTIME-TRUTH",
+      "status": "PASS",
+      "message": "runtime bootstrap blocked, no task washing"
+    },
+    {
+      "id": "SCANNER",
+      "status": "PASS",
+      "message": "14/14 source-aware scanners complete"
+    },
+    {
+      "id": "STATIC-VERDICT",
+      "status": "PASS",
+      "message": "truthful static blocked verdict"
+    },
+    {
+      "id": "ZERO-DRIFT",
+      "status": "PASS",
+      "message": "all rules zero unapproved"
+    },
+    {
+      "id": "ZERO-OP",
+      "status": "PASS",
+      "message": "no production mutation from accepted v65"
+    }
+  ],
+  "errors": [],
+  "productionKotlinCount": 251,
+  "composeSourceCount": 58,
+  "runtimeUiCount": 56,
+  "previewOnlyCount": 2,
+  "changedProductionFiles": [],
+  "resolvedCandidateIds": [
+    "DS59-MATC-353C4BA208",
+    "DS59-MATC-9B9E4A62B6",
+    "DS59-MATC-B28DBA9BD1",
+    "DS59-MATC-D44DE38681",
+    "DS59-MATC-EA81ACB322",
+    "DS59-MATC-FC49FB269C"
+  ],
+  "runtimeRequiredCount": 45,
+  "projectUnapprovedViolations": 0,
+  "runtimeFinalVerified": false,
+  "fullV66Completion": false,
+  "acceptedVersion": "v65",
+  "verdict": "PASS_STATIC"
+}

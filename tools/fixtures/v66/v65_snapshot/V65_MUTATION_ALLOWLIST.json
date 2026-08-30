@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 65,
+  "session": 65,
+  "inputSha256": "2a5fe10ea5edb0d263e5e9849c6a5f8762ecdc205505427029426f245fe8b63a",
+  "files": [
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/FaqScreen.kt",
+      "findingIds": [
+        "V65-001-54F51D005388"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "3d9d62d6b704d32abc0cd7573320c1d5a8d893ec8fc3eeb044f82ec8b5f7dc38"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/actions/ActionComponents.kt",
+      "findingIds": [
+        "V65-001-6A8D20E938AE",
+        "V65-001-2DA4F1C98710",
+        "V65-001-CDA8DAFC3CE5",
+        "V65-001-96F96830E1CB",
+        "V65-001-A2C6EA4D459D",
+        "V65-001-C39D6D75BDFA"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "8ffd0ca42e94015e6379f9cfff4ba3cfd6fd6d5b2b3a56873014225d05be06ca"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/containers/ContainerComponents.kt",
+      "findingIds": [
+        "V65-001-BC344A0CCCBF",
+        "V65-001-F509B7348CD4"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "3ea564017e0dfe6d1922c9774caafe1d8ef1070f11c8fbd77cd1ffd2c7c9dd1c"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/data/DataComponents.kt",
+      "findingIds": [
+        "V65-001-04885218F943",
+        "V65-001-823BAB9242D7",
+        "V65-001-0AEB584281FB",
+        "V65-001-AC88ABC485B5"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "0271e4bb074ecc33bc152a76b66e21a7f661f03bce0c89f0844b3ced58ddfc3e"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/feedback/FeedbackComponents.kt",
+      "findingIds": [
+        "V65-001-E41FB4AA5146",
+        "V65-001-98B5B8DA34C7",
+        "V65-001-4194FD20DE99",
+        "V65-001-DABB67449173"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "a8470cec63305e0dc952bd00b7d4a8ca5108b1ef711d46deeb865fa8a24c1e17"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt",
+      "findingIds": [
+        "V65-001-7BE6C232465D",
+        "V65-001-45E4477E4200",
+        "V65-001-253991148AEC",
+        "V65-001-9FDE7CAEFA0A"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "46d5173bcdec4dc1301707537a176abcb93014c2aec06e05ff2ac3ae2339eeaf"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/navigation/NavigationComponents.kt",
+      "findingIds": [
+        "V65-001-6A9DA85A21D0",
+        "V65-001-D4C62EF1E2D9",
+        "V65-001-9E4A74EC5021",
+        "V65-001-2708601B7EAB"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "d66491936f2372f2f379bad9497d938aa1abd5d53f41fbea343cfe8751e3ab1e"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/patterns/conversation/ConversationItem.kt",
+      "findingIds": [
+        "V65-001-2147BD7A1804"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "9067e96250cb5466ec08d1d6289dd9c72952a962b07570b64e5270f689715fd4"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/CodeInputScreen.kt",
+      "findingIds": [
+        "V65-002-9A2F14E5AC99"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "9273892e1ab842a469defbe6146edb4137aad130cad42840cba5415665c083b7"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/AccountTypeScreen.kt",
+      "findingIds": [
+        "V65-001-CDE9E53CDD48"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "19a5a010275cbb78eb9b883b9cb4b60984bcec82bc14e56b9acbd357f5fc9185"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatImageViewer.kt",
+      "findingIds": [
+        "V65-001-BB2A2B87451C"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "674f426342ebb1e8acbdfd86be8ec7be9f514ce80807ddb992bcc7701b4a247b"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatMessageComponents.kt",
+      "findingIds": [
+        "V65-001-67D4E6D2ADF0",
+        "V65-002-FD99DACB76AE"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "2d2ab3de4a0a9ef7809d640876753e4e2f77fa2b01cbedc3a63cd3d1398a658b"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionEntryComponents.kt",
+      "findingIds": [
+        "V65-001-8AFF406A81C7"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "e379ff14b8b6cc5a7aa8b4eaccb5f6fc08ccc86d640ffa061c20793171dabbf0"
+    },
+    {
+      "path": "feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/presentation/NotificationsScreen.kt",
+      "findingIds": [
+        "V65-001-57A83D9C9575"
+      ],
+      "providerFindingIds": [],
+      "preSha256": "e72d8f39fc5e1a630b75f5e3fa1fd29249ced61348cebe48aab591fdde8fc757"
+    }
+  ]
+}

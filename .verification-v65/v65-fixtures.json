@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 65,
+  "positiveFixtures": 16,
+  "negativeFixtures": 18,
+  "checks": 34,
+  "failed": [],
+  "contrastFixtureRatio": 2.2254,
+  "verdict": "PASS"
+}

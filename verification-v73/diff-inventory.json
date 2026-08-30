@@ -1,0 +1,82 @@
+{
+  "addedArtifacts": [
+    "SESSION_73_FINAL.md",
+    "AUTODRIVE_SYNC_VERIFICATION_v73.json",
+    "AUTODRIVE_SYNC_VERIFICATION_v73.md",
+    "AUTODRIVE_SYNC_OBSERVABILITY_INVENTORY_v73.json",
+    "AUTODRIVE_SYNC_FAULT_MATRIX_v73.json",
+    "AUTODRIVE_SYNC_CONVERGENCE_PROOF_v73.json",
+    "verification-v73/*"
+  ],
+  "addedSourceCount": 11,
+  "addedSourceFiles": [
+    "app/src/test/kotlin/com/autodrive/app/core/sync/fault/SyncFaultInjectorTest.kt",
+    "core/database/src/main/kotlin/com/autodrive/app/core/database/dao/SyncObservabilityDao.kt",
+    "core/database/src/main/kotlin/com/autodrive/app/core/database/entities/SyncObservabilityStateEntity.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/di/SyncFaultModule.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/diagnostics/SyncHealthSnapshot.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/diagnostics/SyncObservabilityStore.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/diagnostics/SyncRunContext.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/fault/SyncFaultInjector.kt",
+    "scripts/verify-v73-migration.py",
+    "scripts/verify-v73-model.py",
+    "scripts/verify-v73-static.py"
+  ],
+  "changedExistingCount": 19,
+  "changedExistingFiles": [
+    "app/src/androidTest/kotlin/com/autodrive/app/core/database/DatabaseMigrationTest.kt",
+    "app/src/test/kotlin/com/autodrive/app/core/observability/SensitiveDataRedactorTest.kt",
+    "core/database/src/main/kotlin/com/autodrive/app/core/database/AutoDriveDatabase.kt",
+    "core/database/src/main/kotlin/com/autodrive/app/core/database/dao/PendingOperationDao.kt",
+    "core/observability/src/main/kotlin/com/autodrive/app/core/observability/AppLogger.kt",
+    "core/observability/src/main/kotlin/com/autodrive/app/core/observability/DiagnosticEvent.kt",
+    "core/observability/src/main/kotlin/com/autodrive/app/core/observability/FirebaseCrashlyticsReporter.kt",
+    "core/observability/src/main/kotlin/com/autodrive/app/core/observability/SensitiveDataRedactor.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/AntiEntropyReconciler.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/DefaultSyncCoordinator.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/LocalDataCleaner.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/OutboxSynchronizer.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/SafeBootstrapSynchronizer.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/SyncEngine.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/SyncManager.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/UnifiedChangeSynchronizer.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/diagnostics/SyncDiagnostics.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/outbox/PendingOperationProcessor.kt",
+    "core/sync/src/main/kotlin/com/autodrive/app/core/sync/realtime/RealtimeManager.kt"
+  ],
+  "deletedCount": 0,
+  "deletedFiles": [],
+  "historicalRoomMigrationHashes": {
+    "MIGRATION_13_14": {
+      "after": "e2f85ee75230d98abe9cb5a360d4b274089b26a465e877cd374cbfbf73a88052",
+      "before": "e2f85ee75230d98abe9cb5a360d4b274089b26a465e877cd374cbfbf73a88052"
+    },
+    "MIGRATION_14_15": {
+      "after": "10ccb9ad1f41e15b15671254525adeebfc50a38ba14be94bcf9e47d9de34f1ad",
+      "before": "10ccb9ad1f41e15b15671254525adeebfc50a38ba14be94bcf9e47d9de34f1ad"
+    },
+    "MIGRATION_15_16": {
+      "after": "0dd0d0bf18b233d1fd4213ded840f981a3c7ee42a72d806682b5cb4b16df2d43",
+      "before": "0dd0d0bf18b233d1fd4213ded840f981a3c7ee42a72d806682b5cb4b16df2d43"
+    },
+    "MIGRATION_16_17": {
+      "after": "6d096b57d58b399753a9e495d98765e21ae2e57f764a7e4bf422f2a086b56862",
+      "before": "6d096b57d58b399753a9e495d98765e21ae2e57f764a7e4bf422f2a086b56862"
+    },
+    "MIGRATION_17_18": {
+      "after": "9b03b4058ca6646db3009e8fddcb0a3f84b9a6ec2655c9b60c99940c27000cf1",
+      "before": "9b03b4058ca6646db3009e8fddcb0a3f84b9a6ec2655c9b60c99940c27000cf1"
+    }
+  },
+  "historicalRoomMigrationsMutated": [],
+  "historicalServerMigrationsMutated": [],
+  "newWaivers": [],
+  "productionKotlinFilesAfter": 285,
+  "productionUiFilesChanged": [],
+  "productionUiFilesChangedCount": 0,
+  "serverMigrationsAdded": [],
+  "serverMigrationsDeleted": [],
+  "session": 73,
+  "testKotlinFilesAfter": 47,
+  "unexpectedProductionMutations": []
+}

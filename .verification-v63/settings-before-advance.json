@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 63,
+  "session": 63,
+  "tool": "verify_designsystem_v63_settings",
+  "targetResolvedIds": [
+    "DS59-SETTINGS-001"
+  ],
+  "settingsRows": 2,
+  "apiGap": "AutoDriveListRow lacked typed title tone input",
+  "apiExtension": "titleTone: AutoDriveStatusTone? = null",
+  "changedProductionFiles": [
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/data/DataComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/patterns/settings/SettingsPatterns.kt"
+  ],
+  "protectedProductionDigest": "6c7ad8efdd6326726b6766287f7e77b2c11eb0cbdb784f3cb730fdb821e75831",
+  "protectedDsDigest": "4a7a96909146a115664a0e68323a2634c8941987e6a7403434123076a093bfd5",
+  "contractChecks": [
+    {
+      "id": "SETTINGS-CONTRACT",
+      "status": "PASS",
+      "message": "typed title tone, disabled precedence/semantics, trailing state and no duplicate/raw-color workaround"
+    },
+    {
+      "id": "PROFILE-BEHAVIOR",
+      "status": "PASS",
+      "message": "SETTINGS_V1 business/navigation/sign-out behavior retained"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_BASELINE_v59.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_BASELINE_v59.json"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_UI_COVERAGE_v59.csv"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_V1_CONTRACT_REGISTRY_v59.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_UI_COVERAGE_v62.csv"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_VERIFICATION_v62.json"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_VERIFICATION_v62.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "AutoDrive-v62-report.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "tools/verify_designsystem_v62_reports.py"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "tools/test_designsystem_verification_v62.py"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "scripts/verify-v62-static.sh"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileScreen.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileViewModel.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileUiState.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/data/ProfileRepositoryImpl.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/ComponentSemantics.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/foundation/color/ColorTokens.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/patterns/preview/V1PatternPreviews.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "docs/design-system/04_PATTERNS.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "docs/design-system/03_COMPONENT_SPEC.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "docs/design-system/02_FOUNDATIONS.md"
+    },
+    {
+      "id": "PROTECTED-PRODUCTION",
+      "status": "PASS",
+      "message": "249 protected production Kotlin digest=6c7ad8efdd6326726b6766287f7e77b2c11eb0cbdb784f3cb730fdb821e75831"
+    },
+    {
+      "id": "PROTECTED-DS",
+      "status": "PASS",
+      "message": "30 protected DS-main digest=4a7a96909146a115664a0e68323a2634c8941987e6a7403434123076a093bfd5"
+    },
+    {
+      "id": "COVERAGE-V62",
+      "status": "PASS",
+      "message": "exact two v63 rows from immutable v62 coverage"
+    },
+    {
+      "id": "TARGET-ID",
+      "status": "PASS",
+      "message": "exact v63 target finding set"
+    },
+    {
+      "id": "STATE",
+      "status": "PASS",
+      "message": "acceptedVersion=v62 totals/candidates/debt boundaries valid"
+    },
+    {
+      "id": "MUTATION-SCOPE",
+      "status": "PASS",
+      "message": "pre-accept changed production=['core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/data/DataComponents.kt', 'core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/patterns/settings/SettingsPatterns.kt']"
+    },
+    {
+      "id": "COVERAGE-V63",
+      "status": "PASS",
+      "message": "Settings rows closed 2/2"
+    }
+  ],
+  "interactionChecks": [
+    {
+      "id": "SETTINGS-CONTRACT",
+      "status": "PASS",
+      "message": "typed title tone, disabled precedence/semantics, trailing state and no duplicate/raw-color workaround"
+    },
+    {
+      "id": "PROFILE-BEHAVIOR",
+      "status": "PASS",
+      "message": "SETTINGS_V1 business/navigation/sign-out behavior retained"
+    }
+  ],
+  "disabledChecks": [
+    {
+      "id": "SETTINGS-CONTRACT",
+      "status": "PASS",
+      "message": "typed title tone, disabled precedence/semantics, trailing state and no duplicate/raw-color workaround"
+    }
+  ],
+  "destructiveChecks": [
+    {
+      "id": "SETTINGS-CONTRACT",
+      "status": "PASS",
+      "message": "typed title tone, disabled precedence/semantics, trailing state and no duplicate/raw-color workaround"
+    }
+  ],
+  "errors": [],
+  "verdict": "PASS"
+}

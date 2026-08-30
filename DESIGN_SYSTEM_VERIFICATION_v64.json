@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 64,
+  "session": 64,
+  "inputSource": "AutoDrive-v63-settings-static-runtime-blocked.zip",
+  "inputSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+  "archiveEntries": 632,
+  "preAcceptedVersion": "v63",
+  "postAcceptedVersion": "v64",
+  "preConfirmedCount": 46,
+  "postConfirmedCount": 0,
+  "preCandidateCount": 18,
+  "postCandidateCount": 6,
+  "activeExceptions": 0,
+  "targetV64Rows": 28,
+  "waveDefinitions": {
+    "Wave 0": {
+      "files": 4,
+      "checkpoint": {
+        "confirmed": 46,
+        "material": 43,
+        "a11y1": 3,
+        "candidates": 18
+      }
+    },
+    "Wave A": {
+      "files": 8,
+      "checkpoint": {
+        "confirmed": 36,
+        "material": 33,
+        "a11y1": 3,
+        "candidates": 14
+      }
+    },
+    "Wave B": {
+      "files": 13,
+      "checkpoint": {
+        "confirmed": 19,
+        "material": 16,
+        "a11y1": 3,
+        "candidates": 14
+      }
+    },
+    "Wave C": {
+      "files": 7,
+      "checkpoint": {
+        "confirmed": 0,
+        "material": 0,
+        "a11y1": 0,
+        "candidates": 6
+      }
+    }
+  },
+  "providerGaps": [
+    {
+      "id": "PRIMARY_BUTTON_DESTRUCTIVE_GAP",
+      "extension": "AutoDrivePrimaryButtonTone",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "TEXT_FIELD_ADOPTION_GAP",
+      "extension": "AutoDriveTextFieldLayout + nullable label + independent isError",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "BOTTOM_SHEET_STATE_GAP",
+      "extension": "skipPartiallyExpanded",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "BACK_HEADER_RICH_TITLE_GAP",
+      "extension": "titleContent",
+      "status": "RESOLVED"
+    }
+  ],
+  "providerExtensions": [
+    "AutoDrivePrimaryButtonTone",
+    "AutoDriveTextFieldLayout + nullable label + independent isError",
+    "skipPartiallyExpanded",
+    "titleContent"
+  ],
+  "targetConfirmedIds": [
+    "DS59-A11Y-9AEB8C866B",
+    "DS59-A11Y-C2A837EC4E",
+    "DS59-A11Y-CDDE3825F9",
+    "DS59-MAT-02296B2D92",
+    "DS59-MAT-027E5AFDF5",
+    "DS59-MAT-0668DF89DF",
+    "DS59-MAT-139CBEC2E6",
+    "DS59-MAT-14A3E53094",
+    "DS59-MAT-1F136AECB1",
+    "DS59-MAT-226B9C8A53",
+    "DS59-MAT-26D2D5FFC4",
+    "DS59-MAT-29FBED754E",
+    "DS59-MAT-3457B1E784",
+    "DS59-MAT-39AA2FA238",
+    "DS59-MAT-498FA71016",
+    "DS59-MAT-4D44160C64",
+    "DS59-MAT-507CF8E50C",
+    "DS59-MAT-544BAE9C14",
+    "DS59-MAT-5556A29491",
+    "DS59-MAT-6197FF510A",
+    "DS59-MAT-64F7319A28",
+    "DS59-MAT-6799D3BC58",
+    "DS59-MAT-6CD5AA263C",
+    "DS59-MAT-74539FBD18",
+    "DS59-MAT-7864E52047",
+    "DS59-MAT-78B406A1AA",
+    "DS59-MAT-79C15801ED",
+    "DS59-MAT-7A5ED65DD6",
+    "DS59-MAT-7C671B14F4",
+    "DS59-MAT-843B8B1A4A",
+    "DS59-MAT-9B3C851CB9",
+    "DS59-MAT-9EB48F8635",
+    "DS59-MAT-A340CA44C4",
+    "DS59-MAT-A62108624A",
+    "DS59-MAT-AB97443291",
+    "DS59-MAT-AD270FAD58",
+    "DS59-MAT-B4AC09E4D7",
+    "DS59-MAT-BE9B4C80B7",
+    "DS59-MAT-CF13DDC2AA",
+    "DS59-MAT-D071B2A0EA",
+    "DS59-MAT-D32F041B86",
+    "DS59-MAT-D686E776D8",
+    "DS59-MAT-DCB7ADBC74",
+    "DS59-MAT-EB816DB417",
+    "DS59-MAT-F3AAC88E93",
+    "DS59-MAT-FB32BA80CD"
+  ],
+  "resolvedConfirmedIds": [
+    "DS59-A11Y-9AEB8C866B",
+    "DS59-A11Y-C2A837EC4E",
+    "DS59-A11Y-CDDE3825F9",
+    "DS59-MAT-02296B2D92",
+    "DS59-MAT-027E5AFDF5",
+    "DS59-MAT-0668DF89DF",
+    "DS59-MAT-139CBEC2E6",
+    "DS59-MAT-14A3E53094",
+    "DS59-MAT-1F136AECB1",
+    "DS59-MAT-226B9C8A53",
+    "DS59-MAT-26D2D5FFC4",
+    "DS59-MAT-29FBED754E",
+    "DS59-MAT-3457B1E784",
+    "DS59-MAT-39AA2FA238",
+    "DS59-MAT-498FA71016",
+    "DS59-MAT-4D44160C64",
+    "DS59-MAT-507CF8E50C",
+    "DS59-MAT-544BAE9C14",
+    "DS59-MAT-5556A29491",
+    "DS59-MAT-6197FF510A",
+    "DS59-MAT-64F7319A28",
+    "DS59-MAT-6799D3BC58",
+    "DS59-MAT-6CD5AA263C",
+    "DS59-MAT-74539FBD18",
+    "DS59-MAT-7864E52047",
+    "DS59-MAT-78B406A1AA",
+    "DS59-MAT-79C15801ED",
+    "DS59-MAT-7A5ED65DD6",
+    "DS59-MAT-7C671B14F4",
+    "DS59-MAT-843B8B1A4A",
+    "DS59-MAT-9B3C851CB9",
+    "DS59-MAT-9EB48F8635",
+    "DS59-MAT-A340CA44C4",
+    "DS59-MAT-A62108624A",
+    "DS59-MAT-AB97443291",
+    "DS59-MAT-AD270FAD58",
+    "DS59-MAT-B4AC09E4D7",
+    "DS59-MAT-BE9B4C80B7",
+    "DS59-MAT-CF13DDC2AA",
+    "DS59-MAT-D071B2A0EA",
+    "DS59-MAT-D32F041B86",
+    "DS59-MAT-D686E776D8",
+    "DS59-MAT-DCB7ADBC74",
+    "DS59-MAT-EB816DB417",
+    "DS59-MAT-F3AAC88E93",
+    "DS59-MAT-FB32BA80CD"
+  ],
+  "targetCandidateIds": [
+    "DS59-A11Y2C-467153365F",
+    "DS59-A11Y2C-5E868149DD",
+    "DS59-A11Y2C-9DB9049F24",
+    "DS59-A11Y2C-C00B365524",
+    "DS59-A11Y2C-C2A837EC4E",
+    "DS59-A11Y2C-CEF649D3E7",
+    "DS59-MATC-61EC00345B",
+    "DS59-MATC-67E12A5D39",
+    "DS59-MATC-8E52AED6C1",
+    "DS59-MATC-A04F621C83",
+    "DS59-MATC-AFC7933F73",
+    "DS59-MATC-C90A33FCBB"
+  ],
+  "resolvedCandidateIds": [
+    "DS59-A11Y2C-467153365F",
+    "DS59-A11Y2C-5E868149DD",
+    "DS59-A11Y2C-9DB9049F24",
+    "DS59-A11Y2C-C00B365524",
+    "DS59-A11Y2C-C2A837EC4E",
+    "DS59-A11Y2C-CEF649D3E7",
+    "DS59-MATC-61EC00345B",
+    "DS59-MATC-67E12A5D39",
+    "DS59-MATC-8E52AED6C1",
+    "DS59-MATC-A04F621C83",
+    "DS59-MATC-AFC7933F73",
+    "DS59-MATC-C90A33FCBB"
+  ],
+  "remainingCandidateIds": [
+    "DS59-MATC-FC49FB269C",
+    "DS59-MATC-EA81ACB322",
+    "DS59-MATC-B28DBA9BD1",
+    "DS59-MATC-9B9E4A62B6",
+    "DS59-MATC-353C4BA208",
+    "DS59-MATC-D44DE38681"
+  ],
+  "perRuleBefore": {
+    "DS-A11Y-001": 3,
+    "DS-MATERIAL-001": 43
+  },
+  "perRuleAfter": {},
+  "waveCheckpoints": {
+    "Wave 0": {
+      "confirmed": 46,
+      "material": 43,
+      "a11y1": 3,
+      "candidates": 18
+    },
+    "Wave A": {
+      "confirmed": 36,
+      "material": 33,
+      "a11y1": 3,
+      "candidates": 14
+    },
+    "Wave B": {
+      "confirmed": 19,
+      "material": 16,
+      "a11y1": 3,
+      "candidates": 14
+    },
+    "Wave C": {
+      "confirmed": 0,
+      "material": 0,
+      "a11y1": 0,
+      "candidates": 6
+    }
+  },
+  "changedProductionFiles": [
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/competition/presentation/WeeklyCompetitionScreen.kt",
+      "preSha256": "69fc0bc1c8a2333948b40c2b84000aaa150917ce9d93a820deddfcd9735e5447",
+      "postSha256": "cc645e29821188fe018b8ef18ea3f2f1c0e9ec8bdff216bf97cab2dd8e8f0d82"
+    },
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/AboutAppScreen.kt",
+      "preSha256": "302fac510879bf9014a02d9202d2dd0589cb2b12c45d52e4a324350f2324b836",
+      "postSha256": "d9bc7a3213ef927255bceb9cc00dbb0087f926edca56568f89e2c7d191a91dfd"
+    },
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/FaqScreen.kt",
+      "preSha256": "ec846f455a8ecb44ef05b05ce426e798056ea5fe2ed8b9e6e524e2578e2e10f7",
+      "postSha256": "3d9d62d6b704d32abc0cd7573320c1d5a8d893ec8fc3eeb044f82ec8b5f7dc38"
+    },
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/PrivacyPolicyScreen.kt",
+      "preSha256": "81a72a3603f315b10d8884bdc8d90a5c7927e714f8196502626d31a0e5786115",
+      "postSha256": "11285193b479595c0552d64ebe9021e1f535f76288391a42bb07c4d795a45076"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/actions/ActionComponents.kt",
+      "preSha256": "dc28cd3efe428f3c01b82b81fcc2256d651562909daf95cd4dd43c1e81f2598a",
+      "postSha256": "8ffd0ca42e94015e6379f9cfff4ba3cfd6fd6d5b2b3a56873014225d05be06ca"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/feedback/FeedbackComponents.kt",
+      "preSha256": "3848eea77a1d518baab3931d2cb125fc5f078b5d16159ac3365189e794932498",
+      "postSha256": "a8470cec63305e0dc952bd00b7d4a8ca5108b1ef711d46deeb865fa8a24c1e17"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt",
+      "preSha256": "164789512b062fe2bc300115f12a1101e1b0cee53baeb582b09fa2deb9caddca",
+      "postSha256": "46d5173bcdec4dc1301707537a176abcb93014c2aec06e05ff2ac3ae2339eeaf"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/navigation/NavigationComponents.kt",
+      "preSha256": "75f9522969fc76bae8a04869b3f2e88038648919a4f6fd8852471f9f57806538",
+      "postSha256": "d66491936f2372f2f379bad9497d938aa1abd5d53f41fbea343cfe8751e3ab1e"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/CodeInputScreen.kt",
+      "preSha256": "2c7124596398d941629a401e8dc94e44b4cf6448b6e3f608097e492e0ec8aacc",
+      "postSha256": "9273892e1ab842a469defbe6146edb4137aad130cad42840cba5415665c083b7"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/WaitingScreen.kt",
+      "preSha256": "0f77936bd7f2469be778839d5d81263b6b451aa4196dfff2ac737c13977a7fa8",
+      "postSha256": "2e9a4df7731ad5cb141cfae01b9ae0c7aeedee38f17eb0273c8f2e1999bd59ba"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/OtpInputScreen.kt",
+      "preSha256": "95f367e4d61da485ee1d469dea74669f9c0646e3877ba217e622eb5dcdade924",
+      "postSha256": "ec8b639652ebbe16e58963a0a77871fbcacfe3984ac7443c47e06c49d0765611"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/PhoneInputScreen.kt",
+      "preSha256": "6155413d2889d8dad7f739a3ae99867cb24a91bbd2dbe7b633b5f30344497f8d",
+      "postSha256": "5ca1ce40124106553754a8f7da47a9b872f242d7c7edd6ba209601ecaf982933"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/TermsScreen.kt",
+      "preSha256": "e28cf7dd94d21f9553c1c00884c46316d2a96f0e3b7cd003fdec92c2a36f04a5",
+      "postSha256": "389676823832a891d68cb0e248ba9b124f6b9000f5960b6547b29a4d501872ee"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/RegisterScreens.kt",
+      "preSha256": "1bf84a0baa974d0a8bf0c447ebf11e37fdded6ea0df9bbbc621e7d8de2b32e9a",
+      "postSha256": "5d6c6b6106a65a743c372d91e0366f603c160ecf38ca50e5201996be326fc1e5"
+    },
+    {
+      "path": "feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/presentation/BalanceComponents.kt",
+      "preSha256": "8766c151eb4fdc653c6de8732ac526fa84eb15bd4a06a1a6caad044eb370ea9d",
+      "postSha256": "fbe8fb342726a7ebc71a7418dfe39a5678293b018cb090c6b07617664149627e"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatComposer.kt",
+      "preSha256": "a48ac2845376f69abc8a573dec2b297c5e7ebb69f377f75a7047e3cfac0eb07f",
+      "postSha256": "edea02de0f0752e929cb290bfc20edf1cb35e5f333c6c126ab0eef0eb46cfcac"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatImageViewer.kt",
+      "preSha256": "397880dbb9fc3d8b2306ea60d1cc7a140b772ab0a1b5afbaea2aba4ddc7df6fc",
+      "postSha256": "674f426342ebb1e8acbdfd86be8ec7be9f514ce80807ddb992bcc7701b4a247b"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatMessageComponents.kt",
+      "preSha256": "6375b79497252cc9ee2c0fc8657358cdd07770826377980cb6cef30e7ac838e8",
+      "postSha256": "2d2ab3de4a0a9ef7809d640876753e4e2f77fa2b01cbedc3a63cd3d1398a658b"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatScreen.kt",
+      "preSha256": "d31bf1fc6c41fc4a5332bb9a4e014cc90b7d5652b7b3cdbbec116d0483b7bdf0",
+      "postSha256": "f7601b536ddf504ff3714c6b5b19e935fd568156cab741ae63fba29ed9bc3dc8"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionEntryComponents.kt",
+      "preSha256": "7dd23b0bf3a3692f472f75d741c6a4c8f3fa67c8e9701ec7c911e0b5a862b2d6",
+      "postSha256": "e379ff14b8b6cc5a7aa8b4eaccb5f6fc08ccc86d640ffa061c20793171dabbf0"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt",
+      "preSha256": "667226b3d182a8f043073e523262bc32e55f001ed3d54fa2e9f28e580d5bc539",
+      "postSha256": "af1fbe1c263f84b77e1ca54e0e0047b467fa59c12b3e4cdc5102d2cec217a45e"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionStatusBadge.kt",
+      "preSha256": "d01cae03a44545c945b2a6519ada4e73af66eaf21dc2b1e12a4b1270e11ecb22",
+      "postSha256": "494546a101095f27a010e16c2dfb35f85cc2e22881a9169f70fc50743397091b"
+    },
+    {
+      "path": "feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/presentation/NotificationsScreen.kt",
+      "preSha256": "d30172be7085bad9db3511ab78afba95a4210d571c32f49038d17c76082a880d",
+      "postSha256": "e72d8f39fc5e1a630b75f5e3fa1fd29249ced61348cebe48aab591fdde8fc757"
+    }
+  ],
+  "protectedProductionDigest": {
+    "count": 228,
+    "sha256": "164fb50c87aa7bad2d583fc5a4fa299f49b93e1a332b73f547cb17dc00b7a580"
+  },
+  "protectedDsDigest": {
+    "count": 23,
+    "sha256": "41ff466d17f9395a5318a4ac4d332baaeba7c8f23cc28f859745e3662fd48b26"
+  },
+  "historicalEvidenceHashes": {
+    "DESIGN_SYSTEM_UI_COVERAGE_v63.csv": "f162bd735c921fb0d1bab233e158d056f78f39228e60957ce9644f5ce55ed1a4",
+    "DESIGN_SYSTEM_VERIFICATION_v63.json": "7c1713dd79d5660841865af34e7103a5a1d8588afcadd90fd10cf9442513a56b",
+    "DESIGN_SYSTEM_VERIFICATION_v63.md": "9544bd76cb2f7e84116d4a5d631096617959d2e6b314e9c8c1e94dd514b7c4fd",
+    "AutoDrive-v63-report.md": "af68cd6ea4372fcd9000a608e8593b34d5f00d8603899666f0b22cdf4d38613f"
+  },
+  "contractChecks": {
+    "inputIdentity": "PASS",
+    "productionScope": "PASS",
+    "providerScope": "PASS",
+    "mappingImmutable": "PASS",
+    "exceptionLedgerEmpty": "PASS",
+    "cleanCarryForward": "PASS",
+    "historicalV62Gate": "PASS",
+    "historicalV63Gate": "PASS"
+  },
+  "behaviorChecks": {
+    "businessLogic": "UNCHANGED_STATIC_PROOF",
+    "navigation": "UNCHANGED_STATIC_PROOF",
+    "viewModels": "UNCHANGED_STATIC_PROOF",
+    "repositoriesDataFlow": "UNCHANGED_STATIC_PROOF",
+    "chatAnchors": "PASS",
+    "callbackStateOwnership": "PASS"
+  },
+  "candidateProofs": [
+    {
+      "candidateId": "DS59-MATC-AFC7933F73",
+      "replacement": "AutoDrivePrimaryButton(loading=isCancelling)",
+      "proof": "button owns loading; same cancel callback; repeated clicks disabled"
+    },
+    {
+      "candidateId": "DS59-MATC-A04F621C83",
+      "replacement": "AutoDriveBackHeader",
+      "proof": "title/back slots equivalent; no extra action"
+    },
+    {
+      "candidateId": "DS59-MATC-C90A33FCBB",
+      "replacement": "AutoDriveBackHeader",
+      "proof": "title/back slots equivalent; loading/content branching unchanged"
+    },
+    {
+      "candidateId": "DS59-MATC-8E52AED6C1",
+      "replacement": "AutoDriveLoadingState",
+      "proof": "full-content loading ownership equivalent"
+    },
+    {
+      "candidateId": "DS59-MATC-67E12A5D39",
+      "replacement": "AutoDriveBackHeader(titleContent)",
+      "proof": "conversation title/typing/back preserved in rich title slot"
+    },
+    {
+      "candidateId": "DS59-MATC-61EC00345B",
+      "replacement": "AutoDriveLoadingState",
+      "proof": "chat list loading branch preserved"
+    }
+  ],
+  "runtimeCommands": [
+    {
+      "command": "./gradlew --version",
+      "exitCode": 1,
+      "result": "BLOCKED",
+      "evidence": ".verification-v64/gradle-version-final.log",
+      "error": "java.net.UnknownHostException: services.gradle.org"
+    }
+  ],
+  "staticGates": {
+    "V07": "PASS",
+    "V08": "PASS",
+    "exceptions": "PASS",
+    "V61": "PASS",
+    "V62Historical": "PASS",
+    "V63Historical": "PASS",
+    "V64Adoption": "PASS",
+    "RatchetS64": "PASS",
+    "fixtures60": "PASS",
+    "fixtures61": "PASS",
+    "fixtures62": "PASS",
+    "fixtures63": "PASS",
+    "fixtures64": "PASS 22/22",
+    "v58Static": "PASS 67/0",
+    "parentGateTwicePreAccept": "PASS deterministic",
+    "parentGateTwicePostAccept": "PASS deterministic"
+  },
+  "finalVerdict": "STATIC_COMPONENT_ADOPTION_COMPLETE / UI_RUNTIME_BLOCKED"
+}

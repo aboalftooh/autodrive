@@ -1,0 +1,14 @@
+[
+  {
+    "id": "DSX-FIX-UNKNOWN",
+    "rule_id": "DS-UNKNOWN-999",
+    "file": "tools/designsystem-fixtures/exception_target.kt",
+    "symbol": "exceptionFixtureTarget",
+    "line_hint": 1,
+    "reason": "Specific fixture-only local color cannot be replaced without changing semantics",
+    "owner": "design-system",
+    "approved_in": "v60",
+    "expires_in": "v61",
+    "replacement_plan": "Replace with an approved token before v61 acceptance"
+  }
+]

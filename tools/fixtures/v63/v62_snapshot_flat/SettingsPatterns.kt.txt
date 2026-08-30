@@ -1,0 +1,85 @@
+package com.autodrive.app.core.designsystem.patterns.settings
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.autodrive.app.core.designsystem.components.AutoDriveStatusTone
+import com.autodrive.app.core.designsystem.components.containers.AutoDriveCard
+import com.autodrive.app.core.designsystem.components.data.AutoDriveDivider
+import com.autodrive.app.core.designsystem.components.data.AutoDriveListRow
+import com.autodrive.app.core.designsystem.components.data.AutoDriveSectionHeader
+import com.autodrive.app.core.designsystem.components.feedback.AutoDriveStatusChip
+import com.autodrive.app.core.designsystem.foundation.color.AutoDriveStatus
+import com.autodrive.app.core.designsystem.foundation.color.AutoDriveText
+import com.autodrive.app.core.designsystem.foundation.icon.AutoDriveIconSize
+import com.autodrive.app.core.designsystem.foundation.spacing.AutoDriveSpace
+import com.autodrive.app.core.designsystem.theme.AutoDriveTheme
+
+enum class SettingsRowVariant { Value, Navigation, Editable, Destructive, Status }
+
+data class SettingsGroupItem(
+    val id: String,
+    val label: String,
+    val value: String? = null,
+    val variant: SettingsRowVariant = SettingsRowVariant.Value,
+    val enabled: Boolean = true,
+)
+
+@Composable
+fun SettingsRow(
+    label: String,
+    modifier: Modifier = Modifier,
+    value: String? = null,
+    variant: SettingsRowVariant = SettingsRowVariant.Value,
+    enabled: Boolean = true,
+    statusTone: AutoDriveStatusTone = AutoDriveStatusTone.Neutral,
+    onClick: (() -> Unit)? = null,
+) {
+    val titleColor = if (variant == SettingsRowVariant.Destructive) AutoDriveStatus.Error else if (enabled) AutoDriveText.Primary else AutoDriveText.Disabled
+    AutoDriveListRow(
+        title = label,
+        supportingText = null,
+        enabled = enabled,
+        onClick = onClick,
+        modifier = modifier,
+        trailing = {
+            when (variant) {
+                SettingsRowVariant.Navigation, SettingsRowVariant.Editable -> Icon(Icons.AutoMirrored.Rounded.KeyboardArrowLeft, null, tint = AutoDriveText.Secondary, modifier = Modifier.then(Modifier))
+                SettingsRowVariant.Status -> if (value != null) AutoDriveStatusChip(value, statusTone)
+                else -> if (value != null) Text(value, style = MaterialTheme.typography.bodyMedium, color = AutoDriveText.Secondary)
+            }
+        },
+    )
+}
+
+@Composable
+fun SettingsGroup(
+    title: String,
+    items: List<SettingsGroupItem>,
+    modifier: Modifier = Modifier,
+    onItemClick: (String) -> Unit = {},
+    headerAction: (@Composable () -> Unit)? = null,
+) {
+    Column(modifier) {
+        AutoDriveSectionHeader(title, action = headerAction)
+        AutoDriveCard(Modifier.fillMaxWidth()) {
+            items.forEachIndexed { index, item ->
+                SettingsRow(item.label, value = item.value, variant = item.variant, enabled = item.enabled, onClick = { onItemClick(item.id) })
+                if (index != items.lastIndex) AutoDriveDivider()
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF08090C)
+@Composable
+private fun SettingsPatternsPreview() = AutoDriveTheme {
+    SettingsGroup("الحساب", listOf(SettingsGroupItem("name", "الاسم", "محمد"), SettingsGroupItem("edit", "تعديل البيانات", variant = SettingsRowVariant.Navigation)))
+}

@@ -1,0 +1,15 @@
+{
+  "allRequiredScenariosExecuted": false,
+  "androidRuntimeIncluded": false,
+  "crossScopeScenarioCount": 1,
+  "deterministicEventualConvergence": true,
+  "modelEvidencePassed": true,
+  "multiDeviceScenarioCount": 1,
+  "noCrossAccountLeakage": true,
+  "noDuplicateEffects": true,
+  "noLostWrites": true,
+  "noResurrectedDeletes": true,
+  "scenarioCount": 20,
+  "serverRuntimeIncluded": false,
+  "session": 73
+}

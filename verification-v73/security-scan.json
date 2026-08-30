@@ -1,0 +1,15 @@
+{
+  "actualSecretFindings": 0,
+  "allowedTestFixtureFindings": 1,
+  "findings": [
+    {
+      "classification": "TEST_FIXTURE",
+      "file": "app/src/test/kotlin/com/autodrive/app/core/observability/SensitiveDataRedactorTest.kt",
+      "kind": "jwt",
+      "preview": "eyJhbGciOiJIUzI1NiJ9.eyJzdWI..."
+    }
+  ],
+  "passed": true,
+  "session": 73,
+  "suspiciousCredentialFiles": []
+}

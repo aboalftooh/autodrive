@@ -1,0 +1,6 @@
+V66 FINAL STATIC: PASS_STATIC
+ - 251 source / 58 Compose / 56 runtime UI / 2 preview
+ - 14 rules: zero unapproved
+ - Material: 6/6 resolved in analysis layer
+ - production mutation: 0
+ - Runtime: BLOCKED; Ratchet remains v65

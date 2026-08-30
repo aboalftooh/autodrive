@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 60,
+  "fixtures": [
+    {
+      "fixture_id": "DS-COLOR-001:must_pass",
+      "rule_id": "DS-COLOR-001",
+      "path": "tools/designsystem-fixtures/core/ds_color_001_must_pass.kt",
+      "expected_exit": 0
+    },
+    {
+      "fixture_id": "DS-COLOR-001:must_fail",
+      "rule_id": "DS-COLOR-001",
+      "path": "tools/designsystem-fixtures/core/ds_color_001_must_fail.kt",
+      "expected_exit": 1
+    },
+    {
+      "fixture_id": "DS-TYPE-001:must_pass",
+      "rule_id": "DS-TYPE-001",
+      "path": "tools/designsystem-fixtures/core/ds_type_001_must_pass.kt",
+      "expected_exit": 0
+    },
+    {
+      "fixture_id": "DS-TYPE-001:must_fail",
+      "rule_id": "DS-TYPE-001",
+      "path": "tools/designsystem-fixtures/core/ds_type_001_must_fail.kt",
+      "expected_exit": 1
+    },
+    {
+      "fixture_id": "DS-SPACE-001:must_pass",
+      "rule_id": "DS-SPACE-001",
+      "path": "tools/designsystem-fixtures/core/ds_space_001_must_pass.kt",
+      "expected_exit": 0
+    },
+    {
+      "fixture_id": "DS-SPACE-001:must_fail",
+      "rule_id": "DS-SPACE-001",
+      "path": "tools/designsystem-fixtures/core/ds_space_001_must_fail.kt",
+      "expected_exit": 1
+    },
+    {
+      "fixture_id": "DS-SHAPE-001:must_pass",
+      "rule_id": "DS-SHAPE-001",
+      "path": "tools/designsystem-fixtures/core/ds_shape_001_must_pass.kt",
+      "expected_exit": 0
+    },
+    {
+      "fixture_id": "DS-SHAPE-001:must_fail",
+      "rule_id": "DS-SHAPE-001",
+      "path": "tools/designsystem-fixtures/core/ds_shape_001_must_fail.kt",
+      "expected_exit": 1
+    },
+    {
+      "fixture_id": "DS-BORDER-001:must_pass",
+      "rule_id": "DS-BORDER-001",
+      "path": "tools/designsystem-fixtures/core/ds_border_001_must_pass.kt",
+      "expected_exit": 0
+    },
+    {
+      "fixture_id": "DS-BORDER-001:must_fail",
+      "rule_id": "DS-BORDER-001",
+      "path": "tools/designsystem-fixtures/core/ds_border_001_must_fail.kt",
+      "expected_exit": 1
+    },
+    {
+      "fixture_id": "DS-ELEVATION-001:must_pass",
+      "rule_id": "DS-ELEVATION-001",
+      "path": "tools/designsystem-fixtures/core/ds_elevation_001_must_pass.kt",
+      "expected_exit": 0
+    },
+    {
+      "fixture_id": "DS-ELEVATION-001:must_fail",
+      "rule_id": "DS-ELEVATION-001",
+      "path": "tools/designsystem-fixtures/core/ds_elevation_001_must_fail.kt",
+      "expected_exit": 1
+    },
+    {
+      "fixture_id": "DS-MATERIAL-001:must_pass",
+      "rule_id": "DS-MATERIAL-001",
+      "path": "tools/designsystem-fixtures/core/ds_material_001_must_pass.kt",
+      "expected_exit": 0
+    },
+    {
+      "fixture_id": "DS-MATERIAL-001:must_fail",
+      "rule_id": "DS-MATERIAL-001",
+      "path": "tools/designsystem-fixtures/core/ds_material_001_must_fail.kt",
+      "expected_exit": 1
+    },
+    {
+      "fixture_id": "DS-DUP-001:must_pass",
+      "rule_id": "DS-DUP-001",
+      "path": "tools/designsystem-fixtures/core/ds_dup_001_must_pass.kt",
+      "expected_exit": 0
+    },
+    {
+      "fixture_id": "DS-DUP-001:must_fail",
+      "rule_id": "DS-DUP-001",
+      "path": "tools/designsystem-fixtures/core/ds_dup_001_must_fail.kt",
+      "expected_exit": 1
+    },
+    {
+      "fixture_id": "DS-A11Y-001:must_pass",
+      "rule_id": "DS-A11Y-001",
+      "path": "tools/designsystem-fixtures/core/ds_a11y_001_must_pass.kt",
+      "expected_exit": 0
+    },
+    {
+      "fixture_id": "DS-A11Y-001:must_fail",
+      "rule_id": "DS-A11Y-001",
+      "path": "tools/designsystem-fixtures/core/ds_a11y_001_must_fail.kt",
+      "expected_exit": 1
+    },
+    {
+      "fixture_id": "GUARD-ONE-OFF-DP",
+      "rule_id": "DS-SPACE-001",
+      "path": "tools/designsystem-fixtures/guards/guard_one_off_dp.kt",
+      "expected_exit": 0,
+      "guard_expectation": "NO_FINDING"
+    },
+    {
+      "fixture_id": "GUARD-TOPAPPBAR",
+      "rule_id": "DS-MATERIAL-001",
+      "path": "tools/designsystem-fixtures/guards/guard_topappbar.kt",
+      "expected_exit": 0,
+      "guard_expectation": "CANDIDATE_ONLY"
+    },
+    {
+      "fixture_id": "GUARD-CPI",
+      "rule_id": "DS-MATERIAL-001",
+      "path": "tools/designsystem-fixtures/guards/guard_cpi.kt",
+      "expected_exit": 0,
+      "guard_expectation": "CANDIDATE_ONLY"
+    },
+    {
+      "fixture_id": "GUARD-MATERIAL-IMPORT",
+      "rule_id": "DS-MATERIAL-001",
+      "path": "tools/designsystem-fixtures/guards/guard_material_import.kt",
+      "expected_exit": 0,
+      "guard_expectation": "NO_FINDING"
+    },
+    {
+      "fixture_id": "GUARD-DIFFERENT-SEMANTICS",
+      "rule_id": "DS-DUP-001",
+      "path": "tools/designsystem-fixtures/guards/guard_different_semantics.kt",
+      "expected_exit": 0,
+      "guard_expectation": "NO_FINDING"
+    }
+  ]
+}

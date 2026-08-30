@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 65,
+  "session": 65,
+  "inputSource": "AutoDrive-v64-component-adoption-static-runtime-blocked.zip",
+  "inputSha256": "2a5fe10ea5edb0d263e5e9849c6a5f8762ecdc205505427029426f245fe8b63a",
+  "archiveEntries": 1109,
+  "preAcceptedVersion": "v64",
+  "postAcceptedVersion": "v65",
+  "preConfirmedCount": 0,
+  "postConfirmedCount": 0,
+  "preCandidateCount": 6,
+  "postCandidateCount": 6,
+  "activeExceptions": 0,
+  "uiRows": 56,
+  "declaredV65Rows": 49,
+  "reclassifiedRows": 4,
+  "effectiveV65Rows": 53,
+  "excludedRows": 3,
+  "waveDefinitions": {
+    "Wave 0": 15,
+    "Wave A": 15,
+    "Wave B": 10,
+    "Wave C": 13
+  },
+  "prestateSha256": "d432c61fdf8ac6d4e9b2e9bcb5c796908a255329cb05a99ef6bdd553b77df366",
+  "findingsLockSha256": "31eaaa0831322bad438f80ae740876720fa108042fc50b25cf4542cee4ec29e5",
+  "mutationAllowlistSha256": "58c9f04484b9cd077d674bf8c2714f39e9f83e73f53b80d803449f28a78d5ca6",
+  "contrastMatrixSha256": "a11edca40949c9a2103c74c6d85f880d6d9ee7a7b8050eecc8e2cc209c9bb9e7",
+  "findingsByRule": {
+    "DS-A11Y-001": 29,
+    "DS-CONTRAST-001": 2,
+    "DS-A11Y-002": 2
+  },
+  "findingsBySubtype": {
+    "SEM_LABEL": 13,
+    "SEM_SELECTED": 6,
+    "SEM_DISABLED": 1,
+    "SEM_PROGRESS": 1,
+    "SEM_HEADING": 6,
+    "SEM_BADGE_UNREAD": 3,
+    "SEM_STATE_DESCRIPTION": 2,
+    "SEM_MODAL_FOCUS_OWNER": 1
+  },
+  "resolvedFindingIds": [
+    "V65-001-04885218F943",
+    "V65-001-0AEB584281FB",
+    "V65-001-2147BD7A1804",
+    "V65-001-253991148AEC",
+    "V65-001-2708601B7EAB",
+    "V65-001-2DA4F1C98710",
+    "V65-001-4194FD20DE99",
+    "V65-001-45E4477E4200",
+    "V65-001-54F51D005388",
+    "V65-001-57A83D9C9575",
+    "V65-001-67D4E6D2ADF0",
+    "V65-001-6A8D20E938AE",
+    "V65-001-6A9DA85A21D0",
+    "V65-001-7BE6C232465D",
+    "V65-001-823BAB9242D7",
+    "V65-001-8AFF406A81C7",
+    "V65-001-96F96830E1CB",
+    "V65-001-98B5B8DA34C7",
+    "V65-001-9E4A74EC5021",
+    "V65-001-9FDE7CAEFA0A",
+    "V65-001-A2C6EA4D459D",
+    "V65-001-AC88ABC485B5",
+    "V65-001-BB2A2B87451C",
+    "V65-001-BC344A0CCCBF",
+    "V65-001-C39D6D75BDFA",
+    "V65-001-CDA8DAFC3CE5",
+    "V65-001-CDE9E53CDD48",
+    "V65-001-D4C62EF1E2D9",
+    "V65-001-DABB67449173",
+    "V65-001-E41FB4AA5146",
+    "V65-001-F509B7348CD4",
+    "V65-002-9A2F14E5AC99",
+    "V65-002-FD99DACB76AE"
+  ],
+  "openStaticFindingIds": [],
+  "runtimeCandidateIds": [],
+  "contrastPairsChecked": 3,
+  "contrastFailures": [],
+  "fontScaleMatrix": {
+    "1.0": {
+      "status": "NOT_RUN",
+      "reason": "Gradle bootstrap blocked by java.net.UnknownHostException: services.gradle.org"
+    },
+    "1.3": {
+      "status": "NOT_RUN",
+      "reason": "Gradle bootstrap blocked by java.net.UnknownHostException: services.gradle.org"
+    },
+    "2.0": {
+      "status": "NOT_RUN",
+      "reason": "Gradle bootstrap blocked by java.net.UnknownHostException: services.gradle.org"
+    }
+  },
+  "focusMatrix": {
+    "dialog": {
+      "status": "NOT_RUN",
+      "reason": "Gradle bootstrap blocked by java.net.UnknownHostException: services.gradle.org"
+    },
+    "bottomSheet": {
+      "status": "NOT_RUN",
+      "reason": "Gradle bootstrap blocked by java.net.UnknownHostException: services.gradle.org"
+    },
+    "logicalTraversal": {
+      "status": "NOT_RUN",
+      "reason": "Gradle bootstrap blocked by java.net.UnknownHostException: services.gradle.org"
+    }
+  },
+  "touchMatrix": {
+    "staticProvable": "PASS",
+    "runtimeBounds": {
+      "status": "NOT_RUN",
+      "reason": "Gradle bootstrap blocked by java.net.UnknownHostException: services.gradle.org"
+    }
+  },
+  "directionMatrix": {
+    "staticRtlSource": "PASS",
+    "runtimeSupportedDirection": {
+      "status": "NOT_RUN",
+      "reason": "Gradle bootstrap blocked by java.net.UnknownHostException: services.gradle.org"
+    }
+  },
+  "changedProductionFiles": [
+    "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/FaqScreen.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/actions/ActionComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/containers/ContainerComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/data/DataComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/feedback/FeedbackComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/navigation/NavigationComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/patterns/conversation/ConversationItem.kt",
+    "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/CodeInputScreen.kt",
+    "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/AccountTypeScreen.kt",
+    "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatImageViewer.kt",
+    "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatMessageComponents.kt",
+    "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionEntryComponents.kt",
+    "feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/presentation/NotificationsScreen.kt"
+  ],
+  "protectedProductionDigest": "1f35f5a563defd7d00ec6dec7ea39a0fe58c3ceb3b2ed56b8ea67924d2e63849",
+  "protectedDsDigest": "d1b04856a33d1b6ed445902868ed332d61d966bf84f39a39c8e7b570f9706b59",
+  "historicalCandidateIds": [
+    "DS59-MATC-353C4BA208",
+    "DS59-MATC-9B9E4A62B6",
+    "DS59-MATC-B28DBA9BD1",
+    "DS59-MATC-D44DE38681",
+    "DS59-MATC-EA81ACB322",
+    "DS59-MATC-FC49FB269C"
+  ],
+  "runtimeCommands": [
+    {
+      "command": "./gradlew --version",
+      "phase": "pre-mutation",
+      "status": "BLOCKED",
+      "evidence": ".verification-v65/gradle-version-pre.log"
+    },
+    {
+      "command": "./gradlew --version",
+      "phase": "final",
+      "status": "BLOCKED",
+      "evidence": ".verification-v65/gradle-version-final.log"
+    },
+    {
+      "command": "affected module compile/unit/androidTest/instrumented matrix",
+      "status": "NOT_RUN",
+      "reason": "Gradle bootstrap blocked"
+    }
+  ],
+  "staticGates": {
+    "v64Preflight": "PASS",
+    "v07": "PASS",
+    "v08": "PASS",
+    "exceptions": "PASS",
+    "v61": "PASS",
+    "historicalV62V63V64": "PASS",
+    "v65Verifier": "PASS",
+    "ratchetPreAccept": "PASS",
+    "ratchetAdvance": "PASS",
+    "ratchetPostAccept": "PASS",
+    "fixturesV60V61V62V63V64V65": "PASS",
+    "v58Static": "PASS",
+    "parentPreAcceptRun1": "PASS",
+    "parentPreAcceptRun2": "PASS",
+    "parentPostAcceptRun1": "PASS",
+    "parentPostAcceptRun2": "PASS",
+    "determinism": "PASS"
+  },
+  "ratchet": {
+    "preAcceptReportSha256": "e87a28885543bf09f3b068d0d891fd00b5c9d4af9b2f5e5baf1a9996b354b3cf",
+    "postAcceptReportSha256": "9e3ba455832a0f611dcb9d8dc8c04ec45af7f2bdac3fb0bb6f4cc514f82d66c4",
+    "stateSha256": "1ae4d32238feb81b9bcb4d7c0144d7d7eeb544250771aace11fef2be35d36a0e",
+    "acceptedVersion": "v65",
+    "confirmed": 0,
+    "candidates": 6
+  },
+  "runtimeAccessibilityVerified": false,
+  "fullV65Completion": false,
+  "package": {
+    "file": "AutoDrive-v65-accessibility-static-runtime-blocked.zip",
+    "sha256": "SEE_COMPANION_SHA256_SIDECAR",
+    "integrityNote": "A ZIP cannot contain its own stable SHA-256; final digest is emitted beside the archive after packaging."
+  },
+  "finalVerdict": "STATIC_ACCESSIBILITY_REPAIR_COMPLETE / ADAPTIVE_UI_RUNTIME_BLOCKED"
+}

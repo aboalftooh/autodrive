@@ -1,0 +1,5 @@
+V08 SCREEN MIGRATION STATIC VERIFICATION: PASS
+ - hard invariants: PASS
+ - historical v59 baseline: 77 confirmed findings
+ - current accepted open confirmed: 46
+ - Home migrated under HOME_V1; Reports migrated under REPORTS_V1; Settings migrated under SETTINGS_V1

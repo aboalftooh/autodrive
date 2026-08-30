@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 66,
+  "rules": [
+    {
+      "ruleId": "DS-A11Y-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 97,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 97,
+          "reason": "Signals reviewed; no confirmed violation under rule semantic contract."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-A11Y-002",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 73,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 73,
+          "reason": "Signals reviewed; no confirmed violation under rule semantic contract."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-A11Y-003",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 71,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 71,
+          "reason": "Signals reviewed; no confirmed violation under rule semantic contract."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-BORDER-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 38,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 38,
+          "reason": "Fresh signals reviewed as provider-owned token implementations or local presentation values already outside confirmed shared-decision debt; no repeat shared bypass confirmed."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-COLOR-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 32,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 32,
+          "reason": "Signals are DS-owned token implementations or ChatImageViewer immersive black canvas; no shared consumer color bypass confirmed."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-CONTRACT-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 321,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 321,
+          "reason": "Signals reviewed; no confirmed violation under rule semantic contract."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-CONTRAST-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 453,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 453,
+          "reason": "Signals reviewed; no confirmed violation under rule semantic contract."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-DUP-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 0,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": []
+    },
+    {
+      "ruleId": "DS-ELEVATION-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 2,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 2,
+          "reason": "Fresh signals reviewed as provider-owned token implementations or local presentation values already outside confirmed shared-decision debt; no repeat shared bypass confirmed."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-EXCEPTION-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 0,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": []
+    },
+    {
+      "ruleId": "DS-MATERIAL-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 21,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 21,
+          "reason": "DS-owned implementations and exact six historical no-global-equivalent primitives semantically classified; enforced consumer bypass count=0."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-SHAPE-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 61,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 61,
+          "reason": "Fresh signals reviewed as provider-owned token implementations or local presentation values already outside confirmed shared-decision debt; no repeat shared bypass confirmed."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-SPACE-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 432,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 432,
+          "reason": "Fresh signals reviewed as provider-owned token implementations or local presentation values already outside confirmed shared-decision debt; no repeat shared bypass confirmed."
+        }
+      ]
+    },
+    {
+      "ruleId": "DS-TYPE-001",
+      "filesScanned": 66,
+      "symbolsScanned": 253,
+      "signalsObserved": 53,
+      "confirmedFindings": 0,
+      "candidateFindings": 0,
+      "ignoredWithReason": [
+        {
+          "count": 53,
+          "reason": "Fresh signals reviewed as provider-owned token implementations or local presentation values already outside confirmed shared-decision debt; no repeat shared bypass confirmed."
+        }
+      ]
+    }
+  ],
+  "filesScannedUnique": 66
+}

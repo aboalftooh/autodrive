@@ -1,0 +1,733 @@
+{
+  "schemaVersion": 64,
+  "session": 64,
+  "inputSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+  "acceptedVersion": "v64",
+  "targetV64Rows": 28,
+  "changedProductionFiles": [
+    "app/src/main/kotlin/com/autodrive/app/feature/competition/presentation/WeeklyCompetitionScreen.kt",
+    "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/AboutAppScreen.kt",
+    "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/FaqScreen.kt",
+    "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/PrivacyPolicyScreen.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/actions/ActionComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/feedback/FeedbackComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt",
+    "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/navigation/NavigationComponents.kt",
+    "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/CodeInputScreen.kt",
+    "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/WaitingScreen.kt",
+    "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/OtpInputScreen.kt",
+    "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/PhoneInputScreen.kt",
+    "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/TermsScreen.kt",
+    "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/RegisterScreens.kt",
+    "feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/presentation/BalanceComponents.kt",
+    "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatComposer.kt",
+    "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatImageViewer.kt",
+    "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatMessageComponents.kt",
+    "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatScreen.kt",
+    "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionEntryComponents.kt",
+    "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt",
+    "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionStatusBadge.kt",
+    "feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/presentation/NotificationsScreen.kt"
+  ],
+  "protectedProductionDigest": "164fb50c87aa7bad2d583fc5a4fa299f49b93e1a332b73f547cb17dc00b7a580",
+  "protectedDsDigest": "41ff466d17f9395a5318a4ac4d332baaeba7c8f23cc28f859745e3662fd48b26",
+  "checks": [
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_BASELINE_v59.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_BASELINE_v59.json"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_UI_COVERAGE_v59.csv"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_V1_CONTRACT_REGISTRY_v59.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_UI_COVERAGE_v63.csv"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_VERIFICATION_v63.json"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_VERIFICATION_v63.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "AutoDrive-v63-report.md"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "tools/verify_designsystem_v63_settings.py"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "tools/test_designsystem_verification_v63.py"
+    },
+    {
+      "id": "AUTH",
+      "status": "PASS",
+      "message": "scripts/verify-v63-static.sh"
+    },
+    {
+      "id": "MAPPING",
+      "status": "PASS",
+      "message": "primitive mapping immutable"
+    },
+    {
+      "id": "EXCEPTIONS",
+      "status": "PASS",
+      "message": "exception ledger immutable"
+    },
+    {
+      "id": "INPUT",
+      "status": "PASS",
+      "message": "v64 prestate source identity"
+    },
+    {
+      "id": "PRESTATE",
+      "status": "PASS",
+      "message": "23 exact prestate files"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot app/src/main/kotlin/com/autodrive/app/feature/competition/presentation/WeeklyCompetitionScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot app/src/main/kotlin/com/autodrive/app/feature/info/presentation/AboutAppScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot app/src/main/kotlin/com/autodrive/app/feature/info/presentation/FaqScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot app/src/main/kotlin/com/autodrive/app/feature/info/presentation/PrivacyPolicyScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/actions/ActionComponents.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/feedback/FeedbackComponents.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/navigation/NavigationComponents.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/CodeInputScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/WaitingScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/OtpInputScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/PhoneInputScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/TermsScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/RegisterScreens.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/presentation/BalanceComponents.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatComposer.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatImageViewer.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatMessageComponents.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionEntryComponents.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionStatusBadge.kt"
+    },
+    {
+      "id": "SNAPSHOT",
+      "status": "PASS",
+      "message": "snapshot feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/presentation/NotificationsScreen.kt"
+    },
+    {
+      "id": "COVERAGE",
+      "status": "PASS",
+      "message": "target_session=v64 rows=28"
+    },
+    {
+      "id": "COVERAGE",
+      "status": "PASS",
+      "message": "43 confirmed Material findings"
+    },
+    {
+      "id": "CLEAN",
+      "status": "PASS",
+      "message": "clean carry-forward app/src/main/kotlin/com/autodrive/app/PermissionsDeniedDialog.kt"
+    },
+    {
+      "id": "CLEAN",
+      "status": "PASS",
+      "message": "clean carry-forward app/src/main/kotlin/com/autodrive/app/feature/reports/presentation/recent/RecentActivityScreen.kt"
+    },
+    {
+      "id": "CLEAN",
+      "status": "PASS",
+      "message": "clean carry-forward app/src/main/kotlin/com/autodrive/app/navigation/AppNavigation.kt"
+    },
+    {
+      "id": "CLEAN",
+      "status": "PASS",
+      "message": "clean carry-forward feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/WelcomeScreen.kt"
+    },
+    {
+      "id": "CLEAN",
+      "status": "PASS",
+      "message": "clean carry-forward feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/LoginScreen.kt"
+    },
+    {
+      "id": "CLEAN",
+      "status": "PASS",
+      "message": "clean carry-forward feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/AccountTypeScreen.kt"
+    },
+    {
+      "id": "CLEAN",
+      "status": "PASS",
+      "message": "clean carry-forward feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/presentation/BalanceScreen.kt"
+    },
+    {
+      "id": "CLEAN",
+      "status": "PASS",
+      "message": "clean carry-forward feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/presentation/WithdrawalSheet.kt"
+    },
+    {
+      "id": "CLEAN",
+      "status": "PASS",
+      "message": "clean carry-forward feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/NewChatDialog.kt"
+    },
+    {
+      "id": "PROD-COUNT",
+      "status": "PASS",
+      "message": "production Kotlin count=251"
+    },
+    {
+      "id": "PROTECTED-PROD",
+      "status": "PASS",
+      "message": "228 protected production digest"
+    },
+    {
+      "id": "PROTECTED-DS",
+      "status": "PASS",
+      "message": "23 protected DS digest"
+    },
+    {
+      "id": "MUTATION",
+      "status": "PASS",
+      "message": "exact 23 production files changed"
+    },
+    {
+      "id": "API-A",
+      "status": "PASS",
+      "message": "destructive PrimaryButton tone"
+    },
+    {
+      "id": "API-B",
+      "status": "PASS",
+      "message": "TextField adoption gap"
+    },
+    {
+      "id": "API-C",
+      "status": "PASS",
+      "message": "BottomSheet partial state"
+    },
+    {
+      "id": "API-D",
+      "status": "PASS",
+      "message": "BackHeader rich title"
+    },
+    {
+      "id": "RAW-ESCAPE",
+      "status": "PASS",
+      "message": "Action no raw Color public escape"
+    },
+    {
+      "id": "RAW-ESCAPE",
+      "status": "PASS",
+      "message": "Input no raw Color public escape"
+    },
+    {
+      "id": "RAW-ESCAPE",
+      "status": "PASS",
+      "message": "Feedback no raw Color public escape"
+    },
+    {
+      "id": "RAW-ESCAPE",
+      "status": "PASS",
+      "message": "Navigation no raw Color public escape"
+    },
+    {
+      "id": "API-USED",
+      "status": "PASS",
+      "message": "provider extension used: AutoDrivePrimaryButtonTone.Destructive"
+    },
+    {
+      "id": "API-USED",
+      "status": "PASS",
+      "message": "provider extension used: AutoDriveTextFieldLayout.CompactMultiline"
+    },
+    {
+      "id": "API-USED",
+      "status": "PASS",
+      "message": "provider extension used: skipPartiallyExpanded = true"
+    },
+    {
+      "id": "API-USED",
+      "status": "PASS",
+      "message": "provider extension used: titleContent = {"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent app/src/main/kotlin/com/autodrive/app/feature/competition/presentation/WeeklyCompetitionScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent app/src/main/kotlin/com/autodrive/app/feature/info/presentation/AboutAppScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent app/src/main/kotlin/com/autodrive/app/feature/info/presentation/FaqScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent app/src/main/kotlin/com/autodrive/app/feature/info/presentation/PrivacyPolicyScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/CodeInputScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/WaitingScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/OtpInputScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/PhoneInputScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/TermsScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/RegisterScreens.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/presentation/BalanceComponents.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatComposer.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatImageViewer.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatMessageComponents.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionEntryComponents.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionStatusBadge.kt"
+    },
+    {
+      "id": "MATERIAL-CLOSE",
+      "status": "PASS",
+      "message": "mapped/candidate primitives absent feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/presentation/NotificationsScreen.kt"
+    },
+    {
+      "id": "STATUS-ADAPTER",
+      "status": "PASS",
+      "message": "CommissionStatus adapter delegates to DS"
+    },
+    {
+      "id": "A11Y",
+      "status": "PASS",
+      "message": "meaningful description إلغاء التسجيل الصوتي"
+    },
+    {
+      "id": "A11Y",
+      "status": "PASS",
+      "message": "meaningful description إرسال التسجيل الصوتي"
+    },
+    {
+      "id": "A11Y",
+      "status": "PASS",
+      "message": "meaningful description إيقاف الرسالة الصوتية مؤقتًا"
+    },
+    {
+      "id": "A11Y",
+      "status": "PASS",
+      "message": "meaningful description تشغيل الرسالة الصوتية"
+    },
+    {
+      "id": "TOUCH",
+      "status": "PASS",
+      "message": "forced sub-48 caller sizes removed"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "BALANCE: Money.sum(requests.map { it.amount })"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "BALANCE: onCancelAll"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "BALANCE: isCancelling"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "COMPETITION: CompetitionAvailability.DISABLED"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "COMPETITION: CompetitionAvailability.LOCKED"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "COMPETITION: CompetitionAvailability.ACTIVE"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "CHAT: ActivityResultContracts.TakePicture"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "CHAT: ActivityResultContracts.GetContent"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "CHAT: ActivityResultContracts.RequestPermission"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "CHAT: createAndStartRecorder"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "CHAT: onSendVoice(voicePath)"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "CHAT: onSendText(text.trim())"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "CHAT: player.pause()"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "CHAT: player.play()"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "COMMISSION: InvoicePdfGenerator.generateAndShare"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "COMMISSION: InvoicePdfGenerator.generateAndPrint"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "COMMISSION: WhatsAppHelper.shareInvoice"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "COMMISSION: CommissionStatus.WITHDRAWABLE"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "COMMISSION: CommissionStatus.PENDING"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "COMMISSION: CommissionStatus.PAID"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "NOTIFY: viewModel.markAllAsRead()"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "NOTIFY: snackbarHostState.showSnackbar"
+    },
+    {
+      "id": "BEHAVIOR",
+      "status": "PASS",
+      "message": "NOTIFY: onNotificationClick(notification)"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin app/src/main/kotlin/com/autodrive/app/feature/competition/presentation/WeeklyCompetitionScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin app/src/main/kotlin/com/autodrive/app/feature/info/presentation/AboutAppScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin app/src/main/kotlin/com/autodrive/app/feature/info/presentation/FaqScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin app/src/main/kotlin/com/autodrive/app/feature/info/presentation/PrivacyPolicyScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/actions/ActionComponents.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/feedback/FeedbackComponents.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/navigation/NavigationComponents.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/CodeInputScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/WaitingScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/OtpInputScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/PhoneInputScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/TermsScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/RegisterScreens.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/presentation/BalanceComponents.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatComposer.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatImageViewer.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatMessageComponents.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionEntryComponents.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionStatusBadge.kt"
+    },
+    {
+      "id": "STRUCTURE",
+      "status": "PASS",
+      "message": "balanced Kotlin feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/presentation/NotificationsScreen.kt"
+    },
+    {
+      "id": "STATE",
+      "status": "PASS",
+      "message": "acceptedVersion v63 preaccept or v64 postaccept"
+    },
+    {
+      "id": "STATE",
+      "status": "PASS",
+      "message": "v64 0/6 postaccept"
+    },
+    {
+      "id": "STATE",
+      "status": "PASS",
+      "message": "v64 exact history accounting"
+    }
+  ],
+  "errors": [],
+  "verdict": "PASS"
+}

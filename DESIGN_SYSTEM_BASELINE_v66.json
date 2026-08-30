@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 66,
+  "session": 66,
+  "inputSha256": "746566c4d4bc61040dd134d395071bdfe97117aaa257bed9c19a94b2cd17c10e",
+  "freshAudit": true,
+  "productionKotlin": 251,
+  "composeSourceFiles": 58,
+  "runtimeUiRows": 56,
+  "previewOnlyRows": 2,
+  "rules": [
+    {
+      "rule_id": "DS-A11Y-001",
+      "v59_count": 3,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": -3,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-A11Y-002",
+      "v59_count": 0,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": 0,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-A11Y-003",
+      "v59_count": 0,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": 0,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-BORDER-001",
+      "v59_count": 0,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": 0,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-COLOR-001",
+      "v59_count": 3,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": -3,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-CONTRACT-001",
+      "v59_count": 12,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": -12,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-CONTRAST-001",
+      "v59_count": 0,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": 0,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-DUP-001",
+      "v59_count": 0,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": 0,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-ELEVATION-001",
+      "v59_count": 0,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": 0,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-EXCEPTION-001",
+      "v59_count": 0,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": 0,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-MATERIAL-001",
+      "v59_count": 50,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": -50,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-SHAPE-001",
+      "v59_count": 3,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": -3,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-SPACE-001",
+      "v59_count": 3,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": -3,
+      "status": "PASS_STATIC"
+    },
+    {
+      "rule_id": "DS-TYPE-001",
+      "v59_count": 3,
+      "v66_unapproved": 0,
+      "active_exceptions": 0,
+      "delta": -3,
+      "status": "PASS_STATIC"
+    }
+  ],
+  "projectUnapprovedViolations": 0,
+  "activeExceptions": 0,
+  "acceptedCandidatesAnalysisAfter": 0,
+  "acceptedCandidatesRatchetStill": 6,
+  "runtimeFinalVerified": false,
+  "fullV66Completion": false,
+  "finalVerdict": "STATIC_ZERO_DRIFT_COMPLETE / FINAL_RUNTIME_BLOCKED"
+}

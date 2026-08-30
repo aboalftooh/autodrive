@@ -1,0 +1,6 @@
+-keep class com.autodrive.app.data.remote.dto.** { *; }
+-keepclassmembers class com.autodrive.app.data.remote.dto.** { *; }
+-keep class io.github.jan.supabase.** { *; }
+-keep class kotlinx.serialization.** { *; }
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.AnnotationsKt
