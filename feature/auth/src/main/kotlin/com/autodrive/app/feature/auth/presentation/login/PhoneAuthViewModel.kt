@@ -3,6 +3,7 @@ package com.autodrive.app.feature.auth.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.autodrive.app.core.common.result.Result
+import com.autodrive.app.core.session.domain.SessionReader
 import com.autodrive.app.feature.auth.domain.model.PhoneEntryResult
 import com.autodrive.app.feature.auth.domain.repository.AuthRepository
 import com.autodrive.app.feature.auth.domain.validation.SudanPhoneNumber
@@ -38,7 +39,8 @@ data class OtpUiState(
 
 @HiltViewModel
 class PhoneAuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val sessionReader: SessionReader,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<PhoneAuthState>(PhoneAuthState.Idle)
@@ -84,9 +86,11 @@ class PhoneAuthViewModel @Inject constructor(
 
     fun initOtp(phoneNumber: String, devOtp: String? = null, requestId: String? = null) {
         val normalizedPhone = SudanPhoneNumber.normalize(phoneNumber) ?: phoneNumber
+        val persistedRequestId = sessionReader.currentSession().pendingJoinRequestId
         _otpState.value = OtpUiState(
             phoneNumber = normalizedPhone,
-            requestId = requestId?.takeIf { it.isNotBlank() },
+            requestId = requestId?.takeIf { it.isNotBlank() }
+                ?: persistedRequestId?.takeIf { it.isNotBlank() },
             otp = devOtp?.let(::sanitizeOtpInput).orEmpty()
         )
     }
