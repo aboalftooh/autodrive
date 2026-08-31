@@ -1,20 +1,24 @@
 package com.autodrive.app.feature.auth.domain.repository
 
-import com.autodrive.app.feature.auth.domain.model.CodeVerificationResult
 import com.autodrive.app.core.common.result.Result
+import com.autodrive.app.feature.auth.domain.model.JoinRequestStatus
+import com.autodrive.app.feature.auth.domain.model.PhoneEntryResult
 
-/**
- * Authentication/session lifecycle boundary used by auth UI and use cases.
- *
- * OTP send/verify and invite operations are remote contracts; successful session verification is
- * distinct from registration completion. Session restore/sign-out own authentication lifecycle,
- * while tenant/client scope is established only by the implemented registration/linking flow.
- * Failures must remain explicit [Result] or domain results rather than being interpreted from UI state.
- */
 interface AuthRepository {
+    suspend fun enterPhone(phone: String): PhoneEntryResult
     suspend fun sendPhoneOtp(phone: String): Result<String?>
     suspend fun verifyPhoneOtp(phone: String, otp: String): Result<Unit>
-    suspend fun verifyInviteCode(code: String): CodeVerificationResult
+
+    suspend fun submitJoinRequest(
+        phone: String,
+        fullName: String,
+        accountType: String,
+    ): Result<String>
+
+    suspend fun getJoinRequestStatus(requestId: String): Result<JoinRequestStatus>
+    suspend fun sendApprovedPhoneOtp(phone: String, requestId: String): Result<Unit>
+    suspend fun verifyApprovedPhoneOtp(phone: String, otp: String, requestId: String): Result<Unit>
+
     suspend fun restoreSession(): Boolean
     suspend fun signOut()
     fun isLoggedIn(): Boolean
