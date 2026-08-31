@@ -1,30 +1,30 @@
 package com.autodrive.app.feature.auth.data
 
+import android.content.Context
+import com.autodrive.app.core.common.result.Result
 import com.autodrive.app.core.network.AutoDriveSupabase
 import com.autodrive.app.core.network.dto.AutoDriveUserDto
 import com.autodrive.app.core.network.dto.LinkPhoneUserParams
+import com.autodrive.app.core.network.dto.SendPhoneOtpResponse
 import com.autodrive.app.core.network.dto.VerifyCodeRpcParams
 import com.autodrive.app.core.network.dto.VerifyCodeRpcResult
 import com.autodrive.app.core.network.dto.VerifyPhoneOtpResponse
-import com.autodrive.app.core.sync.data.SyncManager
-import com.autodrive.app.core.sync.data.SyncScope
-import com.autodrive.app.core.platform.notifications.PushTokenRepository
-import com.autodrive.app.feature.auth.domain.model.CodeVerificationResult
-import com.autodrive.app.core.common.result.Result
-import com.autodrive.app.feature.auth.domain.repository.AuthRepository
-import com.autodrive.app.feature.auth.data.sms.SmsOtpAutofillCoordinator
-import com.autodrive.app.feature.auth.data.sms.SmsRetrieverAppHash
 import com.autodrive.app.core.platform.notifications.FcmTokenUploader
+import com.autodrive.app.core.platform.notifications.PushTokenRepository
 import com.autodrive.app.core.session.domain.RegistrationState
 import com.autodrive.app.core.session.domain.SessionReader
 import com.autodrive.app.core.session.domain.SessionWriter
+import com.autodrive.app.core.sync.data.SyncManager
+import com.autodrive.app.core.sync.data.SyncScope
 import com.autodrive.app.core.sync.domain.RealtimeController
-import android.content.Context
 import com.autodrive.app.feature.auth.BuildConfig
+import com.autodrive.app.feature.auth.data.sms.SmsOtpAutofillCoordinator
+import com.autodrive.app.feature.auth.data.sms.SmsRetrieverAppHash
+import com.autodrive.app.feature.auth.domain.model.CodeVerificationResult
+import com.autodrive.app.feature.auth.domain.repository.AuthRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.user.UserSession
-import com.autodrive.app.core.network.dto.SendPhoneOtpResponse
 import io.github.jan.supabase.functions.functions
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
@@ -52,19 +52,15 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
     private val db get() = supabase.client.postgrest
 
-    // ── 1. إرسال OTP عبر الهاتف — يُرجع dev_otp إن وُجد (وضع تطوير)
     override suspend fun sendPhoneOtp(phone: String): Result<String?> = withContext(Dispatchers.IO) {
         runCatching {
             supabase.client.auth.awaitInitialization()
-
-            // Start listening before the server dispatches the SMS. This closes the race where a
-            // fast OTP arrived while navigation was moving from the phone screen to the OTP screen.
             SmsOtpAutofillCoordinator.startChallenge(appContext)
             val appHash = SmsRetrieverAppHash.current(appContext)
 
             val response = supabase.client.functions.invoke(
                 function = "send-phone-otp",
-                body     = buildJsonObject {
+                body = buildJsonObject {
                     put("phone", phone.trim())
                     appHash?.let { put("app_hash", it) }
                 }
@@ -83,12 +79,11 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    // ── 2. التحقق من OTP واستيراد الجلسة ─────────────────────
     override suspend fun verifyPhoneOtp(phone: String, otp: String): Result<Unit> = withContext(Dispatchers.IO) {
         runCatching {
             val response = supabase.client.functions.invoke(
                 function = "verify-phone-otp",
-                body     = buildJsonObject {
+                body = buildJsonObject {
                     put("phone", phone.trim())
                     put("otp", otp.trim())
                 }
@@ -101,10 +96,10 @@ class AuthRepositoryImpl @Inject constructor(
             val body = response.body<VerifyPhoneOtpResponse>()
             supabase.client.auth.importSession(
                 UserSession(
-                    accessToken  = body.accessToken,
+                    accessToken = body.accessToken,
                     refreshToken = body.refreshToken,
-                    expiresIn    = body.expiresIn,
-                    tokenType    = body.tokenType
+                    expiresIn = body.expiresIn,
+                    tokenType = body.tokenType
                 )
             )
             val session = supabase.client.auth.currentSessionOrNull()
@@ -126,7 +121,6 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    // ── 3. التحقق من كود الدعوة ───────────────────────────────
     override suspend fun verifyInviteCode(code: String): CodeVerificationResult = withContext(Dispatchers.IO) {
         runCatching { supabase.client.auth.awaitInitialization() }
 
@@ -143,9 +137,9 @@ class AuthRepositoryImpl @Inject constructor(
                 ?: return@runCatching CodeVerificationResult.Error("استجابة فارغة من الخادم")
 
             when {
-                !rpcResult.isValid && rpcResult.reason == "NOT_FOUND"           -> CodeVerificationResult.Invalid
-                !rpcResult.isValid && rpcResult.reason == "ALREADY_USED"        -> CodeVerificationResult.AlreadyUsed
-                !rpcResult.isValid && rpcResult.reason == "EXPIRED"             -> CodeVerificationResult.Expired
+                !rpcResult.isValid && rpcResult.reason == "NOT_FOUND" -> CodeVerificationResult.Invalid
+                !rpcResult.isValid && rpcResult.reason == "ALREADY_USED" -> CodeVerificationResult.AlreadyUsed
+                !rpcResult.isValid && rpcResult.reason == "EXPIRED" -> CodeVerificationResult.Expired
                 !rpcResult.isValid && rpcResult.reason == "NOT_A_MARKETER_CODE" -> CodeVerificationResult.Invalid
                 !rpcResult.isValid -> CodeVerificationResult.Error(rpcResult.reason)
                 else -> {
@@ -164,12 +158,18 @@ class AuthRepositoryImpl @Inject constructor(
                         )
                     }
 
-                    val existingUser = runCatching {
+                    val existingUserResult = runCatching {
                         db["autodrive_users"]
                             .select(Columns.ALL) { filter { eq("client_id", clientId) } }
                             .decodeList<AutoDriveUserDto>()
                             .firstOrNull()
-                    }.getOrNull()
+                    }
+                    if (existingUserResult.isFailure) {
+                        return@runCatching CodeVerificationResult.Error(
+                            "تعذّر التحقق من حالة الحساب — تحقق من الإنترنت وحاول مجدداً"
+                        )
+                    }
+                    val existingUser = existingUserResult.getOrNull()
 
                     if (existingUser != null) {
                         val linkResult = runCatching {
@@ -197,8 +197,8 @@ class AuthRepositoryImpl @Inject constructor(
                     }
 
                     CodeVerificationResult.Success(
-                        clientId       = clientId,
-                        orgId          = orgId,
+                        clientId = clientId,
+                        orgId = orgId,
                         isExistingUser = existingUser != null
                     )
                 }
@@ -213,18 +213,17 @@ class AuthRepositoryImpl @Inject constructor(
             supabase.client.auth.awaitInitialization()
             val session = supabase.client.auth.currentSessionOrNull()
             val user = session?.user
-            // رفض الجلسات Anonymous فقط، مع قبول جلسات الهاتف التي لا تملك بريداً.
             if (user != null && user.email.isNullOrBlank() && user.phone.isNullOrBlank()) {
                 return@runCatching false
             }
             if (session != null && sessionReader.currentSession().userId.isNullOrBlank()) {
                 val resolvedUserId = resolveUserId(session)
-                sessionWriter.updateSession { current ->
-                    current.copy(userId = resolvedUserId)
-                }
+                sessionWriter.updateSession { current -> current.copy(userId = resolvedUserId) }
             }
             if (session == null) return@runCatching false
 
+            // A transient profile lookup failure must never downgrade a previously complete session.
+            // refreshRegistrationStateFromSupabase mutates local state only after a successful lookup.
             refreshRegistrationStateFromSupabase()
             true
         }.getOrDefault(false)
@@ -236,8 +235,6 @@ class AuthRepositoryImpl @Inject constructor(
         realtimeController.stop()
         try {
             if (scopeToLogout != null) syncManager.beginLogout(scopeToLogout)
-            // Stop new feature mutations from resolving the departing scope. In-flight Room
-            // transactions revalidate the session inside their transaction and cleanup waits.
             sessionWriter.clearSession()
             if (scopeToLogout != null) {
                 syncManager.quiesceAndClearForLogout(scopeToLogout)
@@ -260,15 +257,12 @@ class AuthRepositoryImpl @Inject constructor(
             ?: sessionReader.currentSession().userId?.takeIf { it.isNotBlank() }
             ?: ""
 
-    // supabase-kt يُلقي ResponseException عند non-2xx، ونصها يتضمن JSON + URL + Headers.
-    // هذه الدالة تستخرج حقل "error" من الـ JSON إن وُجد، وإلا تُرجع رسالة عامة.
     private fun parseEdgeFunctionError(e: Throwable, fallback: String): String {
         val raw = e.message ?: return fallback
         return when {
-            raw.contains("429")                              -> "انتظر دقيقة واحدة قبل إعادة الإرسال"
-            raw.contains("timeout", ignoreCase = true)      -> "تعذّر الاتصال — تحقق من الإنترنت"
+            raw.contains("429") -> "انتظر دقيقة واحدة قبل إعادة الإرسال"
+            raw.contains("timeout", ignoreCase = true) -> "تعذّر الاتصال — تحقق من الإنترنت"
             else -> {
-                // نص الاستثناء يبدأ بجسم الاستجابة JSON قبل "\nURL:"
                 val jsonPart = raw.substringBefore("\nURL:").trim()
                 if (jsonPart.startsWith("{")) {
                     runCatching {
@@ -280,11 +274,15 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun refreshRegistrationStateFromSupabase() {
+    /**
+     * Returns true only when the server lookup completed successfully.
+     * On transport/server failure it leaves the encrypted cached registration state untouched.
+     */
+    private suspend fun refreshRegistrationStateFromSupabase(): Boolean {
         val uid = getCurrentUserId()
-        if (uid.isBlank()) return
+        if (uid.isBlank()) return false
 
-        val linked = runCatching {
+        val linkedResult = runCatching {
             db["autodrive_users"]
                 .select(Columns.ALL) {
                     filter { eq("user_id", uid) }
@@ -292,13 +290,15 @@ class AuthRepositoryImpl @Inject constructor(
                 }
                 .decodeList<AutoDriveUserDto>()
                 .firstOrNull()
-        }.getOrNull()
+        }
+        if (linkedResult.isFailure) return false
 
+        val linked = linkedResult.getOrNull()
         if (linked == null) {
             sessionWriter.updateSession { current ->
                 current.copy(isLoggedIn = true, registrationState = RegistrationState.INCOMPLETE)
             }
-            return
+            return true
         }
 
         sessionWriter.updateSession { current ->
@@ -318,6 +318,7 @@ class AuthRepositoryImpl @Inject constructor(
             )
         }
         FcmTokenUploader.trigger(appContext, pushTokens)
+        return true
     }
 
     private suspend fun resolveUserId(session: UserSession): String? =
