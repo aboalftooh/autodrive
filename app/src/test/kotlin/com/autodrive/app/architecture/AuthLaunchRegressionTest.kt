@@ -51,6 +51,50 @@ class AuthLaunchRegressionTest {
     }
 
     @Test
+    fun `anonymous Supabase session is rejected`() {
+        val repository = ProjectLayout.source(
+            "feature/auth/data/AuthRepositoryImpl.kt"
+        ).readText()
+
+        assertTrue(repository.contains("user.email.isNullOrBlank() && user.phone.isNullOrBlank()"))
+        assertTrue(repository.contains("return@runCatching false"))
+    }
+
+    @Test
+    fun `sign out revokes account state before releasing logout barrier`() {
+        val repository = ProjectLayout.source(
+            "feature/auth/data/AuthRepositoryImpl.kt"
+        ).readText()
+        val signOut = repository.substringAfter("override suspend fun signOut()")
+            .substringBefore("suspend fun syncPushToken")
+
+        val deleteToken = signOut.indexOf("pushTokens.deleteCurrentUserToken()")
+        val stopRealtime = signOut.indexOf("realtimeController.stop()")
+        val beginBarrier = signOut.indexOf("syncManager.beginLogout")
+        val clearSession = signOut.indexOf("sessionWriter.clearSession()")
+        val clearLocal = signOut.indexOf("syncManager.quiesceAndClearForLogout")
+        val remoteSignOut = signOut.indexOf("supabase.client.auth.signOut()")
+        val releaseBarrier = signOut.indexOf("syncManager.releaseLogoutBarrier")
+
+        listOf(
+            deleteToken,
+            stopRealtime,
+            beginBarrier,
+            clearSession,
+            clearLocal,
+            remoteSignOut,
+            releaseBarrier,
+        ).forEach { assertTrue(it >= 0) }
+
+        assertTrue(deleteToken < clearSession)
+        assertTrue(stopRealtime < clearSession)
+        assertTrue(beginBarrier < clearSession)
+        assertTrue(clearSession < clearLocal)
+        assertTrue(clearLocal < releaseBarrier)
+        assertTrue(remoteSignOut < releaseBarrier)
+    }
+
+    @Test
     fun `legacy workshop onboarding route is fully removed`() {
         val destinations = ProjectLayout.source("navigation/AppDestinations.kt").readText()
         val graphs = ProjectLayout.source("navigation/NavigationGraphs.kt").readText()
