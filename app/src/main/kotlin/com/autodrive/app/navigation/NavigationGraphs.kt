@@ -18,7 +18,6 @@ import com.autodrive.app.feature.auth.presentation.login.PhoneInputScreen
 import com.autodrive.app.feature.auth.presentation.login.SessionExpiredScreen
 import com.autodrive.app.feature.auth.presentation.register.AccountTypeScreen
 import com.autodrive.app.feature.auth.presentation.register.BasicInfoScreen
-import com.autodrive.app.feature.auth.presentation.register.WorkshopInfoScreen
 import com.autodrive.app.feature.balance.presentation.BalanceScreen
 import com.autodrive.app.feature.chat.presentation.ChatScreen
 import com.autodrive.app.feature.commission.presentation.CommissionReportScreen
@@ -43,11 +42,10 @@ internal fun NavGraphBuilder.authAndRegistrationGraph(
     navController: NavHostController,
     navVm: AppNavigationViewModel,
 ) {
-// ─── Auth ─────────────────────────────────
 composable(Screen.SessionExpired.route) {
     SessionExpiredScreen(
-        userName  = navVm.userName,
-        onLogin   = {
+        userName = navVm.userName,
+        onLogin = {
             navController.navigate(Screen.PhoneInput.route) {
                 popUpTo(Screen.SessionExpired.route) { inclusive = true }
             }
@@ -70,11 +68,10 @@ composable(Screen.Waiting.route) {
     )
 }
 
-// ─── Phone Auth ───────────────────────────
 composable(Screen.PhoneInput.route) {
     val phoneAuthViewModel: PhoneAuthViewModel = hiltViewModel()
     PhoneInputScreen(
-        onBack    = { navController.popBackStack() },
+        onBack = { navController.popBackStack() },
         onOtpSent = { phoneNumber ->
             val devOtp = (phoneAuthViewModel.state.value as? PhoneAuthState.OtpSent)?.devOtp
             navController.navigate(Screen.OtpInput.createRoute(phoneNumber, devOtp)) {
@@ -109,7 +106,7 @@ composable(
         devOtp = devOtp,
         onVerified = {
             val destination = if (navVm.isRegistrationComplete) Screen.Home.route
-                             else Screen.AccountType.route
+            else Screen.AccountType.route
             navController.navigate(destination) {
                 popUpTo(Screen.PhoneInput.route) { inclusive = true }
             }
@@ -130,7 +127,6 @@ composable(Screen.CodeInput.route) {
     )
 }
 
-// ─── Registration ─────────────────────────
 composable(Screen.AccountType.route) {
     AccountTypeScreen(
         onNext = { type -> navController.navigate(Screen.BasicInfo.createRoute(type)) }
@@ -142,17 +138,6 @@ composable(Screen.BasicInfo.route) { backStack ->
     BasicInfoScreen(
         accountType = accountType,
         onContinue = { navController.navigate(Screen.CodeInput.route) },
-        onBack = { navController.popBackStack() }
-    )
-}
-
-composable(Screen.WorkshopInfo.route) {
-    WorkshopInfoScreen(
-        onSaved = {
-            navController.navigate(Screen.Home.route) {
-                popUpTo(Screen.AccountType.route) { inclusive = true }
-            }
-        },
         onBack = { navController.popBackStack() }
     )
 }
@@ -176,18 +161,17 @@ internal fun NavGraphBuilder.mainGraph(
     competitionAvailability: CompetitionAvailability,
     onRefreshCompetitionAvailability: () -> Unit,
 ) {
-// ─── Main App ─────────────────────────────
 composable(Screen.Home.route) {
     LaunchedEffect(Unit) { onRefreshCompetitionAvailability() }
     HomeScreen(
-        onNavigateRecent        = { navController.navigate(Screen.RecentActivity.createRoute()) },
-        onNavigateLog           = { filter -> navController.navigate(Screen.ActivityLog.createRoute(filter)) },
-        onNavigateProfile       = { navController.navigate(Screen.Profile.route) },
+        onNavigateRecent = { navController.navigate(Screen.RecentActivity.createRoute()) },
+        onNavigateLog = { filter -> navController.navigate(Screen.ActivityLog.createRoute(filter)) },
+        onNavigateProfile = { navController.navigate(Screen.Profile.route) },
         onNavigateNotifications = { navController.navigate(Screen.Notifications.route) },
-        onNavigateCompetition   = { navController.navigate(Screen.WeeklyCompetition.route) },
+        onNavigateCompetition = { navController.navigate(Screen.WeeklyCompetition.route) },
         competitionAvailability = competitionAvailability,
-        onAddClick              = onOpenNewChat,
-        unreadMessages          = unreadMessages,
+        onAddClick = onOpenNewChat,
+        unreadMessages = unreadMessages,
     )
 }
 
@@ -212,13 +196,13 @@ composable(Screen.CommissionReport.route) {
 }
 
 composable(
-    route     = Screen.InvoiceDetail.route,
+    route = Screen.InvoiceDetail.route,
     arguments = listOf(navArgument("invoiceId") { type = NavType.StringType })
 ) { backStack ->
     val invoiceId = backStack.arguments?.getString("invoiceId") ?: ""
     InvoiceDetailScreen(
         invoiceId = invoiceId,
-        onBack    = { navController.popBackStack() }
+        onBack = { navController.popBackStack() }
     )
 }
 
@@ -229,74 +213,74 @@ composable(Screen.Notifications.route) {
             NotificationDestinationResolver.resolve(
                 explicitRoute = notification.navRoute,
                 type = notification.notificationType(),
-             )?.let { route -> navController.navigate(route) }
+            )?.let { route -> navController.navigate(route) }
         }
     )
 }
 
 composable(
-    route     = Screen.RecentActivity.route,
+    route = Screen.RecentActivity.route,
     arguments = listOf(
         navArgument("newChat") {
-            type         = NavType.BoolType
+            type = NavType.BoolType
             defaultValue = false
         }
     )
 ) { backStack ->
     val newChat = backStack.arguments?.getBoolean("newChat") ?: false
     RecentActivityScreen(
-        onNavigateHome     = { navController.navigate(Screen.Home.route) },
-        onNavigateLog      = { navController.navigate(Screen.ActivityLog.createRoute()) },
-        onNavigateProfile  = { navController.navigate(Screen.Profile.route) },
-        onAddClick         = onOpenNewChat,
+        onNavigateHome = { navController.navigate(Screen.Home.route) },
+        onNavigateLog = { navController.navigate(Screen.ActivityLog.createRoute()) },
+        onNavigateProfile = { navController.navigate(Screen.Profile.route) },
+        onAddClick = onOpenNewChat,
         onOpenConversation = { id, title ->
             navController.navigate(Screen.Chat.createRoute(id, title))
         },
-        autoStartNewChat   = newChat,
-        unreadMessages     = unreadMessages,
+        autoStartNewChat = newChat,
+        unreadMessages = unreadMessages,
     )
 }
 
 composable(
-    route     = Screen.ActivityLog.route,
+    route = Screen.ActivityLog.route,
     arguments = listOf(
         navArgument("filter") {
-            type         = NavType.StringType
-            nullable     = true
+            type = NavType.StringType
+            nullable = true
             defaultValue = null
         }
     )
 ) {
     ActivityLogScreen(
-        onNavigateHome              = { navController.navigate(Screen.Home.route) },
-        onNavigateRecent            = { navController.navigate(Screen.RecentActivity.createRoute()) },
-        onNavigateProfile           = { navController.navigate(Screen.Profile.route) },
-        onNavigateBalance           = { navController.navigate(Screen.Balance.route) },
-        onNavigateInvoiceDetail     = { id -> navController.navigate(Screen.InvoiceDetail.createRoute(id)) },
-        onNavigateInvoiceList       = { weekMode -> navController.navigate(Screen.InvoiceList.createRoute(weekMode)) },
-        onNavigateWinWeeks          = { navController.navigate(Screen.WinWeeks.route) },
+        onNavigateHome = { navController.navigate(Screen.Home.route) },
+        onNavigateRecent = { navController.navigate(Screen.RecentActivity.createRoute()) },
+        onNavigateProfile = { navController.navigate(Screen.Profile.route) },
+        onNavigateBalance = { navController.navigate(Screen.Balance.route) },
+        onNavigateInvoiceDetail = { id -> navController.navigate(Screen.InvoiceDetail.createRoute(id)) },
+        onNavigateInvoiceList = { weekMode -> navController.navigate(Screen.InvoiceList.createRoute(weekMode)) },
+        onNavigateWinWeeks = { navController.navigate(Screen.WinWeeks.route) },
         onNavigateWeeklyCommissions = { navController.navigate(Screen.WeeklyCommissions.route) },
-        onNavigateCompetitionHistory= { navController.navigate(Screen.CompetitionHistory.route) },
-        onAddClick                  = onOpenNewChat,
-        unreadMessages              = unreadMessages,
-        competitionAvailability     = competitionAvailability,
+        onNavigateCompetitionHistory = { navController.navigate(Screen.CompetitionHistory.route) },
+        onAddClick = onOpenNewChat,
+        unreadMessages = unreadMessages,
+        competitionAvailability = competitionAvailability,
     )
 }
 
 composable(
-    route     = Screen.InvoiceList.route,
+    route = Screen.InvoiceList.route,
     arguments = listOf(
         navArgument("weekMode") {
-            type         = NavType.StringType
-            nullable     = true
+            type = NavType.StringType
+            nullable = true
             defaultValue = "all"
         }
     )
 ) { backStack ->
     val weekMode = backStack.arguments?.getString("weekMode") ?: "all"
     InvoiceListScreen(
-        weekMode                = weekMode,
-        onBack                  = { navController.popBackStack() },
+        weekMode = weekMode,
+        onBack = { navController.popBackStack() },
         onNavigateInvoiceDetail = { id -> navController.navigate(Screen.InvoiceDetail.createRoute(id)) }
     )
 }
@@ -329,19 +313,19 @@ composable(Screen.CompetitionHistory.route) {
 
 composable(Screen.Profile.route) {
     ProfileScreen(
-        onNavigateHome    = { navController.navigate(Screen.Home.route) },
-        onNavigateRecent  = { navController.navigate(Screen.RecentActivity.createRoute()) },
-        onNavigateLog     = { navController.navigate(Screen.ActivityLog.createRoute()) },
-        onSignedOut       = {
+        onNavigateHome = { navController.navigate(Screen.Home.route) },
+        onNavigateRecent = { navController.navigate(Screen.RecentActivity.createRoute()) },
+        onNavigateLog = { navController.navigate(Screen.ActivityLog.createRoute()) },
+        onSignedOut = {
             navController.navigate(Screen.PhoneInput.route) {
                 popUpTo(0) { inclusive = true }
             }
         },
-        onAddClick        = onOpenNewChat,
-        onNavigateAbout   = { navController.navigate(Screen.AboutApp.route) },
+        onAddClick = onOpenNewChat,
+        onNavigateAbout = { navController.navigate(Screen.AboutApp.route) },
         onNavigatePrivacy = { navController.navigate(Screen.PrivacyPolicy.route) },
-        onNavigateFaq     = { navController.navigate(Screen.Faq.route) },
-        unreadMessages    = unreadMessages,
+        onNavigateFaq = { navController.navigate(Screen.Faq.route) },
+        unreadMessages = unreadMessages,
     )
 }
 
@@ -370,23 +354,23 @@ composable(Screen.Faq.route) {
 }
 
 composable(
-    route     = Screen.Chat.route,
+    route = Screen.Chat.route,
     arguments = listOf(
         navArgument("conversationId") { type = NavType.StringType },
         navArgument("title") {
-            type         = NavType.StringType
-            nullable     = true
+            type = NavType.StringType
+            nullable = true
             defaultValue = "الإدارة"
         }
     )
 ) { backStack ->
     val conversationId = backStack.arguments?.getString("conversationId") ?: ""
-    val rawTitle       = backStack.arguments?.getString("title") ?: "الإدارة"
-    val title          = URLDecoder.decode(rawTitle, "UTF-8")
+    val rawTitle = backStack.arguments?.getString("title") ?: "الإدارة"
+    val title = URLDecoder.decode(rawTitle, "UTF-8")
     ChatScreen(
-        conversationId    = conversationId,
+        conversationId = conversationId,
         conversationTitle = title,
-        onBack            = { navController.popBackStack() }
+        onBack = { navController.popBackStack() }
     )
 }
 }
