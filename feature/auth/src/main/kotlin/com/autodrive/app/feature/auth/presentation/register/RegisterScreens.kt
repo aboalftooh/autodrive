@@ -11,6 +11,8 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,21 +38,34 @@ import com.autodrive.app.core.model.account.WorkshopSpecialties
 @Composable
 fun BasicInfoScreen(
     accountType: String,
-    onContinue: () -> Unit,
+    onSubmitted: () -> Unit,
+    onCompleted: () -> Unit,
     onBack: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
+    val action by viewModel.action.collectAsState()
     val isWorkshop = accountType == "WORKSHOP_OWNER"
     val totalSteps = if (isWorkshop) 3 else 2
 
     var fullName by remember { mutableStateOf(viewModel.fullName) }
-    val phone = viewModel.verifiedPhone
+    val phone = viewModel.registrationPhone
     var bankName by remember { mutableStateOf(viewModel.bankName) }
     var bankAccount by remember { mutableStateOf(viewModel.bankAccount) }
     var workshopName by remember { mutableStateOf(viewModel.workshopName) }
     var specialty by remember { mutableStateOf(viewModel.specialty) }
     var address by remember { mutableStateOf(viewModel.address) }
     var workers by remember { mutableStateOf(viewModel.workersCount) }
+
+    LaunchedEffect(accountType) {
+        viewModel.accountType = accountType
+    }
+    LaunchedEffect(action) {
+        when (action) {
+            is RegistrationActionState.Submitted -> onSubmitted()
+            RegistrationActionState.Completed -> onCompleted()
+            else -> Unit
+        }
+    }
 
     val focusWorkshop = remember { FocusRequester() }
     val focusAddress = remember { FocusRequester() }
@@ -66,7 +81,6 @@ fun BasicInfoScreen(
             .padding(24.dp)
     ) {
         Spacer(Modifier.height(24.dp))
-
         Row(verticalAlignment = Alignment.CenterVertically) {
             AutoDriveIconButton(
                 icon = Icons.Rounded.ArrowBack,
@@ -78,21 +92,19 @@ fun BasicInfoScreen(
         }
 
         Spacer(Modifier.height(32.dp))
-
         Text(
-            if (isWorkshop) "استكمال بيانات الورشة" else "استكمال بيانات المسوّق",
+            if (isWorkshop) "بيانات الورشة" else "بيانات المسوّق",
             style = MaterialTheme.typography.headlineLarge,
             color = AutoDriveText.Primary
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            "تُدخل مرة واحدة فقط — يمكن تعديل البيانات غير الموثقة من الملف الشخصي",
+            if (viewModel.isPhoneVerified) "أكمل بيانات حسابك" else "أدخل البيانات لإرسال طلب الانضمام",
             style = MaterialTheme.typography.bodySmall,
             color = AutoDriveText.Secondary
         )
 
         Spacer(Modifier.height(32.dp))
-
         AutoDriveTextField(
             value = fullName,
             onValueChange = { fullName = it; viewModel.fullName = it },
@@ -107,8 +119,12 @@ fun BasicInfoScreen(
         AutoDriveTextField(
             value = phone,
             onValueChange = {},
-            label = "رقم الهاتف الموثق",
-            supportingText = "تم التحقق منه بواسطة OTP ولا يمكن تغييره أثناء التسجيل",
+            label = if (viewModel.isPhoneVerified) "رقم الهاتف الموثق" else "رقم الهاتف",
+            supportingText = if (viewModel.isPhoneVerified) {
+                "تم التحقق منه بواسطة OTP ولا يمكن تغييره من الملف الشخصي"
+            } else {
+                "سيتم التحقق منه بواسطة OTP بعد موافقة الإدارة"
+            },
             readOnly = true,
         )
         Spacer(Modifier.height(16.dp))
@@ -165,8 +181,16 @@ fun BasicInfoScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
         )
 
-        Spacer(Modifier.height(40.dp))
+        if (action is RegistrationActionState.Error) {
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = (action as RegistrationActionState.Error).message,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
 
+        Spacer(Modifier.height(40.dp))
         val canProceed = fullName.isNotBlank() &&
             phone.isNotBlank() &&
             bankName.isNotBlank() &&
@@ -174,14 +198,11 @@ fun BasicInfoScreen(
             (!isWorkshop || (workshopName.isNotBlank() && specialty.isNotBlank() && address.isNotBlank()))
 
         AutoDrivePrimaryButton(
-            text = "التالي ←",
+            text = if (viewModel.isPhoneVerified) "إكمال التسجيل" else "إرسال طلب الانضمام",
             modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                viewModel.accountType = accountType
-                viewModel.saveDraft()
-                onContinue()
-            },
-            enabled = canProceed,
+            onClick = viewModel::submitOrComplete,
+            enabled = canProceed && action !is RegistrationActionState.Loading,
+            loading = action is RegistrationActionState.Loading,
         )
         Spacer(Modifier.height(24.dp))
     }
