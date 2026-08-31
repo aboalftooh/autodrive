@@ -23,7 +23,6 @@ sealed class Screen(val route: String) {
     data object BasicInfo       : Screen("basic_info/{accountType}") {
         fun createRoute(accountType: String) = "basic_info/$accountType"
     }
-    data object WorkshopInfo    : Screen("workshop_info")
     data object Welcome         : Screen("welcome")
     // ─── Main App ─────────────────────────────
     data object Home            : Screen("home")
