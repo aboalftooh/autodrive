@@ -287,7 +287,8 @@ class AuthRepositoryImpl @Inject constructor(
                 return@runCatching false
             }
             if (session != null && sessionReader.currentSession().userId.isNullOrBlank()) {
-                sessionWriter.updateSession { current -> current.copy(userId = resolveUserId(session)) }
+                val resolvedUserId = resolveUserId(session)
+                sessionWriter.updateSession { current -> current.copy(userId = resolvedUserId) }
             }
             if (session == null) return@runCatching false
             refreshRegistrationStateFromSupabase()
