@@ -1,15 +1,14 @@
 package com.autodrive.app.feature.profile.data
 
+import android.content.Context
 import androidx.room.withTransaction
+import com.autodrive.app.core.common.result.Result
 import com.autodrive.app.core.database.AutoDriveDatabase
 import com.autodrive.app.core.database.entities.PendingOperationEntity
-import com.autodrive.app.core.network.AutoDriveSupabase
-import com.autodrive.app.core.network.dto.AutoDriveUserUpdateDto
-import com.autodrive.app.core.network.dto.RedeemInviteCodeParams
 import com.autodrive.app.core.model.account.AccountType
 import com.autodrive.app.core.model.account.AutoDriveUser
-import com.autodrive.app.core.common.result.Result
-import com.autodrive.app.feature.profile.domain.repository.ProfileRepository
+import com.autodrive.app.core.network.AutoDriveSupabase
+import com.autodrive.app.core.network.dto.AutoDriveUserUpdateDto
 import com.autodrive.app.core.platform.notifications.FcmTokenUploader
 import com.autodrive.app.core.platform.notifications.PushTokenRepository
 import com.autodrive.app.core.session.domain.RegistrationState
@@ -19,7 +18,7 @@ import com.autodrive.app.core.sync.data.SyncScope
 import com.autodrive.app.core.sync.outbox.OUTBOX_CONTRACT_VERSION
 import com.autodrive.app.core.sync.outbox.OutboxEntityType
 import com.autodrive.app.core.sync.outbox.OutboxOperationType
-import android.content.Context
+import com.autodrive.app.feature.profile.domain.repository.ProfileRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.rpc
@@ -62,53 +61,40 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun saveUser(user: AutoDriveUser): Result<Unit> = withContext(Dispatchers.IO) {
         runCatching {
-            val inviteCode = sessionReader.currentSession().pendingInviteCode
-                ?: return@runCatching Result.Error("كود الدعوة غير موجود — أعد إدخال الكود")
-
-            // ذرّي: يُعلّم الكود used ويُنشئ autodrive_users + marketer_balance في معاملة واحدة
-            supabase.client.postgrest.rpc(
-                "redeem_invite_code",
-                RedeemInviteCodeParams(
-                    code         = inviteCode,
-                    fullName     = user.fullName,
-                    phone        = user.phone,
-                    accountType  = user.accountType.name,
-                    bankName     = user.bankName,
-                    bankAccount  = user.bankAccount,
-                    workshopName = user.workshopName,
-                    specialty    = user.specialty,
-                    workersCount = user.workersCount,
-                    address      = user.address
-                )
-            )
-            supabase.client.postgrest["autodrive_users"].update(
-                buildJsonObject { put("onboarding_completed", true) }
-            ) {
-                filter { eq("user_id", user.userId) }
+            val session = sessionReader.currentSession()
+            val uid = session.userId?.takeIf { it.isNotBlank() }
+                ?: return@runCatching Result.Error("جلسة الدخول مفقودة")
+            if (!session.isLoggedIn || user.userId != uid) {
+                return@runCatching Result.Error("جلسة المستخدم غير متطابقة")
             }
+            val verifiedPhone = session.phone?.takeIf { it.isNotBlank() }
+                ?: return@runCatching Result.Error("رقم الهاتف الموثق مفقود")
 
-            markRegistrationComplete(user)
+            supabase.client.postgrest.rpc(
+                "autodrive_complete_onboarding_v1",
+                buildJsonObject {
+                    put("p_full_name", user.fullName.trim())
+                    put("p_bank_name", user.bankName.orEmpty().trim())
+                    put("p_bank_account", user.bankAccount.orEmpty().trim())
+                    user.workshopName?.let { put("p_workshop_name", it.trim()) }
+                    user.specialty?.let { put("p_specialty", it.trim()) }
+                    user.workersCount?.let { put("p_workers_count", it) }
+                    user.address?.let { put("p_address", it.trim()) }
+                }
+            )
+
+            markRegistrationComplete(user.copy(phone = verifiedPhone))
             FcmTokenUploader.trigger(appContext, pushTokens)
             Result.Success(Unit)
-        }.fold(
-            onSuccess = { it },
-            onFailure = { e ->
-                // السجل موجود بالفعل (client_id_unique) — تسجيل سابق ناجح جزئياً
-                // نعتبره نجاحاً: ندير prefs ونترك SyncManager يجلب البيانات الحقيقية
-                if (e.message?.contains("autodrive_users_client_id_unique") == true) {
-                    markRegistrationComplete(user)
-                    FcmTokenUploader.trigger(appContext, pushTokens)
-                    return@withContext Result.Success(Unit)
-                }
-                val msg = when {
-                    e.message?.contains("CODE_ALREADY_USED") == true -> "الكود مستخدم بالفعل — تواصل مع الإدارة للحصول على كود جديد"
-                    e.message?.contains("CODE_NOT_FOUND") == true    -> "الكود غير صحيح"
-                    e.message?.contains("CODE_EXPIRED") == true      -> "انتهت صلاحية الكود"
-                    else -> e.message ?: "خطأ في حفظ البيانات"
-                }
-                Result.Error(msg, e)
+        }.getOrElse { e ->
+            val msg = when {
+                e.message?.contains("NOT_AUTHENTICATED") == true -> "انتهت الجلسة — أعد تسجيل الدخول"
+                e.message?.contains("AUTODRIVE_MEMBERSHIP_NOT_FOUND") == true -> "عضوية AutoDrive غير موجودة"
+                e.message?.contains("WORKSHOP_DETAILS_REQUIRED") == true -> "أكمل بيانات الورشة المطلوبة"
+                else -> e.message ?: "خطأ في حفظ البيانات"
             }
-        )
+            Result.Error(msg, e)
+        }
     }
 
     override suspend fun updateUser(user: AutoDriveUser): Result<Unit> = withContext(Dispatchers.IO) {
@@ -119,15 +105,17 @@ class ProfileRepositoryImpl @Inject constructor(
                 return@runCatching Result.Error("جلسة المستخدم غير متطابقة")
             }
 
+            // Phone is authentication identity. It is immutable here; changing it requires a
+            // dedicated OTP re-verification flow, which is intentionally not implicit in profile edits.
             val dto = AutoDriveUserUpdateDto(
-                fullName     = user.fullName.ifBlank { null },
-                phone        = user.phone.ifBlank { null },
-                bankName     = user.bankName,
-                bankAccount  = user.bankAccount,
+                fullName = user.fullName.ifBlank { null },
+                phone = null,
+                bankName = user.bankName,
+                bankAccount = user.bankAccount,
                 workshopName = user.workshopName,
-                specialty    = user.specialty,
+                specialty = user.specialty,
                 workersCount = user.workersCount,
-                address      = user.address
+                address = user.address
             )
             val operationId = "profile_${UUID.randomUUID()}"
             val mutationId = UUID.randomUUID().toString()
@@ -141,15 +129,15 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
                 db.autoDriveUserDao().upsert(
                     current.copy(
-                        fullName     = user.fullName,
-                        phone        = user.phone,
-                        bankName     = user.bankName,
-                        bankAccount  = user.bankAccount,
+                        fullName = user.fullName,
+                        phone = current.phone,
+                        bankName = user.bankName,
+                        bankAccount = user.bankAccount,
                         workshopName = user.workshopName,
-                        specialty    = user.specialty,
+                        specialty = user.specialty,
                         workersCount = user.workersCount,
-                        address      = user.address,
-                        syncStatus   = "PENDING"
+                        address = user.address,
+                        syncStatus = "PENDING"
                     )
                 )
                 db.pendingOperationDao().insert(
@@ -168,13 +156,10 @@ class ProfileRepositoryImpl @Inject constructor(
                 )
             }
 
-            // Preferences are a UI convenience, not the durability authority.
             sessionWriter.updateSession { current ->
                 if (SyncScope.from(current) == scope) {
-                    current.copy(userName = user.fullName, phone = user.phone)
-                } else {
-                    current
-                }
+                    current.copy(userName = user.fullName)
+                } else current
             }
             Result.Success(Unit)
         }.getOrElse { Result.Error(it.message ?: "خطأ في التحديث", it) }
@@ -185,30 +170,28 @@ class ProfileRepositoryImpl @Inject constructor(
             current.copy(
                 userName = user.fullName,
                 accountType = user.accountType.name,
-                phone = user.phone,
+                phone = current.phone ?: user.phone,
                 isLoggedIn = true,
                 registrationState = RegistrationState.COMPLETE,
-                pendingInviteCode = null
+                pendingJoinRequestId = null,
             )
         }
     }
 
-    // ─── Mapper ────────────────────────────────────────────────
-
     private fun com.autodrive.app.core.database.entities.AutoDriveUserEntity.toDomain() = AutoDriveUser(
-        id           = id,
-        userId       = userId,
-        clientId     = clientId,
-        orgId        = orgId,
-        accountType  = if (accountType == "WORKSHOP_OWNER") AccountType.WORKSHOP_OWNER else AccountType.MARKETER,
-        fullName     = fullName,
-        phone        = phone,
-        bankName     = bankName,
-        bankAccount  = bankAccount,
+        id = id,
+        userId = userId,
+        clientId = clientId,
+        orgId = orgId,
+        accountType = if (accountType == "WORKSHOP_OWNER") AccountType.WORKSHOP_OWNER else AccountType.MARKETER,
+        fullName = fullName,
+        phone = phone,
+        bankName = bankName,
+        bankAccount = bankAccount,
         workshopName = workshopName,
-        specialty    = specialty,
+        specialty = specialty,
         workersCount = workersCount,
-        address      = address,
-        createdAt    = createdAt
+        address = address,
+        createdAt = createdAt
     )
 }
