@@ -7,9 +7,9 @@ import com.autodrive.app.core.common.registration.RegistrationProfileWriter
 import com.autodrive.app.core.common.result.Result
 import com.autodrive.app.core.model.account.AccountType
 import com.autodrive.app.core.model.account.AutoDriveUser
-import com.autodrive.app.core.session.domain.SessionReader
 import com.autodrive.app.core.platform.notifications.FcmTokenUploader
 import com.autodrive.app.core.platform.notifications.PushTokenRepository
+import com.autodrive.app.core.session.domain.SessionReader
 import com.autodrive.app.core.sync.domain.SyncCoordinator
 import com.autodrive.app.core.sync.domain.SyncReason
 import com.autodrive.app.feature.auth.domain.model.CodeVerificationResult
@@ -51,7 +51,6 @@ class CodeInputViewModel @Inject constructor(
                             is Result.Success -> {
                                 draftStore.clear()
                                 syncCoordinator.requestSync(SyncReason.LOGIN_SUCCESS)
-                                // التسجيل الجديد كان ينتهي دون رفع FCM token حتى إعادة تشغيل التطبيق.
                                 FcmTokenUploader.trigger(appContext, pushTokenRepository)
                                 CodeState.Success(false)
                             }
@@ -73,6 +72,9 @@ class CodeInputViewModel @Inject constructor(
         val uid = session.userId ?: return Result.Error("بيانات الجلسة مفقودة")
         val clientId = session.clientId ?: return Result.Error("معرف العميل مفقود")
         val orgId = session.orgId ?: return Result.Error("معرف المنظمة مفقود")
+        val verifiedPhone = session.phone?.trim()?.takeIf { it.isNotBlank() }
+            ?: return Result.Error("رقم الهاتف الموثق مفقود — أعد التحقق بالهاتف")
+
         val user = AutoDriveUser(
             id = "",
             userId = uid,
@@ -80,7 +82,7 @@ class CodeInputViewModel @Inject constructor(
             orgId = orgId,
             accountType = if (draftStore.accountType == "WORKSHOP_OWNER") AccountType.WORKSHOP_OWNER else AccountType.MARKETER,
             fullName = draftStore.fullName,
-            phone = draftStore.phone.ifBlank { session.phone.orEmpty() },
+            phone = verifiedPhone,
             bankName = draftStore.bankName.ifBlank { null },
             bankAccount = draftStore.bankAccount.ifBlank { null },
             workshopName = draftStore.workshopName.ifBlank { null },
