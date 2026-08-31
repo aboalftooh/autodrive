@@ -16,7 +16,6 @@ sealed class Screen(val route: String) {
             }
         }
     }
-    data object CodeInput       : Screen("code_input")
     data object SessionExpired  : Screen("session_expired")
     // ─── Registration ─────────────────────────
     data object AccountType     : Screen("account_type")
