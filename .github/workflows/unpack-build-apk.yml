@@ -60,14 +60,21 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Run auth and regression tests
+      - name: Run complete auth unit suite
         shell: bash
         run: |
           set -euo pipefail
           chmod +x gradlew
-          ./gradlew --no-daemon \
-            :feature:auth:testDebugUnitTest \
-            :app:testDebugUnitTest \
+          ./gradlew --no-daemon :feature:auth:testDebugUnitTest --stacktrace
+
+      - name: Run auth architecture regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./gradlew --no-daemon :app:testDebugUnitTest \
+            --tests 'com.autodrive.app.architecture.AuthLaunchRegressionTest' \
+            --tests 'com.autodrive.app.architecture.SessionIsolationArchitectureTest' \
+            --tests 'com.autodrive.app.architecture.ObservabilitySecurityArchitectureTest' \
             --stacktrace
 
       - name: Build debug APK
