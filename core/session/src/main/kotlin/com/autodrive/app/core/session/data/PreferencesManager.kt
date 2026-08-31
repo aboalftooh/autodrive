@@ -3,9 +3,9 @@ package com.autodrive.app.core.session.data
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.autodrive.app.core.session.domain.DashboardPreferences
 import com.autodrive.app.core.model.money.Money
 import com.autodrive.app.core.session.domain.CurrentSession
+import com.autodrive.app.core.session.domain.DashboardPreferences
 import com.autodrive.app.core.session.domain.RegistrationState
 import com.autodrive.app.core.session.domain.SessionReader
 import com.autodrive.app.core.session.domain.SessionWriter
@@ -29,9 +29,6 @@ class PreferencesManager @Inject constructor(
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
-    // ═══════════════════════════════════════════
-    // حالة التوثيق
-    // ═══════════════════════════════════════════
     var isLoggedIn: Boolean
         get() = prefs.getBoolean(KEY_IS_LOGGED_IN, false)
         set(v) = prefs.edit().putBoolean(KEY_IS_LOGGED_IN, v).apply()
@@ -40,9 +37,6 @@ class PreferencesManager @Inject constructor(
         get() = prefs.getBoolean(KEY_REGISTRATION_DONE, false)
         set(v) = prefs.edit().putBoolean(KEY_REGISTRATION_DONE, v).apply()
 
-    // ═══════════════════════════════════════════
-    // بيانات المستخدم المحلية (سريعة الوصول)
-    // ═══════════════════════════════════════════
     var userId: String?
         get() = prefs.getString(KEY_USER_ID, null)
         set(v) = prefs.edit().putString(KEY_USER_ID, v).apply()
@@ -67,9 +61,11 @@ class PreferencesManager @Inject constructor(
         get() = prefs.getString(KEY_PHONE, null)
         set(v) = prefs.edit().putString(KEY_PHONE, v).apply()
 
-    // ═══════════════════════════════════════════
-    // إعدادات العمولات
-    // ═══════════════════════════════════════════
+    var pendingJoinRequestId: String?
+        get() = prefs.getString(KEY_PENDING_JOIN_REQUEST_ID, null)
+        set(v) = if (v != null) prefs.edit().putString(KEY_PENDING_JOIN_REQUEST_ID, v).apply()
+                 else prefs.edit().remove(KEY_PENDING_JOIN_REQUEST_ID).apply()
+
     override var weeklyTarget: Money
         get() = readMoney(KEY_WEEKLY_TARGET, Money.of(500_000L))
         set(v) = prefs.edit().putString(KEY_WEEKLY_TARGET, v.toPlainString()).apply()
@@ -82,15 +78,6 @@ class PreferencesManager @Inject constructor(
         get() = prefs.getLong(KEY_LAST_DISPLAYED_WEEK_START_MS, 0L)
         set(v) = prefs.edit().putLong(KEY_LAST_DISPLAYED_WEEK_START_MS, v).apply()
 
-    // كود الدعوة المعلّق: يُحفظ بعد verify_invite_code_v2 ويُمسح بعد redeem_invite_code
-    var pendingInviteCode: String?
-        get() = prefs.getString(KEY_PENDING_INVITE_CODE, null)
-        set(v) = if (v != null) prefs.edit().putString(KEY_PENDING_INVITE_CODE, v).apply()
-                 else prefs.edit().remove(KEY_PENDING_INVITE_CODE).apply()
-
-    // ═══════════════════════════════════════════
-    // مسح عند تسجيل الخروج
-    // ═══════════════════════════════════════════
     override fun currentSession(): CurrentSession = CurrentSession(
         isLoggedIn = isLoggedIn,
         registrationState = if (isRegistrationComplete) RegistrationState.COMPLETE else RegistrationState.INCOMPLETE,
@@ -100,7 +87,7 @@ class PreferencesManager @Inject constructor(
         userName = userName,
         accountType = accountType,
         phone = phone,
-        pendingInviteCode = pendingInviteCode
+        pendingJoinRequestId = pendingJoinRequestId,
     )
 
     override fun updateSession(transform: (CurrentSession) -> CurrentSession) {
@@ -114,7 +101,7 @@ class PreferencesManager @Inject constructor(
             .putNullableString(KEY_USER_NAME, updated.userName)
             .putNullableString(KEY_ACCOUNT_TYPE, updated.accountType)
             .putNullableString(KEY_PHONE, updated.phone)
-            .putNullableString(KEY_PENDING_INVITE_CODE, updated.pendingInviteCode)
+            .putNullableString(KEY_PENDING_JOIN_REQUEST_ID, updated.pendingJoinRequestId)
             .apply()
     }
 
@@ -128,15 +115,14 @@ class PreferencesManager @Inject constructor(
             .remove(KEY_USER_NAME)
             .remove(KEY_ACCOUNT_TYPE)
             .remove(KEY_PHONE)
-            .remove(KEY_PENDING_INVITE_CODE)
+            .remove(KEY_PENDING_JOIN_REQUEST_ID)
+            .remove(KEY_LEGACY_PENDING_INVITE_CODE)
             .remove(KEY_WEEKLY_TARGET)
             .remove(KEY_LAST_DISPLAYED_TOTAL)
             .remove(KEY_LAST_DISPLAYED_WEEK_START_MS)
             .apply()
     }
 
-
-    /** يقرأ صيغة String الجديدة ويقبل صيغة Double bits القديمة دون فقد التوافق. */
     private fun readMoney(key: String, default: Money): Money = when (val raw = prefs.all[key]) {
         is String -> runCatching { Money.of(raw) }.getOrDefault(default)
         is Long -> Money.fromLegacyDouble(Double.fromBits(raw))
@@ -152,17 +138,18 @@ class PreferencesManager @Inject constructor(
         if (value == null) remove(key) else putString(key, value)
 
     companion object {
-        private const val KEY_IS_LOGGED_IN         = "is_logged_in"
-        private const val KEY_REGISTRATION_DONE    = "registration_done"
-        private const val KEY_USER_ID              = "user_id"
-        private const val KEY_CLIENT_ID            = "client_id"
-        private const val KEY_ORG_ID               = "org_id"
-        private const val KEY_USER_NAME            = "user_name"
-        private const val KEY_ACCOUNT_TYPE         = "account_type"
-        private const val KEY_PHONE                = "phone"
-        private const val KEY_WEEKLY_TARGET           = "weekly_target"
-        private const val KEY_LAST_DISPLAYED_TOTAL    = "last_displayed_total"
+        private const val KEY_IS_LOGGED_IN = "is_logged_in"
+        private const val KEY_REGISTRATION_DONE = "registration_done"
+        private const val KEY_USER_ID = "user_id"
+        private const val KEY_CLIENT_ID = "client_id"
+        private const val KEY_ORG_ID = "org_id"
+        private const val KEY_USER_NAME = "user_name"
+        private const val KEY_ACCOUNT_TYPE = "account_type"
+        private const val KEY_PHONE = "phone"
+        private const val KEY_PENDING_JOIN_REQUEST_ID = "pending_join_request_id"
+        private const val KEY_LEGACY_PENDING_INVITE_CODE = "pending_invite_code"
+        private const val KEY_WEEKLY_TARGET = "weekly_target"
+        private const val KEY_LAST_DISPLAYED_TOTAL = "last_displayed_total"
         private const val KEY_LAST_DISPLAYED_WEEK_START_MS = "last_displayed_week_start_ms"
-        private const val KEY_PENDING_INVITE_CODE     = "pending_invite_code"
     }
 }
