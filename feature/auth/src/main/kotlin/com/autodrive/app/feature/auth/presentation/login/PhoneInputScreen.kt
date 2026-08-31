@@ -1,8 +1,8 @@
 package com.autodrive.app.feature.auth.presentation.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,22 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PhoneAndroid
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.res.painterResource
-import com.autodrive.app.feature.auth.R
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,27 +27,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.autodrive.app.core.designsystem.components.actions.AutoDrivePrimaryButton
-import com.autodrive.app.feature.auth.domain.validation.SudanPhoneNumber
-import com.autodrive.app.core.designsystem.foundation.color.AutoDriveFinance
-import com.autodrive.app.core.designsystem.foundation.color.AutoDriveSurface
-import com.autodrive.app.core.designsystem.foundation.color.AutoDriveText
 import com.autodrive.app.core.designsystem.components.actions.AutoDriveTextButton
 import com.autodrive.app.core.designsystem.components.actions.AutoDriveTextButtonTone
 import com.autodrive.app.core.designsystem.components.inputs.AutoDriveTextField
+import com.autodrive.app.core.designsystem.foundation.color.AutoDriveSurface
+import com.autodrive.app.core.designsystem.foundation.color.AutoDriveText
+import com.autodrive.app.feature.auth.R
+import com.autodrive.app.feature.auth.domain.validation.SudanPhoneNumber
 
 @Composable
 fun PhoneInputScreen(
     onBack: () -> Unit,
-    onOtpSent: (String) -> Unit,
+    onOtpSent: (phone: String, devOtp: String?, requestId: String?) -> Unit,
+    onRegistrationRequired: () -> Unit,
+    onWaitingApproval: () -> Unit,
     viewModel: PhoneAuthViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -64,7 +54,12 @@ fun PhoneInputScreen(
     var showTermsSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(state) {
-        (state as? PhoneAuthState.OtpSent)?.let { onOtpSent(it.phone) }
+        when (val current = state) {
+            is PhoneAuthState.OtpSent -> onOtpSent(current.phone, current.devOtp, current.requestId)
+            is PhoneAuthState.RegistrationRequired -> onRegistrationRequired()
+            is PhoneAuthState.WaitingApproval -> onWaitingApproval()
+            else -> Unit
+        }
     }
 
     val isValidPhone = SudanPhoneNumber.normalize(phone) != null
@@ -74,7 +69,11 @@ fun PhoneInputScreen(
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(AutoDriveSurface.Canvas, AutoDriveSurface.Raised.copy(alpha = 0.72f), AutoDriveSurface.Canvas)
+                    colors = listOf(
+                        AutoDriveSurface.Canvas,
+                        AutoDriveSurface.Raised.copy(alpha = 0.72f),
+                        AutoDriveSurface.Canvas,
+                    )
                 )
             )
             .verticalScroll(rememberScrollState())
@@ -93,7 +92,7 @@ fun PhoneInputScreen(
         )
         Spacer(Modifier.height(10.dp))
         Text(
-            text = "سنرسل لك رمز تحقق عبر الرسائل",
+            text = "سنحدد حالة حسابك ثم نرسل رمز التحقق عند توفر الدخول",
             style = MaterialTheme.typography.bodyMedium,
             color = AutoDriveText.Secondary,
             textAlign = TextAlign.Center
@@ -128,7 +127,7 @@ fun PhoneInputScreen(
 
         Spacer(Modifier.height(22.dp))
         AutoDrivePrimaryButton(
-            text = "إرسال",
+            text = "متابعة",
             modifier = Modifier.fillMaxWidth(),
             onClick = { viewModel.sendOtp(phone) },
             enabled = isValidPhone && state !is PhoneAuthState.Loading,
@@ -136,7 +135,7 @@ fun PhoneInputScreen(
         )
         Spacer(Modifier.height(14.dp))
         AutoDriveTextButton(
-            text = "بالضغط على إرسال أنت توافق على سياسة الاستخدام",
+            text = "بالمتابعة أنت توافق على سياسة الاستخدام",
             onClick = { showTermsSheet = true },
             tone = AutoDriveTextButtonTone.Primary,
         )
@@ -149,7 +148,7 @@ fun PhoneInputScreen(
     if (showTermsSheet) {
         TermsScreen(
             onAccepted = { showTermsSheet = false },
-            onBack     = { showTermsSheet = false }
+            onBack = { showTermsSheet = false }
         )
     }
 }
@@ -169,8 +168,6 @@ private fun SecureHint() {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        
-    }
+        verticalAlignment = Alignment.CenterVertically,
+    ) { }
 }
