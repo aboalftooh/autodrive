@@ -75,7 +75,6 @@ class MainActivity : ComponentActivity() {
         }
         handleIntent(intent)
 
-        // بند 3: تحديث «آخر ظهور» فور الاستئناف + heartbeat كل دقيقتين أثناء المقدّمة
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 runCatching { syncManager.touchPresence(force = true) }
@@ -117,8 +116,11 @@ class MainActivity : ComponentActivity() {
                     AppNavigation(
                         startDestination = when (dest) {
                             SplashDestination.PHONE_INPUT -> Screen.PhoneInput.route
+                            SplashDestination.WAITING -> Screen.Waiting.route
                             SplashDestination.HOME -> Screen.Home.route
-                            SplashDestination.REGISTRATION -> Screen.AccountType.route
+                            SplashDestination.REGISTRATION -> Screen.BasicInfo.createRoute(
+                                appNavVm.accountType.ifBlank { "MARKETER" }
+                            )
                         },
                         navVm            = appNavVm,
                         pendingNavRoute  = pendingNavRoute
@@ -135,10 +137,6 @@ class MainActivity : ComponentActivity() {
 
     private fun handleIntent(intent: Intent?) {
         intent ?: return
-        // 1) إشعار يبنيه التطبيق في المقدّمة → مفتاح EXTRA_NAV_ROUTE.
-        // 2) النقر على إشعار النظام (الخلفية/التطبيق مغلق): لا يُستدعى onMessageReceived،
-        //    بل تصل حقول FCM data كـ extras بمفاتيحها الأصلية (nav_route / type). نقرأ
-        //    nav_route مباشرة، وإلا نشتقّ الوجهة من النوع — وإلا لا تنقّل (بند 5).
         val route = intent.getStringExtra(AutoDriveNotificationConstants.EXTRA_NAV_ROUTE)
             ?: intent.getStringExtra(AutoDriveNotificationConstants.DATA_NAV_ROUTE)
             ?: AutoDriveNotificationConstants.routeForType(
