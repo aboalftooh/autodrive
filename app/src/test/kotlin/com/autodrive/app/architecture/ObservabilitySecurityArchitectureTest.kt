@@ -23,12 +23,19 @@ class ObservabilitySecurityArchitectureTest {
 
     @Test
     fun `otp autofill uses sms retriever only`() {
+        val coordinator = mainRoot
+            .resolve("feature/auth/data/sms/SmsOtpAutofillCoordinator.kt")
+            .readText()
         val screen = mainRoot
             .resolve("feature/auth/presentation/login/OtpInputScreen.kt")
             .readText()
-        assertTrue(screen.contains("SmsRetriever.SMS_RETRIEVED_ACTION"))
-        assertFalse(screen.contains("Telephony.SMS_RECEIVED"))
-        assertFalse(screen.contains("SmsMessage.createFromPdu"))
+        val combined = coordinator + "\n" + screen
+
+        assertTrue(coordinator.contains("SmsRetriever.SMS_RETRIEVED_ACTION"))
+        assertTrue(coordinator.contains("startSmsRetriever()"))
+        assertTrue(coordinator.contains("startSmsUserConsent(null)"))
+        assertFalse(combined.contains("Telephony.SMS_RECEIVED"))
+        assertFalse(combined.contains("SmsMessage.createFromPdu"))
     }
 
     @Test
