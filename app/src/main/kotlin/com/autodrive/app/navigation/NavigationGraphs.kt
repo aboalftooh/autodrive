@@ -8,11 +8,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.autodrive.app.feature.notifications.domain.model.notificationType
-import com.autodrive.app.feature.auth.presentation.join.CodeInputScreen
 import com.autodrive.app.feature.auth.presentation.join.WaitingScreen
 import com.autodrive.app.feature.auth.presentation.join.WelcomeScreen
 import com.autodrive.app.feature.auth.presentation.login.OtpInputScreen
-import com.autodrive.app.feature.auth.presentation.login.PhoneAuthState
 import com.autodrive.app.feature.auth.presentation.login.PhoneAuthViewModel
 import com.autodrive.app.feature.auth.presentation.login.PhoneInputScreen
 import com.autodrive.app.feature.auth.presentation.login.SessionExpiredScreen
@@ -60,9 +58,10 @@ composable(Screen.SessionExpired.route) {
 
 composable(Screen.Waiting.route) {
     WaitingScreen(
-        onCodeClick = {
-            if (navController.currentDestination?.route == Screen.Waiting.route)
-                navController.navigate(Screen.PhoneInput.route)
+        onOtpReady = { phone, _ ->
+            navController.navigate(Screen.OtpInput.createRoute(phone)) {
+                launchSingleTop = true
+            }
         },
         onBack = { navController.popBackStack() }
     )
@@ -72,11 +71,18 @@ composable(Screen.PhoneInput.route) {
     val phoneAuthViewModel: PhoneAuthViewModel = hiltViewModel()
     PhoneInputScreen(
         onBack = { navController.popBackStack() },
-        onOtpSent = { phoneNumber ->
-            val devOtp = (phoneAuthViewModel.state.value as? PhoneAuthState.OtpSent)?.devOtp
+        onOtpSent = { phoneNumber, devOtp, _ ->
             navController.navigate(Screen.OtpInput.createRoute(phoneNumber, devOtp)) {
                 launchSingleTop = true
             }
+            phoneAuthViewModel.resetToIdle()
+        },
+        onRegistrationRequired = {
+            navController.navigate(Screen.AccountType.route) { launchSingleTop = true }
+            phoneAuthViewModel.resetToIdle()
+        },
+        onWaitingApproval = {
+            navController.navigate(Screen.Waiting.route) { launchSingleTop = true }
             phoneAuthViewModel.resetToIdle()
         },
         viewModel = phoneAuthViewModel
@@ -105,22 +111,13 @@ composable(
         phoneNumber = phoneNumber,
         devOtp = devOtp,
         onVerified = {
-            val destination = if (navVm.isRegistrationComplete) Screen.Home.route
-            else Screen.AccountType.route
+            val destination = if (navVm.isRegistrationComplete) {
+                Screen.Home.route
+            } else {
+                Screen.BasicInfo.createRoute(navVm.accountType.ifBlank { "MARKETER" })
+            }
             navController.navigate(destination) {
                 popUpTo(Screen.PhoneInput.route) { inclusive = true }
-            }
-        },
-        onBack = { navController.popBackStack() }
-    )
-}
-
-composable(Screen.CodeInput.route) {
-    CodeInputScreen(
-        onVerified = { isExistingUser ->
-            val destination = if (isExistingUser) Screen.Home.route else Screen.Welcome.route
-            navController.navigate(destination) {
-                popUpTo(Screen.AccountType.route) { inclusive = true }
             }
         },
         onBack = { navController.popBackStack() }
@@ -137,7 +134,16 @@ composable(Screen.BasicInfo.route) { backStack ->
     val accountType = backStack.arguments?.getString("accountType") ?: "MARKETER"
     BasicInfoScreen(
         accountType = accountType,
-        onContinue = { navController.navigate(Screen.CodeInput.route) },
+        onSubmitted = {
+            navController.navigate(Screen.Waiting.route) {
+                popUpTo(Screen.AccountType.route) { inclusive = true }
+            }
+        },
+        onCompleted = {
+            navController.navigate(Screen.Home.route) {
+                popUpTo(0) { inclusive = true }
+            }
+        },
         onBack = { navController.popBackStack() }
     )
 }
