@@ -8,12 +8,12 @@ import com.autodrive.app.feature.competition.domain.usecase.ObserveCompetitionAv
 import com.autodrive.app.feature.notifications.data.UnreadMessagesObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class AppNavigationViewModel @Inject constructor(
@@ -46,6 +46,9 @@ class AppNavigationViewModel @Inject constructor(
 
     val userName: String
         get() = sessionReader.currentSession().userName.orEmpty()
+
+    val accountType: String
+        get() = sessionReader.currentSession().accountType.orEmpty()
 
     val isRegistrationComplete: Boolean
         get() = sessionReader.currentSession().isRegistrationComplete
