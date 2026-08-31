@@ -21,15 +21,18 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val cachedBeforeRestore = sessionReader.currentSession()
             val hasSession = restoreSession()
+            val current = sessionReader.currentSession()
             _startDest.value = when {
-                !hasSession -> SplashDestination.PHONE_INPUT
-                sessionReader.currentSession().isRegistrationComplete -> SplashDestination.HOME
-                else -> SplashDestination.REGISTRATION
+                hasSession && current.isRegistrationComplete -> SplashDestination.HOME
+                hasSession -> SplashDestination.REGISTRATION
+                !cachedBeforeRestore.pendingJoinRequestId.isNullOrBlank() &&
+                    !cachedBeforeRestore.phone.isNullOrBlank() -> SplashDestination.WAITING
+                else -> SplashDestination.PHONE_INPUT
             }
         }
     }
 }
 
-
-enum class SplashDestination { PHONE_INPUT, HOME, REGISTRATION }
+enum class SplashDestination { PHONE_INPUT, WAITING, HOME, REGISTRATION }
