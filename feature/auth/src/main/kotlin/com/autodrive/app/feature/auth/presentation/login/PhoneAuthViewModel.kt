@@ -3,6 +3,7 @@ package com.autodrive.app.feature.auth.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.autodrive.app.core.common.result.Result
+import com.autodrive.app.feature.auth.domain.model.PhoneEntryResult
 import com.autodrive.app.feature.auth.domain.repository.AuthRepository
 import com.autodrive.app.feature.auth.domain.validation.SudanPhoneNumber
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,15 +13,22 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class PhoneAuthState {
-    data object Idle                                                    : PhoneAuthState()
-    data object Loading                                                 : PhoneAuthState()
-    data class  OtpSent(val phone: String, val devOtp: String? = null) : PhoneAuthState()
-    data object Verified                                                : PhoneAuthState()
-    data class  Error(val message: String)                             : PhoneAuthState()
+    data object Idle : PhoneAuthState()
+    data object Loading : PhoneAuthState()
+    data class OtpSent(
+        val phone: String,
+        val devOtp: String? = null,
+        val requestId: String? = null,
+    ) : PhoneAuthState()
+    data class RegistrationRequired(val phone: String) : PhoneAuthState()
+    data class WaitingApproval(val phone: String, val requestId: String) : PhoneAuthState()
+    data object Verified : PhoneAuthState()
+    data class Error(val message: String) : PhoneAuthState()
 }
 
 data class OtpUiState(
     val phoneNumber: String = "",
+    val requestId: String? = null,
     val otp: String = "",
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
@@ -47,18 +55,38 @@ class PhoneAuthViewModel @Inject constructor(
         }
         viewModelScope.launch {
             _state.value = PhoneAuthState.Loading
-            _state.value = when (val r = authRepository.sendPhoneOtp(normalizedPhone)) {
-                is Result.Success -> PhoneAuthState.OtpSent(normalizedPhone, r.data)
-                is Result.Error   -> PhoneAuthState.Error(r.message)
-                is Result.Loading -> PhoneAuthState.Loading
+            _state.value = when (val entry = authRepository.enterPhone(normalizedPhone)) {
+                PhoneEntryResult.LoginOtp -> sendLoginOtp(normalizedPhone)
+                PhoneEntryResult.NewRequest -> PhoneAuthState.RegistrationRequired(normalizedPhone)
+                is PhoneEntryResult.WaitApproval -> PhoneAuthState.WaitingApproval(normalizedPhone, entry.requestId)
+                is PhoneEntryResult.ApprovedOtp -> sendApprovedOtp(normalizedPhone, entry.requestId)
+                PhoneEntryResult.AccountSelectionRequired -> PhoneAuthState.Error(
+                    "يوجد أكثر من حساب مرتبط بالرقم — تواصل مع الإدارة لتحديد الحساب"
+                )
+                is PhoneEntryResult.Error -> PhoneAuthState.Error(entry.message)
             }
         }
     }
 
-    fun initOtp(phoneNumber: String, devOtp: String? = null) {
+    private suspend fun sendLoginOtp(phone: String): PhoneAuthState =
+        when (val result = authRepository.sendPhoneOtp(phone)) {
+            is Result.Success -> PhoneAuthState.OtpSent(phone, result.data, requestId = null)
+            is Result.Error -> PhoneAuthState.Error(result.message)
+            is Result.Loading -> PhoneAuthState.Loading
+        }
+
+    private suspend fun sendApprovedOtp(phone: String, requestId: String): PhoneAuthState =
+        when (val result = authRepository.sendApprovedPhoneOtp(phone, requestId)) {
+            is Result.Success -> PhoneAuthState.OtpSent(phone, devOtp = null, requestId = requestId)
+            is Result.Error -> PhoneAuthState.Error(result.message)
+            is Result.Loading -> PhoneAuthState.Loading
+        }
+
+    fun initOtp(phoneNumber: String, devOtp: String? = null, requestId: String? = null) {
         val normalizedPhone = SudanPhoneNumber.normalize(phoneNumber) ?: phoneNumber
         _otpState.value = OtpUiState(
             phoneNumber = normalizedPhone,
+            requestId = requestId?.takeIf { it.isNotBlank() },
             otp = devOtp?.let(::sanitizeOtpInput).orEmpty()
         )
     }
@@ -83,31 +111,29 @@ class PhoneAuthViewModel @Inject constructor(
             _otpState.value = current.copy(errorMessage = "رمز التحقق غير مكتمل", infoMessage = null)
             return
         }
-
         val normalizedPhone = SudanPhoneNumber.normalize(current.phoneNumber)
         if (normalizedPhone == null) {
-            _otpState.value = current.copy(
-                errorMessage = "حدث خطأ أثناء التحقق، حاول مرة أخرى",
-                infoMessage = null
-            )
+            _otpState.value = current.copy(errorMessage = "حدث خطأ أثناء التحقق، حاول مرة أخرى", infoMessage = null)
             return
         }
 
         viewModelScope.launch {
-            _otpState.value = _otpState.value.copy(
+            _otpState.value = current.copy(
                 isLoading = true,
                 errorMessage = null,
                 infoMessage = null,
                 isVerified = false
             )
-            _otpState.value = when (val r = authRepository.verifyPhoneOtp(normalizedPhone, current.otp)) {
+            val result = current.requestId?.let { requestId ->
+                authRepository.verifyApprovedPhoneOtp(normalizedPhone, current.otp, requestId)
+            } ?: authRepository.verifyPhoneOtp(normalizedPhone, current.otp)
+
+            _otpState.value = when (result) {
                 is Result.Success -> _otpState.value.copy(isLoading = false, isVerified = true)
                 is Result.Error -> _otpState.value.copy(
-                    // Never leave a rejected/expired OTP occupying all six cells.
-                    // Clearing it makes the screen immediately ready for the new SMS.
                     otp = "",
                     isLoading = false,
-                    errorMessage = mapOtpVerificationError(r.message),
+                    errorMessage = mapOtpVerificationError(result.message),
                     infoMessage = null,
                     isVerified = false
                 )
@@ -123,8 +149,8 @@ class PhoneAuthViewModel @Inject constructor(
 
     private fun Char.toEnglishDigitOrNull(): Char? = when (this) {
         in '0'..'9' -> this
-        in '\u0660'..'\u0669' -> '0' + (this.code - '\u0660'.code)
-        in '\u06F0'..'\u06F9' -> '0' + (this.code - '\u06F0'.code)
+        in '\u0660'..'\u0669' -> '0' + (code - '\u0660'.code)
+        in '\u06F0'..'\u06F9' -> '0' + (code - '\u06F0'.code)
         else -> null
     }
 
