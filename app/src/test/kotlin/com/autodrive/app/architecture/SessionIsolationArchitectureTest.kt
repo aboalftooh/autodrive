@@ -76,13 +76,17 @@ class SessionIsolationArchitectureTest {
         val source = appRoot.resolve("core/sync/data/LocalDataCleaner.kt").readText()
 
         listOf(
-            "paymentDao().deleteByInvoiceIds",
+            "paymentDao().deleteByClientId(scope.clientId)",
+            "invoiceDao().deleteByClientId(scope.clientId)",
+            "commissionPaymentDao().deleteByClientId(scope.clientId)",
             "notificationDao().deleteByUserId(scope.userId)",
             "chatMessageDao().deleteByConversationIds",
             "conversationDao().deleteByMarketer(scope.userId)",
             "weeklyLeaderboardDao().clear()",
             "pendingOperationDao().deleteForScope",
             "syncCursorDao().deleteForScope",
+            "syncInboxDao().deleteForScope",
+            "autoDriveUserDao().deleteByUserId(scope.userId)",
             "db.withTransaction",
         ).forEach { required -> assertTrue("تنظيف الخروج ناقص: $required", source.contains(required)) }
     }
