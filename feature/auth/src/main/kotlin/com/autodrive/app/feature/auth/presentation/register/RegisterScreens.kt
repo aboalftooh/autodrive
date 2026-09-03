@@ -38,7 +38,6 @@ import com.autodrive.app.core.model.account.WorkshopSpecialties
 @Composable
 fun BasicInfoScreen(
     accountType: String,
-    onSubmitted: () -> Unit,
     onCompleted: () -> Unit,
     onBack: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
@@ -61,7 +60,6 @@ fun BasicInfoScreen(
     }
     LaunchedEffect(action) {
         when (action) {
-            is RegistrationActionState.Submitted -> onSubmitted()
             RegistrationActionState.Completed -> onCompleted()
             else -> Unit
         }
@@ -99,7 +97,7 @@ fun BasicInfoScreen(
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            if (viewModel.isPhoneVerified) "أكمل بيانات حسابك" else "أدخل البيانات لإرسال طلب الانضمام",
+            "أكمل بيانات حسابك بعد التحقق من رقم الهاتف",
             style = MaterialTheme.typography.bodySmall,
             color = AutoDriveText.Secondary
         )
@@ -119,12 +117,8 @@ fun BasicInfoScreen(
         AutoDriveTextField(
             value = phone,
             onValueChange = {},
-            label = if (viewModel.isPhoneVerified) "رقم الهاتف الموثق" else "رقم الهاتف",
-            supportingText = if (viewModel.isPhoneVerified) {
-                "تم التحقق منه بواسطة OTP ولا يمكن تغييره من الملف الشخصي"
-            } else {
-                "سيتم التحقق منه بواسطة OTP بعد موافقة الإدارة"
-            },
+            label = "رقم الهاتف الموثق",
+            supportingText = "تم التحقق منه بواسطة OTP ولا يمكن تغييره من الملف الشخصي",
             readOnly = true,
         )
         Spacer(Modifier.height(16.dp))
@@ -198,7 +192,7 @@ fun BasicInfoScreen(
             (!isWorkshop || (workshopName.isNotBlank() && specialty.isNotBlank() && address.isNotBlank()))
 
         AutoDrivePrimaryButton(
-            text = if (viewModel.isPhoneVerified) "إكمال التسجيل" else "إرسال طلب الانضمام",
+            text = "إكمال التسجيل",
             modifier = Modifier.fillMaxWidth(),
             onClick = viewModel::submitOrComplete,
             enabled = canProceed && action !is RegistrationActionState.Loading,

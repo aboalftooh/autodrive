@@ -7,7 +7,6 @@ import com.autodrive.app.core.common.result.Result
 import com.autodrive.app.core.model.account.AccountType
 import com.autodrive.app.core.model.account.AutoDriveUser
 import com.autodrive.app.core.session.domain.SessionReader
-import com.autodrive.app.feature.auth.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +16,6 @@ import javax.inject.Inject
 sealed class RegistrationActionState {
     data object Idle : RegistrationActionState()
     data object Loading : RegistrationActionState()
-    data class Submitted(val requestId: String) : RegistrationActionState()
     data object Completed : RegistrationActionState()
     data class Error(val message: String) : RegistrationActionState()
 }
@@ -26,7 +24,6 @@ sealed class RegistrationActionState {
 class RegisterViewModel @Inject constructor(
     private val sessionReader: SessionReader,
     private val draftStore: RegistrationDraftStore,
-    private val authRepository: AuthRepository,
     private val registrationProfileWriter: RegistrationProfileWriter,
 ) : ViewModel() {
 
@@ -36,7 +33,8 @@ class RegisterViewModel @Inject constructor(
     var accountType: String = sessionReader.currentSession().accountType
         ?.takeIf { it.isNotBlank() } ?: draftStore.accountType
     var fullName: String = draftStore.fullName.ifBlank {
-        sessionReader.currentSession().userName.orEmpty()
+        val session = sessionReader.currentSession()
+        session.userName.orEmpty().takeUnless { it == session.phone }.orEmpty()
     }
     var bankName = draftStore.bankName
     var bankAccount = draftStore.bankAccount
@@ -70,16 +68,7 @@ class RegisterViewModel @Inject constructor(
             _action.value = RegistrationActionState.Loading
             val session = sessionReader.currentSession()
             if (!session.isLoggedIn) {
-                val result = authRepository.submitJoinRequest(
-                    phone = registrationPhone,
-                    fullName = fullName.trim(),
-                    accountType = accountType,
-                )
-                _action.value = when (result) {
-                    is Result.Success -> RegistrationActionState.Submitted(result.data)
-                    is Result.Error -> RegistrationActionState.Error(result.message)
-                    is Result.Loading -> RegistrationActionState.Loading
-                }
+                _action.value = RegistrationActionState.Error("يجب التحقق من رقم الهاتف أولاً")
                 return@launch
             }
 

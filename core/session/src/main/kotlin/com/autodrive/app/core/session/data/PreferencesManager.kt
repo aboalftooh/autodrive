@@ -61,10 +61,10 @@ class PreferencesManager @Inject constructor(
         get() = prefs.getString(KEY_PHONE, null)
         set(v) = prefs.edit().putString(KEY_PHONE, v).apply()
 
-    var pendingJoinRequestId: String?
-        get() = prefs.getString(KEY_PENDING_JOIN_REQUEST_ID, null)
-        set(v) = if (v != null) prefs.edit().putString(KEY_PENDING_JOIN_REQUEST_ID, v).apply()
-                 else prefs.edit().remove(KEY_PENDING_JOIN_REQUEST_ID).apply()
+    var pendingInviteCode: String?
+        get() = prefs.getString(KEY_PENDING_INVITE_CODE, null)
+        set(v) = if (v != null) prefs.edit().putString(KEY_PENDING_INVITE_CODE, v).apply()
+                 else prefs.edit().remove(KEY_PENDING_INVITE_CODE).apply()
 
     override var weeklyTarget: Money
         get() = readMoney(KEY_WEEKLY_TARGET, Money.of(500_000L))
@@ -87,7 +87,7 @@ class PreferencesManager @Inject constructor(
         userName = userName,
         accountType = accountType,
         phone = phone,
-        pendingJoinRequestId = pendingJoinRequestId,
+        pendingInviteCode = pendingInviteCode,
     )
 
     override fun updateSession(transform: (CurrentSession) -> CurrentSession) {
@@ -101,7 +101,7 @@ class PreferencesManager @Inject constructor(
             .putNullableString(KEY_USER_NAME, updated.userName)
             .putNullableString(KEY_ACCOUNT_TYPE, updated.accountType)
             .putNullableString(KEY_PHONE, updated.phone)
-            .putNullableString(KEY_PENDING_JOIN_REQUEST_ID, updated.pendingJoinRequestId)
+            .putNullableString(KEY_PENDING_INVITE_CODE, updated.pendingInviteCode)
             .apply()
     }
 
@@ -115,8 +115,7 @@ class PreferencesManager @Inject constructor(
             .remove(KEY_USER_NAME)
             .remove(KEY_ACCOUNT_TYPE)
             .remove(KEY_PHONE)
-            .remove(KEY_PENDING_JOIN_REQUEST_ID)
-            .remove(KEY_LEGACY_PENDING_INVITE_CODE)
+            .remove(KEY_PENDING_INVITE_CODE)
             .remove(KEY_WEEKLY_TARGET)
             .remove(KEY_LAST_DISPLAYED_TOTAL)
             .remove(KEY_LAST_DISPLAYED_WEEK_START_MS)
@@ -146,8 +145,7 @@ class PreferencesManager @Inject constructor(
         private const val KEY_USER_NAME = "user_name"
         private const val KEY_ACCOUNT_TYPE = "account_type"
         private const val KEY_PHONE = "phone"
-        private const val KEY_PENDING_JOIN_REQUEST_ID = "pending_join_request_id"
-        private const val KEY_LEGACY_PENDING_INVITE_CODE = "pending_invite_code"
+        private const val KEY_PENDING_INVITE_CODE = "pending_invite_code"
         private const val KEY_WEEKLY_TARGET = "weekly_target"
         private const val KEY_LAST_DISPLAYED_TOTAL = "last_displayed_total"
         private const val KEY_LAST_DISPLAYED_WEEK_START_MS = "last_displayed_week_start_ms"

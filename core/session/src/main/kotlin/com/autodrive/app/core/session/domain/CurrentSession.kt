@@ -14,7 +14,7 @@ data class CurrentSession(
     val userName: String? = null,
     val accountType: String? = null,
     val phone: String? = null,
-    val pendingJoinRequestId: String? = null,
+    val pendingInviteCode: String? = null,
 ) {
     val isRegistrationComplete: Boolean
         get() = registrationState == RegistrationState.COMPLETE

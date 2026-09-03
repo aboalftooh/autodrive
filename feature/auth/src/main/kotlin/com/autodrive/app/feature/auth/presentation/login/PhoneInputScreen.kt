@@ -44,9 +44,8 @@ import com.autodrive.app.feature.auth.domain.validation.SudanPhoneNumber
 @Composable
 fun PhoneInputScreen(
     onBack: () -> Unit,
-    onOtpSent: (phone: String, devOtp: String?, requestId: String?) -> Unit,
-    onRegistrationRequired: () -> Unit,
-    onWaitingApproval: () -> Unit,
+    onOtpSent: (phone: String, devOtp: String?) -> Unit,
+    onJoinCodeRequired: (phone: String) -> Unit,
     viewModel: PhoneAuthViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -55,9 +54,8 @@ fun PhoneInputScreen(
 
     LaunchedEffect(state) {
         when (val current = state) {
-            is PhoneAuthState.OtpSent -> onOtpSent(current.phone, current.devOtp, current.requestId)
-            is PhoneAuthState.RegistrationRequired -> onRegistrationRequired()
-            is PhoneAuthState.WaitingApproval -> onWaitingApproval()
+            is PhoneAuthState.OtpSent -> onOtpSent(current.phone, current.devOtp)
+            is PhoneAuthState.JoinCodeRequired -> onJoinCodeRequired(current.phone)
             else -> Unit
         }
     }

@@ -4,7 +4,7 @@ import java.net.URLEncoder
 
 sealed class Screen(val route: String) {
     // ─── Auth & Onboarding ────────────────────
-    data object Waiting         : Screen("waiting")
+    data object CodeInput       : Screen("join_code")
     data object PhoneInput      : Screen("phone_input")
     data object OtpInput        : Screen("otp_input/{phoneNumber}?devOtp={devOtp}") {
         fun createRoute(phoneNumber: String, devOtp: String? = null): String {
@@ -18,7 +18,6 @@ sealed class Screen(val route: String) {
     }
     data object SessionExpired  : Screen("session_expired")
     // ─── Registration ─────────────────────────
-    data object AccountType     : Screen("account_type")
     data object BasicInfo       : Screen("basic_info/{accountType}") {
         fun createRoute(accountType: String) = "basic_info/$accountType"
     }

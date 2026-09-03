@@ -16,15 +16,13 @@ import com.autodrive.app.core.sync.data.SyncManager
 import com.autodrive.app.core.sync.data.SyncScope
 import com.autodrive.app.core.sync.domain.RealtimeController
 import com.autodrive.app.feature.auth.BuildConfig
-import com.autodrive.app.feature.auth.data.registration.ApprovedOtpVerificationResponse
 import com.autodrive.app.feature.auth.data.registration.InstallationIdProvider
-import com.autodrive.app.feature.auth.data.registration.JoinRequestDto
-import com.autodrive.app.feature.auth.data.registration.JoinRequestStatusDto
+import com.autodrive.app.feature.auth.data.registration.JoinCodeVerificationDto
 import com.autodrive.app.feature.auth.data.registration.PhoneEntryDto
 import com.autodrive.app.feature.auth.data.registration.RegistrationEnvelope
 import com.autodrive.app.feature.auth.data.sms.SmsOtpAutofillCoordinator
 import com.autodrive.app.feature.auth.data.sms.SmsRetrieverAppHash
-import com.autodrive.app.feature.auth.domain.model.JoinRequestStatus
+import com.autodrive.app.feature.auth.domain.model.JoinCodeVerificationResult
 import com.autodrive.app.feature.auth.domain.model.PhoneEntryResult
 import com.autodrive.app.feature.auth.domain.repository.AuthRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -40,7 +38,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.runCatching
@@ -60,11 +57,12 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun enterPhone(phone: String): PhoneEntryResult = withContext(Dispatchers.IO) {
         runCatching {
+            val normalized = phone.trim()
             val response = supabase.client.functions.invoke(
                 function = "autodrive-registration",
                 body = buildJsonObject {
                     put("action", "phone_entry")
-                    put("phone", phone.trim())
+                    put("phone", normalized)
                     put("device_id", installationId.get())
                     put("platform", "android")
                     currentPushToken()?.let { put("push_token", it) }
@@ -78,25 +76,55 @@ class AuthRepositoryImpl @Inject constructor(
             val data = response.body<RegistrationEnvelope<PhoneEntryDto>>().data
                 ?: return@runCatching PhoneEntryResult.Error("استجابة غير مكتملة من الخادم")
 
-            val requestId = data.requestId
             sessionWriter.updateSession { current ->
-                current.copy(
-                    phone = phone.trim(),
-                    pendingJoinRequestId = requestId,
-                )
+                current.copy(phone = normalized, pendingInviteCode = null)
             }
 
             when (data.nextAction) {
                 "LOGIN_OTP" -> PhoneEntryResult.LoginOtp
-                "NEW_REQUEST" -> PhoneEntryResult.NewRequest
-                "WAIT_APPROVAL" -> requestId?.let(PhoneEntryResult::WaitApproval)
-                    ?: PhoneEntryResult.Error("معرف الطلب مفقود")
-                "APPROVED_OTP" -> requestId?.let(PhoneEntryResult::ApprovedOtp)
-                    ?: PhoneEntryResult.Error("معرف الطلب مفقود")
+                "JOIN_CODE_REQUIRED" -> PhoneEntryResult.JoinCodeRequired
                 "ACCOUNT_SELECTION_REQUIRED" -> PhoneEntryResult.AccountSelectionRequired
                 else -> PhoneEntryResult.Error("حالة حساب غير معروفة")
             }
         }.getOrElse { e -> PhoneEntryResult.Error(parseEdgeFunctionError(e, "تعذّر الاتصال — حاول مجدداً")) }
+    }
+
+    override suspend fun verifyJoinCode(phone: String, code: String): JoinCodeVerificationResult = withContext(Dispatchers.IO) {
+        runCatching {
+            val normalizedPhone = phone.trim()
+            val normalizedCode = code.trim()
+            val response = supabase.client.functions.invoke(
+                function = "autodrive-registration",
+                body = buildJsonObject {
+                    put("action", "verify_join_code")
+                    put("phone", normalizedPhone)
+                    put("code", normalizedCode)
+                    put("device_id", installationId.get())
+                }
+            )
+            if (!response.status.isSuccess()) {
+                val message = runCatching { response.body<Map<String, String>>()["error"] }.getOrNull()
+                    ?: "تعذّر التحقق من كود الانضمام"
+                return@runCatching JoinCodeVerificationResult.Error(message)
+            }
+            val data = response.body<RegistrationEnvelope<JoinCodeVerificationDto>>().data
+                ?: return@runCatching JoinCodeVerificationResult.Error("استجابة غير مكتملة من الخادم")
+            if (!data.isValid) return@runCatching JoinCodeVerificationResult.Invalid(data.reason)
+
+            val clientId = data.clientId ?: return@runCatching JoinCodeVerificationResult.Error("معرف العميل مفقود")
+            val orgId = data.orgId ?: return@runCatching JoinCodeVerificationResult.Error("معرف المؤسسة مفقود")
+            val accountType = data.accountType ?: return@runCatching JoinCodeVerificationResult.Error("نوع الحساب مفقود")
+            sessionWriter.updateSession { current ->
+                current.copy(
+                    phone = normalizedPhone,
+                    clientId = clientId,
+                    orgId = orgId,
+                    accountType = accountType,
+                    pendingInviteCode = normalizedCode,
+                )
+            }
+            JoinCodeVerificationResult.Valid(clientId, orgId, accountType)
+        }.getOrElse { e -> JoinCodeVerificationResult.Error(parseEdgeFunctionError(e, "تعذّر التحقق من كود الانضمام")) }
     }
 
     override suspend fun sendPhoneOtp(phone: String): Result<String?> = withContext(Dispatchers.IO) {
@@ -104,10 +132,12 @@ class AuthRepositoryImpl @Inject constructor(
             supabase.client.auth.awaitInitialization()
             SmsOtpAutofillCoordinator.startChallenge(appContext)
             val appHash = SmsRetrieverAppHash.current(appContext)
+            val inviteCode = sessionReader.currentSession().pendingInviteCode?.takeIf { it.isNotBlank() }
             val response = supabase.client.functions.invoke(
                 function = "send-phone-otp",
                 body = buildJsonObject {
                     put("phone", phone.trim())
+                    inviteCode?.let { put("invite_code", it) }
                     appHash?.let { put("app_hash", it) }
                 }
             )
@@ -124,11 +154,13 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun verifyPhoneOtp(phone: String, otp: String): Result<Unit> = withContext(Dispatchers.IO) {
         runCatching {
+            val inviteCode = sessionReader.currentSession().pendingInviteCode?.takeIf { it.isNotBlank() }
             val response = supabase.client.functions.invoke(
                 function = "verify-phone-otp",
                 body = buildJsonObject {
                     put("phone", phone.trim())
                     put("otp", otp.trim())
+                    inviteCode?.let { put("invite_code", it) }
                 }
             )
             if (!response.status.isSuccess()) {
@@ -137,143 +169,15 @@ class AuthRepositoryImpl @Inject constructor(
             }
             val body = response.body<VerifyPhoneOtpResponse>()
             importSession(body.accessToken, body.refreshToken, body.expiresIn, body.tokenType)
-            val session = supabase.client.auth.currentSessionOrNull()
+            val authSession = supabase.client.auth.currentSessionOrNull()
                 ?: return@runCatching Result.Error("لم تُنشأ الجلسة — أعد المحاولة")
-            val resolvedUserId = resolveUserId(session)
+            val resolvedUserId = resolveUserId(authSession)
             sessionWriter.updateSession { current ->
-                current.copy(
-                    userId = resolvedUserId,
-                    phone = phone.trim(),
-                    pendingJoinRequestId = null,
-                )
+                current.copy(userId = resolvedUserId, phone = phone.trim(), pendingInviteCode = null)
             }
-            refreshRegistrationStateFromSupabase()
-            Result.Success(Unit)
-        }.getOrElse { e -> Result.Error(parseEdgeFunctionError(e, "فشل التحقق — حاول مجدداً"), e) }
-    }
-
-    override suspend fun submitJoinRequest(
-        phone: String,
-        fullName: String,
-        accountType: String,
-    ): Result<String> = withContext(Dispatchers.IO) {
-        runCatching {
-            val response = supabase.client.functions.invoke(
-                function = "autodrive-registration",
-                body = buildJsonObject {
-                    put("action", "submit")
-                    put("client_request_id", UUID.randomUUID().toString())
-                    put("phone", phone.trim())
-                    put("full_name", fullName.trim())
-                    put("account_type", accountType.trim().uppercase())
-                    put("region_key", "")
-                    put("device_id", installationId.get())
-                    put("platform", "android")
-                    currentPushToken()?.let { put("push_token", it) }
-                }
-            )
-            if (!response.status.isSuccess()) {
-                val errBody = runCatching { response.body<Map<String, String>>() }.getOrNull()
-                return@runCatching Result.Error(errBody?.get("error") ?: "تعذّر إرسال طلب الانضمام")
+            if (!refreshRegistrationStateFromSupabase()) {
+                return@runCatching Result.Error("تعذّر تحميل بيانات الحساب")
             }
-            val data = response.body<RegistrationEnvelope<JoinRequestDto>>().data
-                ?: return@runCatching Result.Error("استجابة غير مكتملة من الخادم")
-            sessionWriter.updateSession { current ->
-                current.copy(
-                    phone = phone.trim(),
-                    accountType = accountType.trim().uppercase(),
-                    pendingJoinRequestId = data.requestId,
-                )
-            }
-            Result.Success(data.requestId)
-        }.getOrElse { e -> Result.Error(parseEdgeFunctionError(e, "تعذّر إرسال طلب الانضمام"), e) }
-    }
-
-    override suspend fun getJoinRequestStatus(requestId: String): Result<JoinRequestStatus> = withContext(Dispatchers.IO) {
-        runCatching {
-            val response = supabase.client.functions.invoke(
-                function = "autodrive-registration",
-                body = buildJsonObject {
-                    put("action", "status")
-                    put("request_id", requestId)
-                    put("device_id", installationId.get())
-                }
-            )
-            if (!response.status.isSuccess()) {
-                val errBody = runCatching { response.body<Map<String, String>>() }.getOrNull()
-                return@runCatching Result.Error(errBody?.get("error") ?: "تعذّر تحديث حالة الطلب")
-            }
-            val data = response.body<RegistrationEnvelope<JoinRequestStatusDto>>().data
-                ?: return@runCatching Result.Error("استجابة غير مكتملة من الخادم")
-            Result.Success(
-                JoinRequestStatus(
-                    requestId = data.requestId,
-                    status = data.status,
-                    accountType = data.accountType,
-                    organizationName = data.organizationName,
-                    rejectionReason = data.rejectionReason,
-                )
-            )
-        }.getOrElse { e -> Result.Error(parseEdgeFunctionError(e, "تعذّر تحديث حالة الطلب"), e) }
-    }
-
-    override suspend fun sendApprovedPhoneOtp(phone: String, requestId: String): Result<Unit> = withContext(Dispatchers.IO) {
-        runCatching {
-            SmsOtpAutofillCoordinator.startChallenge(appContext)
-            val response = supabase.client.functions.invoke(
-                function = "autodrive-send-otp",
-                body = buildJsonObject {
-                    put("request_id", requestId)
-                    put("device_id", installationId.get())
-                    put("phone", phone.trim())
-                }
-            )
-            if (!response.status.isSuccess()) {
-                val errBody = runCatching { response.body<Map<String, String>>() }.getOrNull()
-                return@runCatching Result.Error(errBody?.get("error") ?: "تعذّر إرسال رمز التحقق")
-            }
-            Result.Success(Unit)
-        }.getOrElse { e -> Result.Error(parseEdgeFunctionError(e, "تعذّر إرسال رمز التحقق"), e) }
-    }
-
-    override suspend fun verifyApprovedPhoneOtp(
-        phone: String,
-        otp: String,
-        requestId: String,
-    ): Result<Unit> = withContext(Dispatchers.IO) {
-        runCatching {
-            val response = supabase.client.functions.invoke(
-                function = "autodrive-verify-otp",
-                body = buildJsonObject {
-                    put("request_id", requestId)
-                    put("device_id", installationId.get())
-                    put("phone", phone.trim())
-                    put("otp", otp.trim())
-                }
-            )
-            if (!response.status.isSuccess()) {
-                val errBody = runCatching { response.body<Map<String, String>>() }.getOrNull()
-                return@runCatching Result.Error(errBody?.get("error") ?: "رمز التحقق غير صحيح")
-            }
-            val body = response.body<ApprovedOtpVerificationResponse>()
-            importSession(body.accessToken, body.refreshToken, body.expiresIn, body.tokenType)
-            if (supabase.client.auth.currentSessionOrNull() == null) {
-                return@runCatching Result.Error("لم تُنشأ الجلسة — أعد المحاولة")
-            }
-            sessionWriter.updateSession { current ->
-                current.copy(
-                    isLoggedIn = true,
-                    registrationState = if (body.onboardingCompleted) RegistrationState.COMPLETE else RegistrationState.INCOMPLETE,
-                    userId = body.userId,
-                    clientId = body.clientId,
-                    orgId = body.orgId,
-                    userName = body.fullName,
-                    accountType = body.accountType,
-                    phone = body.phone,
-                    pendingJoinRequestId = null,
-                )
-            }
-            FcmTokenUploader.trigger(appContext, pushTokens)
             Result.Success(Unit)
         }.getOrElse { e -> Result.Error(parseEdgeFunctionError(e, "فشل التحقق — حاول مجدداً"), e) }
     }
@@ -283,12 +187,9 @@ class AuthRepositoryImpl @Inject constructor(
             supabase.client.auth.awaitInitialization()
             val session = supabase.client.auth.currentSessionOrNull()
             val user = session?.user
-            if (user != null && user.email.isNullOrBlank() && user.phone.isNullOrBlank()) {
-                return@runCatching false
-            }
+            if (user != null && user.email.isNullOrBlank() && user.phone.isNullOrBlank()) return@runCatching false
             if (session != null && sessionReader.currentSession().userId.isNullOrBlank()) {
-                val resolvedUserId = resolveUserId(session)
-                sessionWriter.updateSession { current -> current.copy(userId = resolvedUserId) }
+                sessionWriter.updateSession { current -> current.copy(userId = resolveUserId(session)) }
             }
             if (session == null) return@runCatching false
             refreshRegistrationStateFromSupabase()
@@ -312,47 +213,29 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     suspend fun syncPushToken(token: String): kotlin.Result<Unit> = pushTokens.upsertCurrentUserToken(token)
-
     override fun isLoggedIn() = sessionReader.currentSession().isLoggedIn
     override fun isRegistrationComplete() = sessionReader.currentSession().isRegistrationComplete
-
     override fun getCurrentUserId(): String =
         supabase.client.auth.currentSessionOrNull()?.user?.id
             ?: sessionReader.currentSession().userId?.takeIf { it.isNotBlank() }
             ?: ""
 
-    private fun currentPushToken(): String? =
-        FcmTokenStore.pending(appContext) ?: FcmTokenStore.lastUploaded(appContext)
+    private fun currentPushToken(): String? = FcmTokenStore.pending(appContext) ?: FcmTokenStore.lastUploaded(appContext)
 
-    private suspend fun importSession(
-        accessToken: String,
-        refreshToken: String,
-        expiresIn: Long,
-        tokenType: String,
-    ) {
-        supabase.client.auth.importSession(
-            UserSession(
-                accessToken = accessToken,
-                refreshToken = refreshToken,
-                expiresIn = expiresIn,
-                tokenType = tokenType,
-            )
-        )
+    private suspend fun importSession(accessToken: String, refreshToken: String, expiresIn: Long, tokenType: String) {
+        supabase.client.auth.importSession(UserSession(accessToken = accessToken, refreshToken = refreshToken, expiresIn = expiresIn, tokenType = tokenType))
     }
 
     private fun parseEdgeFunctionError(e: Throwable, fallback: String): String {
         val raw = e.message ?: return fallback
         return when {
             raw.contains("429") -> "انتظر دقيقة واحدة قبل إعادة المحاولة"
-            raw.contains("timeout", ignoreCase = true) || raw.contains("network", ignoreCase = true) ->
-                "تعذّر الاتصال — تحقق من الإنترنت"
+            raw.contains("timeout", ignoreCase = true) || raw.contains("network", ignoreCase = true) -> "تعذّر الاتصال — تحقق من الإنترنت"
             else -> {
                 val jsonPart = raw.substringBefore("\nURL:").trim()
                 if (jsonPart.startsWith("{")) {
-                    runCatching {
-                        Json { ignoreUnknownKeys = true }
-                            .decodeFromString<Map<String, String>>(jsonPart)["error"]
-                    }.getOrNull()?.takeIf { it.isNotBlank() } ?: fallback
+                    runCatching { Json { ignoreUnknownKeys = true }.decodeFromString<Map<String, String>>(jsonPart)["error"] }
+                        .getOrNull()?.takeIf { it.isNotBlank() } ?: fallback
                 } else fallback
             }
         }
@@ -362,22 +245,13 @@ class AuthRepositoryImpl @Inject constructor(
         val uid = getCurrentUserId()
         if (uid.isBlank()) return false
         val linkedResult = runCatching {
-            db["autodrive_users"]
-                .select(Columns.ALL) {
-                    filter { eq("user_id", uid) }
-                    limit(1)
-                }
-                .decodeList<AutoDriveUserDto>()
-                .firstOrNull()
+            db["autodrive_users"].select(Columns.ALL) {
+                filter { eq("user_id", uid) }
+                limit(1)
+            }.decodeList<AutoDriveUserDto>().firstOrNull()
         }
         if (linkedResult.isFailure) return false
-        val linked = linkedResult.getOrNull()
-        if (linked == null) {
-            sessionWriter.updateSession { current ->
-                current.copy(isLoggedIn = true, registrationState = RegistrationState.INCOMPLETE)
-            }
-            return true
-        }
+        val linked = linkedResult.getOrNull() ?: return false
         sessionWriter.updateSession { current ->
             current.copy(
                 userId = uid,
@@ -388,6 +262,7 @@ class AuthRepositoryImpl @Inject constructor(
                 phone = linked.phone,
                 isLoggedIn = true,
                 registrationState = if (linked.onboardingCompleted) RegistrationState.COMPLETE else RegistrationState.INCOMPLETE,
+                pendingInviteCode = null,
             )
         }
         FcmTokenUploader.trigger(appContext, pushTokens)

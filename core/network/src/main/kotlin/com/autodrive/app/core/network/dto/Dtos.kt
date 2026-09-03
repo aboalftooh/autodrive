@@ -26,18 +26,6 @@ data class AutoDriveUserDto(
 )
 
 @Serializable
-data class InviteCodeDto(
-    val id: Int = 0,
-    val code: String = "",
-    @SerialName("marketer_client_id") val clientId: String = "",
-    @SerialName("organization_id")    val orgId: String = "",
-    @SerialName("expires_at")         val expiresAt: String? = null,
-    val used: Boolean = false,
-    @SerialName("used_at")            val usedAt: String? = null,
-    @SerialName("created_at")         val createdAt: String = ""
-)
-
-@Serializable
 data class InvoiceDto(
     val id: String = "",
     @SerialName("client_id")      val clientId: String = "",
@@ -179,48 +167,6 @@ data class WithdrawalRequestDto(
     @SerialName("processed_at")    val processedAt: String? = null,
     @SerialName("processed_by")    val processedBy: String? = null,
     @SerialName("client_request_id") val clientRequestId: String? = null,
-)
-
-@Serializable
-data class MarkInviteUsedDto(
-    val used: Boolean = true,
-    @SerialName("used_at") val usedAt: String
-)
-
-// ── RPC: verify_invite_code_v2 ─────────────────────────────
-@Serializable
-data class VerifyCodeRpcParams(
-    @SerialName("p_code") val code: String
-)
-
-@Serializable
-data class VerifyCodeRpcResult(
-    @SerialName("is_valid")    val isValid: Boolean,
-    val reason: String,
-    @SerialName("client_id")   val clientId: String?,
-    @SerialName("org_id")      val orgId: String?,
-    @SerialName("is_marketer") val isMarketer: Boolean,
-)
-
-// ── RPC: redeem_invite_code ────────────────────────────────
-@Serializable
-data class RedeemInviteCodeParams(
-    @SerialName("p_code")          val code: String,
-    @SerialName("p_full_name")     val fullName: String,
-    @SerialName("p_phone")         val phone: String,
-    @SerialName("p_account_type")  val accountType: String,
-    @SerialName("p_bank_name")     val bankName: String?    = null,
-    @SerialName("p_bank_account")  val bankAccount: String? = null,
-    @SerialName("p_workshop_name") val workshopName: String? = null,
-    @SerialName("p_specialty")     val specialty: String?   = null,
-    @SerialName("p_workers_count") val workersCount: Int?   = null,
-    @SerialName("p_address")       val address: String?     = null,
-)
-
-// ── RPC: link_phone_user (FIX-022) ────────────────────────
-@Serializable
-data class LinkPhoneUserParams(
-    @SerialName("p_invite_code") val inviteCode: String
 )
 
 // ── RPC: request_withdrawal (FIX-008) ─────────────────────

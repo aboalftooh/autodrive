@@ -173,7 +173,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 phone = current.phone ?: user.phone,
                 isLoggedIn = true,
                 registrationState = RegistrationState.COMPLETE,
-                pendingJoinRequestId = null,
+                pendingInviteCode = null,
             )
         }
     }

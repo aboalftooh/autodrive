@@ -116,7 +116,6 @@ class MainActivity : ComponentActivity() {
                     AppNavigation(
                         startDestination = when (dest) {
                             SplashDestination.PHONE_INPUT -> Screen.PhoneInput.route
-                            SplashDestination.WAITING -> Screen.Waiting.route
                             SplashDestination.HOME -> Screen.Home.route
                             SplashDestination.REGISTRATION -> Screen.BasicInfo.createRoute(
                                 appNavVm.accountType.ifBlank { "MARKETER" }
