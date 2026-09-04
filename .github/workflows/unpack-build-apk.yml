@@ -19,6 +19,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          BAD1='feature/achievements/build.gradle.kts'
+          BAD2='feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt'
+          BAD3='feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsUiState.kt'
+          BAD4='feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsViewModel.kt'
+          BAD5='feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/data/AuthRepositoryImpl.kt'
+
           cat \
             .ci/latest-overlay/part00.b64 \
             .ci/latest-overlay/part01.b64 \
@@ -40,9 +47,26 @@ jobs:
             .ci/latest-overlay/p11a.b64 \
             .ci/latest-overlay/p11b.b64 \
             | base64 --decode > /tmp/latest-overlay.zip
-          sha256sum /tmp/latest-overlay.zip
-          unzip -t /tmp/latest-overlay.zip >/dev/null
-          unzip -o /tmp/latest-overlay.zip -d . >/dev/null
+
+          # The staging transport damaged bytes inside five known ZIP members only.
+          # Validate and extract every other member, then overlay exact repaired copies.
+          unzip -t /tmp/latest-overlay.zip -x "$BAD1" "$BAD2" "$BAD3" "$BAD4" "$BAD5" >/dev/null
+          unzip -o /tmp/latest-overlay.zip -d . -x "$BAD1" "$BAD2" "$BAD3" "$BAD4" "$BAD5" >/dev/null
+
+          cat \
+            .ci/latest-overlay/repair_00.b64 \
+            .ci/latest-overlay/repair_01.b64 \
+            .ci/latest-overlay/repair_02.b64 \
+            .ci/latest-overlay/repair_03.b64 \
+            .ci/latest-overlay/repair_04.b64 \
+            .ci/latest-overlay/repair_05.b64 \
+            .ci/latest-overlay/repair_06.b64 \
+            | base64 --decode > /tmp/overlay-repair.zip
+
+          echo 'a52d58e9e0a483d0cf37f4876f1f23e4c03cf088a0a1036722e8cd89b08a5ea4  /tmp/overlay-repair.zip' | sha256sum -c -
+          unzip -t /tmp/overlay-repair.zip >/dev/null
+          unzip -o /tmp/overlay-repair.zip -d . >/dev/null
+
           rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
           test -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
