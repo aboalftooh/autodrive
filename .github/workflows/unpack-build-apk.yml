@@ -67,8 +67,6 @@ jobs:
           unzip -t /tmp/overlay-repair.zip >/dev/null
           unzip -o /tmp/overlay-repair.zip -d . >/dev/null
 
-          # Keep the branch auth flow, then adapt only its logout call to the
-          # newer PushTokenRepository contract supplied by the latest overlay.
           git checkout -- "$BAD5"
           python3 - <<'PY'
           from pathlib import Path
@@ -87,6 +85,20 @@ jobs:
           grep -q "العمولات المعلقة" feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
           test ! -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           echo 'Latest financial UI overlay: PASS'
+
+      - name: Upload resolved financial sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoDrive-resolved-financial-sources
+          path: |
+            feature/achievements
+            feature/balance
+            feature/commission
+            core/network
+            core/database
+            core/model
+          if-no-files-found: error
+          retention-days: 2
 
       - name: Verify unpacked project
         shell: bash
