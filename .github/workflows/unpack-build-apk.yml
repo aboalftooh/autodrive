@@ -10,6 +10,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: -Dorg.gradle.internal.http.connectionTimeout=60000 -Dorg.gradle.internal.http.socketTimeout=120000
 
     steps:
       - name: Checkout
@@ -48,8 +50,6 @@ jobs:
             .ci/latest-overlay/p11b.b64 \
             | base64 --decode > /tmp/latest-overlay.zip
 
-          # The staging transport damaged bytes inside five known ZIP members only.
-          # Validate and extract every other member, then overlay exact repaired copies.
           unzip -t /tmp/latest-overlay.zip -x "$BAD1" "$BAD2" "$BAD3" "$BAD4" "$BAD5" >/dev/null
           unzip -o /tmp/latest-overlay.zip -d . -x "$BAD1" "$BAD2" "$BAD3" "$BAD4" "$BAD5" >/dev/null
 
@@ -67,9 +67,19 @@ jobs:
           unzip -t /tmp/overlay-repair.zip >/dev/null
           unzip -o /tmp/overlay-repair.zip -d . >/dev/null
 
-          # Financial UI changes must not replace the auth implementation with
-          # an incompatible snapshot from a different auth contract revision.
+          # Keep the branch auth flow, then adapt only its logout call to the
+          # newer PushTokenRepository contract supplied by the latest overlay.
           git checkout -- "$BAD5"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/data/AuthRepositoryImpl.kt')
+          s = p.read_text(encoding='utf-8')
+          old = 'runCatching { pushTokens.deleteCurrentUserToken() }'
+          new = 'currentPushToken()?.let { token -> runCatching { pushTokens.deleteCurrentUserToken(token) } }'
+          if old not in s:
+              raise SystemExit('Auth logout compatibility target not found')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
 
           rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
