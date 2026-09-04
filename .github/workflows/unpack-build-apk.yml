@@ -28,12 +28,13 @@ jobs:
             .ci/latest-overlay/part04b.b64 \
             .ci/latest-overlay/part05a.b64 \
             .ci/latest-overlay/part05b.b64 \
-            .ci/latest-overlay/part06a.b64 \
-            .ci/latest-overlay/part06b.b64 \
+            .ci/latest-overlay/p06a.b64 \
+            .ci/latest-overlay/p06b.b64 \
             .ci/latest-overlay/part07a.b64 \
             .ci/latest-overlay/part07b.b64 \
             .ci/latest-overlay/part08.b64 \
-            .ci/latest-overlay/part09.b64 \
+            .ci/latest-overlay/p09a.b64 \
+            .ci/latest-overlay/p09b.b64 \
             .ci/latest-overlay/p10a.b64 \
             .ci/latest-overlay/p10b.b64 \
             .ci/latest-overlay/p11a.b64 \
