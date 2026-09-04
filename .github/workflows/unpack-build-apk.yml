@@ -67,6 +67,10 @@ jobs:
           unzip -t /tmp/overlay-repair.zip >/dev/null
           unzip -o /tmp/overlay-repair.zip -d . >/dev/null
 
+          # Financial UI changes must not replace the auth implementation with
+          # an incompatible snapshot from a different auth contract revision.
+          git checkout -- "$BAD5"
+
           rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
           test -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
