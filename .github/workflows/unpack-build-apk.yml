@@ -2,7 +2,7 @@ name: Build AutoDrive APK
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, build-latest-20260904 ]
 
 permissions:
   contents: read
@@ -14,6 +14,40 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Apply latest source overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            .ci/latest-overlay/part00.b64 \
+            .ci/latest-overlay/part01.b64 \
+            .ci/latest-overlay/part02.b64 \
+            .ci/latest-overlay/part03.b64 \
+            .ci/latest-overlay/part04a.b64 \
+            .ci/latest-overlay/part04b.b64 \
+            .ci/latest-overlay/part05a.b64 \
+            .ci/latest-overlay/part05b.b64 \
+            .ci/latest-overlay/part06a.b64 \
+            .ci/latest-overlay/part06b.b64 \
+            .ci/latest-overlay/part07a.b64 \
+            .ci/latest-overlay/part07b.b64 \
+            .ci/latest-overlay/part08.b64 \
+            .ci/latest-overlay/part09.b64 \
+            .ci/latest-overlay/p10a.b64 \
+            .ci/latest-overlay/p10b.b64 \
+            .ci/latest-overlay/p11a.b64 \
+            .ci/latest-overlay/p11b.b64 \
+            | base64 --decode > /tmp/latest-overlay.zip
+          echo "b303512dbad9115f1437a3db2a4e0582c30bfc53ecf3dbdc547bb45e3a2f09b7  /tmp/latest-overlay.zip" | sha256sum -c -
+          unzip -t /tmp/latest-overlay.zip >/dev/null
+          unzip -o /tmp/latest-overlay.zip -d . >/dev/null
+          rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
+          test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
+          test -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
+          grep -q "العمولات المعلقة" feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
+          test ! -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
+          echo 'Latest financial UI overlay: PASS'
 
       - name: Verify unpacked project
         shell: bash
