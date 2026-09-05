@@ -2,9 +2,11 @@ package com.autodrive.app.feature.balance.data
 
 import androidx.room.withTransaction
 import com.autodrive.app.core.database.AutoDriveDatabase
+import com.autodrive.app.core.database.entities.AutoDriveUserEntity
 import com.autodrive.app.core.database.entities.PendingOperationEntity
 import com.autodrive.app.core.database.entities.WithdrawalRequestEntity
 import com.autodrive.app.core.network.AutoDriveSupabase
+import com.autodrive.app.core.network.dto.AutoDriveUserDto
 import com.autodrive.app.core.network.dto.RequestWithdrawalParams
 import com.autodrive.app.core.session.domain.SessionReader
 import com.autodrive.app.core.sync.data.SyncScope
@@ -20,6 +22,7 @@ import com.autodrive.app.feature.balance.domain.model.WithdrawalSubmitResult
 import com.autodrive.app.feature.balance.domain.repository.BalanceRepository
 import com.autodrive.app.core.model.money.Money
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.rpc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -76,12 +79,8 @@ class BalanceRepositoryImpl @Inject constructor(
                 if (clientId != scope.clientId) {
                     return@runCatching Result.Error("جلسة العميل غير متطابقة")
                 }
-                val userEntity = db.autoDriveUserDao().get(scope.userId)
-                if (
-                    userEntity == null ||
-                    userEntity.clientId != scope.clientId ||
-                    userEntity.orgId != scope.orgId
-                ) {
+                val userEntity = resolveUserForScope(scope)
+                if (userEntity == null) {
                     return@runCatching Result.Error("بيانات الحساب غير متطابقة")
                 }
                 if (userEntity.bankName.isNullOrBlank() || userEntity.bankAccount.isNullOrBlank()) {
@@ -134,6 +133,32 @@ class BalanceRepositoryImpl @Inject constructor(
             }.getOrElse { Result.Error(it.message ?: "تعذّر حفظ طلب السحب محليًا", it) }
         }
 
+    private suspend fun resolveUserForScope(scope: SyncScope): AutoDriveUserEntity? {
+        db.autoDriveUserDao().getForScope(scope.userId, scope.clientId, scope.orgId)?.let { return it }
+
+        // Repair legacy/stale local profile rows from the authoritative account link before rejecting
+        // a legitimate withdrawal. The exact server scope is still validated; no safety check is bypassed.
+        val remote = supabase.client.postgrest["autodrive_users"]
+            .select(Columns.ALL) {
+                filter {
+                    eq("user_id", scope.userId)
+                    eq("client_id", scope.clientId)
+                    eq("org_id", scope.orgId)
+                }
+                limit(1)
+            }
+            .decodeSingleOrNull<AutoDriveUserDto>() ?: return null
+        if (remote.userId != scope.userId || remote.clientId != scope.clientId || remote.orgId != scope.orgId) return null
+
+        val repaired = remote.toLocalEntity()
+        db.withTransaction {
+            check(SyncScope.from(sessionReader.currentSession()) == scope) { "STALE_LOCAL_MUTATION_SCOPE" }
+            db.autoDriveUserDao().deleteByUserId(scope.userId)
+            db.autoDriveUserDao().upsert(repaired)
+        }
+        return repaired
+    }
+
     // v69: steady-state withdrawal delivery is receipt-driven in OutboxSynchronizer.
     // Legacy text parsing/reconciliation helpers were removed from this repository.
 
@@ -159,6 +184,24 @@ class BalanceRepositoryImpl @Inject constructor(
         }
 
     // ── Mappers ──────────────────────────────────────────────
+
+    private fun AutoDriveUserDto.toLocalEntity() = AutoDriveUserEntity(
+        id = id,
+        userId = userId,
+        clientId = clientId,
+        orgId = orgId,
+        accountType = accountType,
+        fullName = fullName,
+        phone = phone,
+        bankName = bankName,
+        bankAccount = bankAccount,
+        workshopName = workshopName,
+        specialty = specialty,
+        workersCount = workersCount,
+        address = address,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+    )
 
     private fun com.autodrive.app.core.database.entities.MarketerBalanceEntity.toDomain() = MarketerBalance(
         balance           = Money.of(balance),
@@ -202,4 +245,3 @@ private data class CancelPendingWithdrawalsReceipt(
     @SerialName("result_count") val resultCount: Int? = null,
     @SerialName("error_code") val errorCode: String? = null,
 )
-

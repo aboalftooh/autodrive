@@ -23,7 +23,7 @@ class PendingLocalMutationGuard @Inject constructor(
 ) {
     suspend fun profile(scope: SyncScope, remote: AutoDriveUserDto): AutoDriveUserEntity {
         require(remote.userId == scope.userId && remote.clientId == scope.clientId && remote.orgId == scope.orgId)
-        val local = db.autoDriveUserDao().get(scope.userId)
+        val local = db.autoDriveUserDao().getForScope(scope.userId, scope.clientId, scope.orgId)
         val pending = db.pendingOperationDao().findActiveForEntity(
             scope.userId,
             scope.clientId,
