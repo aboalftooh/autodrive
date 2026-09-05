@@ -96,6 +96,12 @@ jobs:
           unzip -o /tmp/navfix.zip -d . >/dev/null
           echo 'Navigation compatibility fix: PASS'
 
+          base64 --decode .ci/latest-overlay/testfix.b64 > /tmp/testfix.zip
+          echo '3223cd42fb59c7dd9feb03a9157ceead0cba03aac207ed250db6c889b42cf3bc  /tmp/testfix.zip' | sha256sum -c -
+          unzip -t /tmp/testfix.zip >/dev/null
+          unzip -o /tmp/testfix.zip -d . >/dev/null
+          echo 'Unit test compatibility fixes: PASS'
+
           rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
           test -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
