@@ -90,11 +90,20 @@ jobs:
           unzip -o /tmp/compilefix.zip -d . >/dev/null
           echo 'Financial compile fixes: PASS'
 
+          base64 --decode .ci/latest-overlay/navfix.b64 > /tmp/navfix.zip
+          echo '8460dc4b9200300af7be593894df77005112ebceca787a03346d8dec918ace01  /tmp/navfix.zip' | sha256sum -c -
+          unzip -t /tmp/navfix.zip >/dev/null
+          unzip -o /tmp/navfix.zip -d . >/dev/null
+          echo 'Navigation compatibility fix: PASS'
+
           rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
           test -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
           grep -q "العمولات المعلقة" feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
           test ! -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
+          grep -q 'CodeInputScreen' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
+          grep -q 'onJoinCodeRequired' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
+          test "$(grep -c 'WaitingScreen\|AccountTypeScreen' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt || true)" -eq 0
           echo 'Latest financial UI overlay: PASS'
 
       - name: Upload resolved financial sources
@@ -105,9 +114,11 @@ jobs:
             feature/achievements
             feature/balance
             feature/commission
+            feature/auth
             core/network
             core/database
             core/model
+            app/src/main/kotlin/com/autodrive/app/navigation
           if-no-files-found: error
           retention-days: 2
 
