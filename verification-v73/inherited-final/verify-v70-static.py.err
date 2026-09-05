@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "/mnt/data/autodrive73_work/scripts/verify-v70-static.py", line 87, in <module>
-    add("41_chat_fetch_before_apply", legacy.index('postgrest["internal_messages"]') < legacy.index("snapshotTransaction(scope) {", legacy.index("private suspend fun pullChat")))
-                                      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ValueError: substring not found

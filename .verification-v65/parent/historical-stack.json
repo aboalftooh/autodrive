@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 65,
-  "session": 65,
-  "historicalSession": "62-64",
-  "requestedGate": "stack",
-  "shadowVerifierReturnCode": 0,
-  "shadowVerifierErrors": [],
-  "verdict": "PASS"
-}

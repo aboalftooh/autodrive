@@ -1,4 +1,0 @@
-foregroundToken,foregroundAlpha,backgroundToken,backgroundAlpha,compositedBackground,usagePath,symbol,textClass,requiredRatio,actualRatio,status
-AutoDriveText.Disabled,1.0,AutoDriveSurface.Raised,1.0,#161820,core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt,AutoDriveTextField enabled placeholder,normal,4.5,2.23,CONFIRMED_STATIC_FAIL
-AutoDriveText.Disabled,1.0,AutoDriveSurface.Raised,1.0,#161820,core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt,AutoDriveSearchField enabled placeholder,normal,4.5,2.23,CONFIRMED_STATIC_FAIL
-AutoDriveText.Secondary,1.0,AutoDriveSurface.Raised,1.0,#161820,core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt,replacement target,normal,4.5,5.57,APPROVED_EXISTING_TOKEN_PAIR

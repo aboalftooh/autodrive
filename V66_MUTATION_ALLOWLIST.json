@@ -1,8 +1,0 @@
-{
-  "schemaVersion": 66,
-  "session": 66,
-  "productionMutationPolicy": "ZERO_OP",
-  "files": [],
-  "findingIds": [],
-  "reason": "Fresh v66 discovery found no confirmed static production finding."
-}

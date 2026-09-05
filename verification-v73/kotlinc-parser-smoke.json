@@ -1,8 +1,0 @@
-{
-  "compiled": false,
-  "kotlincExitCode": 1,
-  "note": "Parser smoke only; unresolved Android/Hilt/Room dependencies prevent standalone Kotlin compilation and this is not Gradle compile evidence.",
-  "session": 73,
-  "syntaxDiagnosticCount": 0,
-  "syntaxDiagnostics": []
-}

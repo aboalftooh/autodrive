@@ -1,1 +1,0 @@
-val governed = AutoDriveRadius.MediumShape
