@@ -63,3 +63,6 @@ for text in (home, recent, profile, ach):
     assert 'AutoDriveNavigationItem("achievements", "إنجازاتي"' in text
 assert 'selectedItemId = "achievements"' in ach
 print('Achievements root navigation: PASS')
+
+balance_fix = ROOT / '.ci/fix_balance_source_of_truth.py'
+exec(compile(balance_fix.read_text(encoding='utf-8'), str(balance_fix), 'exec'), {'__name__': '__main__'})
