@@ -76,7 +76,7 @@ class BalanceRepositoryImpl @Inject constructor(
                 if (clientId != scope.clientId) {
                     return@runCatching Result.Error("جلسة العميل غير متطابقة")
                 }
-                val userEntity = db.autoDriveUserDao().get(scope.userId)
+                val userEntity = db.autoDriveUserDao().getForScope(scope.userId, scope.clientId, scope.orgId)
                 if (
                     userEntity == null ||
                     userEntity.clientId != scope.clientId ||
@@ -202,4 +202,3 @@ private data class CancelPendingWithdrawalsReceipt(
     @SerialName("result_count") val resultCount: Int? = null,
     @SerialName("error_code") val errorCode: String? = null,
 )
-
