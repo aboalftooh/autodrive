@@ -6,8 +6,8 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class NotificationDestinationResolverTest {
-    @Test fun `explicit route wins`() = assertEquals(
-        "custom/route",
+    @Test fun `typed invoice destination wins over explicit route`() = assertEquals(
+        Screen.InvoiceList.createRoute(),
         NotificationDestinationResolver.resolve("custom/route", NotificationType.NEW_INVOICE),
     )
 
@@ -26,8 +26,8 @@ class NotificationDestinationResolverTest {
         NotificationDestinationResolver.resolve(null, NotificationType.WITHDRAWAL_COMPLETED),
     )
 
-    @Test fun `invoice opens achievements`() = assertEquals(
-        Screen.Achievements.route,
+    @Test fun `invoice opens invoice list`() = assertEquals(
+        Screen.InvoiceList.createRoute(),
         NotificationDestinationResolver.resolve(null, NotificationType.NEW_INVOICE),
     )
 

@@ -72,7 +72,7 @@ class CommissionCalculator @Inject constructor() {
     }
 
     // 5.5: حُذف منطق الأهلية المحلي (isEligible/calculate) نهائياً — مصدر الحقيقة الوحيد
-    // هو view commission_eligibility عبر CommissionRepository.getEligibilities(clientId).
+    // هو snapshot محلي materialized من view commission_eligibility بواسطة SyncCoordinator.
     // ما تبقى هنا أدوات حدود الأسبوع (fallbackLastFriday9AM/fallbackNextFriday9AM)، تحليل التاريخ، وتجميع صفوف
     // مُصنَّفة سلفاً من السيرفر (summarize) — وليست تصنيف أهلية.
 
@@ -81,17 +81,15 @@ class CommissionCalculator @Inject constructor() {
         val cutoff = if (weekStartMs > 0L) weekStartMs else fallbackLastFriday9AM()
         val weekEnd = cutoff + 7L * 24 * 3_600_000L
 
-        fun List<CommissionEntry>.moneySum() = Money.sum(map { it.amount })
-
-        val withdrawable = entries.filter { it.status == CommissionStatus.WITHDRAWABLE }.moneySum()
-        val pending      = entries.filter { it.status == CommissionStatus.PENDING }.moneySum()
-        val paid         = entries.filter { it.status == CommissionStatus.PAID }.moneySum()
+        val withdrawable = Money.sum(entries.map { it.withdrawableAmount })
+        val pending      = Money.sum(entries.map { it.pendingAmount })
+        val paid         = Money.sum(entries.map { it.paidOutAmount })
         val weeklyTotal  = entries
             .filter {
                 it.status != CommissionStatus.PAID &&
                     parseIsoMs(it.createdAt) in cutoff until weekEnd
             }
-            .moneySum()
+            .let { Money.sum(it.map { entry -> entry.amount }) }
 
         return CommissionSummary(
             withdrawable       = withdrawable,

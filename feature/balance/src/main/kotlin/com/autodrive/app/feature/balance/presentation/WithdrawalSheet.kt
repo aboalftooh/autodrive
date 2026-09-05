@@ -19,7 +19,6 @@ import com.autodrive.app.core.designsystem.components.inputs.AutoDriveTextField
 import com.autodrive.app.core.designsystem.foundation.color.AutoDriveText
 import com.autodrive.app.core.designsystem.foundation.spacing.AutoDriveSpace
 import com.autodrive.app.core.model.money.Money
-import com.autodrive.app.feature.balance.domain.model.WithdrawalStatus
 
 @Composable
 internal fun WithdrawalSheet(
@@ -29,11 +28,7 @@ internal fun WithdrawalSheet(
     onSubmit: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val reservedSum = state.withdrawalRequests
-        .filter { it.status == WithdrawalStatus.PENDING || it.status == WithdrawalStatus.APPROVED }
-        .let { Money.sum(it.map { request -> request.amount }) }
-    val rawAvailable = (state.balance?.balance ?: Money.ZERO) - reservedSum
-    val maxBalance = if (rawAvailable.isNegative()) Money.ZERO else rawAvailable
+    val maxBalance = state.balance?.balance ?: Money.ZERO
     val noteLimit = 200
 
     AutoDriveBottomSheet(
@@ -41,17 +36,10 @@ internal fun WithdrawalSheet(
         title = "طلب سحب رصيد",
     ) {
         Text(
-            "الرصيد المتاح: ${FormatUtils.formatSar(maxBalance)}",
+            "الرصيد المتاح: ${FormatUtils.formatSarNoLabel(maxBalance)}",
             style = MaterialTheme.typography.bodyMedium,
             color = AutoDriveText.Secondary,
         )
-        if (reservedSum.isPositive()) {
-            Text(
-                "محجوز بطلبات سحب سابقة: ${FormatUtils.formatSar(reservedSum)}",
-                style = MaterialTheme.typography.bodySmall,
-                color = AutoDriveText.Secondary,
-            )
-        }
         AutoDriveNumericField(
             value = state.withdrawalAmount,
             onValueChange = onAmountChange,

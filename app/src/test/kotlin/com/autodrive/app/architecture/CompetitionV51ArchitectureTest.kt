@@ -50,7 +50,7 @@ class CompetitionV51ArchitectureTest {
     fun `history preserves null rank and win count is nullable`() {
         val repository = app("feature/competition/data/WeeklyCompetitionRepositoryImpl.kt")
         val model = app("feature/competition/domain/model/WeeklyCompetition.kt")
-        val history = app("feature/reports/presentation/log/CompetitionHistoryScreen.kt")
+        val history = app("feature/competition/presentation/CompetitionHistoryScreen.kt")
         assertTrue(repository.contains("myRank = dto.myRank?.toInt()"))
         assertFalse(repository.contains("dto.myRank?.toInt() ?: return@mapNotNull null"))
         assertTrue(model.contains("val myWinCount: Int?"))

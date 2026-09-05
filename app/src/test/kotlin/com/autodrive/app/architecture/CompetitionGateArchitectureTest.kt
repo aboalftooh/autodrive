@@ -24,15 +24,14 @@ class CompetitionGateArchitectureTest {
     }
 
     @Test
-    fun `reports competition cards render only for active`() {
-        val reports = source("feature/reports/presentation/log/ActivityLogScreen.kt")
-        val activeGate = reports.indexOf("if (competitionAvailability == CompetitionAvailability.ACTIVE)")
-        val leader = reports.indexOf("label = \"شارة الزعيم\"")
-        val competition = reports.indexOf("label = \"المسابقة الأسبوعية\"")
+    fun `competition secondary screens are owned by competition feature`() {
+        val history = source("feature/competition/presentation/CompetitionHistoryScreen.kt")
+        val winWeeks = source("feature/competition/presentation/WinWeeksScreen.kt")
+        val legacyReports = appRoot.resolve("feature/reports")
 
-        assertTrue(activeGate >= 0)
-        assertTrue(leader > activeGate)
-        assertTrue(competition > activeGate)
+        assertTrue(history.contains("WeeklyCompetitionRepository"))
+        assertTrue(winWeeks.contains("WeeklyCompetitionRepository"))
+        assertFalse(legacyReports.exists())
     }
 
     @Test
@@ -54,8 +53,8 @@ class CompetitionGateArchitectureTest {
     fun `navigation fixes history route and guards direct competition routes`() {
         val graph = source("navigation/NavigationGraphs.kt")
 
-        assertTrue(graph.contains("onNavigateCompetitionHistory= { navController.navigate(Screen.CompetitionHistory.route) }"))
-        assertFalse(graph.contains("onNavigateCompetitionHistory= { navController.navigate(Screen.WeeklyCompetition.route) }"))
+        assertTrue(graph.contains("onNavigateCompetitionHistory = { navController.navigate(Screen.CompetitionHistory.route) }"))
+        assertFalse(graph.contains("onNavigateCompetitionHistory = { navController.navigate(Screen.WeeklyCompetition.route) }"))
         assertTrue(graph.contains("composable(Screen.WinWeeks.route)"))
         assertTrue(graph.contains("composable(Screen.CompetitionHistory.route)"))
         assertTrue(graph.contains("competitionAvailability == CompetitionAvailability.ACTIVE"))

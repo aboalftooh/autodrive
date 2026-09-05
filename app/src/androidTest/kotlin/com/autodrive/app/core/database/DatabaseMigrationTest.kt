@@ -25,7 +25,7 @@ class DatabaseMigrationTest {
     }
 
     @Test
-    fun migrationFrom4To19_preservesDataAndAddsScopedObservability() {
+    fun migrationFrom4To20_preservesDataAndAddsHomeCommissionCache() {
         createVersion4Database()
 
         val roomDatabase = Room.databaseBuilder(
@@ -118,6 +118,8 @@ class DatabaseMigrationTest {
             assertTrue(database.hasTable("sync_bootstrap_staging"))
             assertTrue(database.hasTable("sync_reconciliation_state"))
             assertTrue(database.hasTable("sync_observability_state"))
+            assertTrue(database.hasTable("commission_eligibility_cache"))
+            assertTrue(database.hasTable("commission_eligibility_sync_state"))
             assertEquals(0L, database.singleLong("SELECT COUNT(*) FROM sync_observability_state", emptyArray()))
             assertEquals("INTEGER", database.columnType("sync_observability_state", "bootstrap_count"))
             assertEquals("INTEGER", database.columnType("sync_observability_state", "hint_dropped_count"))
@@ -134,6 +136,7 @@ class DatabaseMigrationTest {
                 "index_payments_invoice_id",
                 "index_payments_client_id",
                 "index_commission_payments_client_id",
+                "index_commission_eligibility_cache_client_id",
                 "index_balance_transactions_user_id_created_at",
                 "index_balance_transactions_sync_status",
                 "index_withdrawal_requests_user_id_created_at",

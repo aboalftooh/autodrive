@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.BarChart
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Message
 import androidx.compose.material3.Icon
@@ -197,7 +196,6 @@ private fun BottomNavigationPreview() = AutoDriveTheme {
         items = listOf(
             AutoDriveNavigationItem("home", "الرئيسية", Icons.Rounded.Home),
             AutoDriveNavigationItem("messages", "الرسائل", Icons.Rounded.Message, 4),
-            AutoDriveNavigationItem("reports", "التقارير", Icons.Rounded.BarChart),
         ),
         selectedItemId = "messages",
         onItemClick = {},

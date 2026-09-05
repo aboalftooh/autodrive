@@ -9,7 +9,7 @@ import com.autodrive.app.core.database.dao.*
 import com.autodrive.app.core.database.converters.BigDecimalConverters
 import com.autodrive.app.core.database.entities.*
 
-const val AUTODRIVE_DATABASE_VERSION = 19
+const val AUTODRIVE_DATABASE_VERSION = 21
 
 @TypeConverters(BigDecimalConverters::class)
 @Database(
@@ -17,6 +17,8 @@ const val AUTODRIVE_DATABASE_VERSION = 19
         InvoiceEntity::class,
         PaymentEntity::class,
         CommissionPaymentEntity::class,
+        CommissionEligibilityCacheEntity::class,
+        CommissionEligibilitySyncStateEntity::class,
         MarketerBalanceEntity::class,
         BalanceTransactionEntity::class,
         WithdrawalRequestEntity::class,
@@ -43,6 +45,7 @@ abstract class AutoDriveDatabase : RoomDatabase() {
     abstract fun invoiceDao(): InvoiceDao
     abstract fun paymentDao(): PaymentDao
     abstract fun commissionPaymentDao(): CommissionPaymentDao
+    abstract fun commissionEligibilityCacheDao(): CommissionEligibilityCacheDao
     abstract fun marketerBalanceDao(): MarketerBalanceDao
     abstract fun balanceTransactionDao(): BalanceTransactionDao
     abstract fun withdrawalRequestDao(): WithdrawalRequestDao
@@ -709,6 +712,54 @@ abstract class AutoDriveDatabase : RoomDatabase() {
             }
         }
 
+        /** Home commissions: persistent server-authoritative eligibility snapshot cache. */
+        val MIGRATION_19_20 = object : Migration(19, 20) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS commission_eligibility_cache (
+                        invoice_id TEXT NOT NULL PRIMARY KEY,
+                        client_id TEXT NOT NULL,
+                        commission TEXT NOT NULL,
+                        invoice_number INTEGER NOT NULL,
+                        created_at TEXT NOT NULL,
+                        eligibility TEXT NOT NULL
+                    )
+                    """.trimIndent(),
+                )
+                database.execSQL(
+                    "CREATE INDEX IF NOT EXISTS index_commission_eligibility_cache_client_id ON commission_eligibility_cache (client_id)",
+                )
+                database.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS commission_eligibility_sync_state (
+                        client_id TEXT NOT NULL PRIMARY KEY,
+                        week_start_ms INTEGER NOT NULL,
+                        synced_at INTEGER NOT NULL
+                    )
+                    """.trimIndent(),
+                )
+            }
+        }
+
+
+        /** Commission canonical v1: server-provided remaining amounts and pending reasons. */
+        val MIGRATION_20_21 = object : Migration(20, 21) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE commission_eligibility_cache ADD COLUMN paid_out_amount TEXT NOT NULL DEFAULT '0'")
+                database.execSQL("ALTER TABLE commission_eligibility_cache ADD COLUMN remaining_amount TEXT NOT NULL DEFAULT '0'")
+                database.execSQL("ALTER TABLE commission_eligibility_cache ADD COLUMN withdrawable_amount TEXT NOT NULL DEFAULT '0'")
+                database.execSQL("ALTER TABLE commission_eligibility_cache ADD COLUMN pending_amount TEXT NOT NULL DEFAULT '0'")
+                database.execSQL("ALTER TABLE commission_eligibility_cache ADD COLUMN credit_remaining_amount TEXT NOT NULL DEFAULT '0'")
+                database.execSQL("ALTER TABLE commission_eligibility_cache ADD COLUMN reason_code TEXT")
+                database.execSQL("ALTER TABLE commission_eligibility_cache ADD COLUMN reason_message TEXT")
+                database.execSQL("UPDATE commission_eligibility_cache SET paid_out_amount = CASE WHEN eligibility='PAID' THEN commission ELSE '0' END")
+                database.execSQL("UPDATE commission_eligibility_cache SET remaining_amount = CASE WHEN eligibility='PAID' THEN '0' ELSE commission END")
+                database.execSQL("UPDATE commission_eligibility_cache SET withdrawable_amount = CASE WHEN eligibility='WITHDRAWABLE' THEN commission ELSE '0' END")
+                database.execSQL("UPDATE commission_eligibility_cache SET pending_amount = CASE WHEN eligibility='PENDING' THEN commission ELSE '0' END")
+            }
+        }
+
         val ROOM_V13_INDEXES: List<String> = listOf(
             "CREATE INDEX IF NOT EXISTS index_invoices_client_id_category ON invoices (client_id, category)",
             "CREATE INDEX IF NOT EXISTS index_payments_invoice_id ON payments (invoice_id)",
@@ -764,6 +815,8 @@ abstract class AutoDriveDatabase : RoomDatabase() {
             MIGRATION_16_17,
             MIGRATION_17_18,
             MIGRATION_18_19,
+            MIGRATION_19_20,
+            MIGRATION_20_21,
         )
     }
 }

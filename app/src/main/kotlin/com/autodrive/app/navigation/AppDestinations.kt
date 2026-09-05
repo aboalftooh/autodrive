@@ -29,10 +29,11 @@ sealed class Screen(val route: String) {
         fun createRoute(newChat: Boolean = false) =
             if (newChat) "recent_activity?newChat=true" else "recent_activity"
     }
-    data object Achievements    : Screen("achievements")
     data object Profile         : Screen("profile")
     data object Balance         : Screen("balance")
-    data object CommissionReport : Screen("commission_report")
+    data object Achievements     : Screen("achievements")
+    data object AllCommissions   : Screen("all_commissions")
+    data object PendingCommissions : Screen("pending_commissions")
     data object InvoiceDetail   : Screen("invoice_detail/{invoiceId}") {
         fun createRoute(invoiceId: String) = "invoice_detail/$invoiceId"
     }

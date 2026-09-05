@@ -24,6 +24,7 @@ class SyncManager @Inject constructor(
     private val presenceReporter: PresenceReporter,
     private val outboxSynchronizer: OutboxSynchronizer,
     private val unifiedChangeSynchronizer: UnifiedChangeSynchronizer,
+    private val commissionEligibilityRefresher: CommissionEligibilityRefresher,
     private val safeBootstrapSynchronizer: SafeBootstrapSynchronizer,
     private val antiEntropyReconciler: AntiEntropyReconciler,
     private val localDataCleaner: LocalDataCleaner,
@@ -116,6 +117,20 @@ class SyncManager @Inject constructor(
             val code = stableCode(error, "CHANGE_FEED_PROTOCOL")
             failures += SyncFailure(SyncPhase.PROFILE, code)
             phase(context, SyncPhase.PROFILE, pullStarted, false, error, code)
+        }
+
+        onPhase(SyncPhase.COMMISSIONS)
+        val commissionsStarted = System.nanoTime()
+        try {
+            commissionEligibilityRefresher.refresh(scope)
+            completed += 1
+            phase(context, SyncPhase.COMMISSIONS, commissionsStarted, true)
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (error: Throwable) {
+            val code = stableCode(error, "COMMISSION_ELIGIBILITY_REFRESH")
+            failures += SyncFailure(SyncPhase.COMMISSIONS, code)
+            phase(context, SyncPhase.COMMISSIONS, commissionsStarted, false, error, code)
         }
 
         onPhase(SyncPhase.DELETIONS)

@@ -57,13 +57,13 @@ class CompetitionV52RegressionGuardTest {
     @Test
     fun `disabled locked active matrix remains wired at presentation boundaries`() {
         val home = app("feature/home/presentation/HomeScreen.kt")
-        val reports = app("feature/reports/presentation/log/ActivityLogScreen.kt")
         val screen = app("feature/competition/presentation/WeeklyCompetitionScreen.kt")
         val graph = app("navigation/NavigationGraphs.kt")
+        val history = app("feature/competition/presentation/CompetitionHistoryScreen.kt")
+        val winWeeks = app("feature/competition/presentation/WinWeeksScreen.kt")
 
-        // DISABLED: hidden from normal Home and Reports competition surfaces.
+        // DISABLED: hidden from the normal Home surface.
         assertTrue(home.contains("competitionAvailability != CompetitionAvailability.DISABLED"))
-        assertTrue(reports.contains("competitionAvailability == CompetitionAvailability.ACTIVE"))
 
         // LOCKED: Home teaser only, direct competition routes render locked content.
         assertTrue(home.contains("CompetitionAvailability.LOCKED"))
@@ -76,6 +76,8 @@ class CompetitionV52RegressionGuardTest {
         assertTrue(graph.contains("composable(Screen.WinWeeks.route)"))
         assertTrue(graph.contains("composable(Screen.CompetitionHistory.route)"))
         assertTrue(graph.contains("competitionAvailability == CompetitionAvailability.ACTIVE"))
+        assertTrue(history.contains("WeeklyCompetitionRepository"))
+        assertTrue(winWeeks.contains("WeeklyCompetitionRepository"))
     }
 
     @Test

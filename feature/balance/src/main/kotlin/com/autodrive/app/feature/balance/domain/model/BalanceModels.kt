@@ -4,7 +4,7 @@ import com.autodrive.app.core.model.money.Money
 
 enum class WithdrawalStatus(val label: String) {
     PENDING("قيد المعالجة"),
-    APPROVED("ناجح"),
+    APPROVED("قيد المعالجة"),
     REJECTED("مرفوض"),
     COMPLETED("مكتمل")
 }
@@ -16,7 +16,6 @@ sealed class WithdrawalSubmitResult {
 
 data class MarketerBalance(
     val balance: Money,
-    val pendingWithdrawal: Money,
     val updatedAt: String
 )
 
@@ -25,7 +24,21 @@ data class BalanceTransaction(
     val type: String,
     val amount: Money,
     val description: String,
-    val createdAt: String
+    val createdAt: String,
+    val referenceType: String = "",
+    val referenceId: String? = null,
+    val invoiceNumber: Int? = null,
+)
+
+data class BalanceActivityPageCursor(
+    val createdAt: String,
+    val id: String,
+)
+
+data class BalanceActivityPage(
+    val entries: List<BalanceTransaction>,
+    val nextCursor: BalanceActivityPageCursor?,
+    val hasMore: Boolean,
 )
 
 data class WithdrawalRequest(

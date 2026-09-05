@@ -1,6 +1,7 @@
 package com.autodrive.app.feature.commission.domain.usecase
 
-import com.autodrive.app.feature.commission.domain.model.CommissionEntry
+import com.autodrive.app.feature.commission.domain.model.CommissionSnapshot
+import com.autodrive.app.feature.commission.domain.model.CommissionSnapshotSource
 import com.autodrive.app.feature.commission.domain.model.CommissionSummary
 import com.autodrive.app.feature.commission.domain.repository.CommissionRepository
 import com.autodrive.app.core.session.domain.SessionReader
@@ -13,9 +14,13 @@ class ObserveCommissionsUseCase @Inject constructor(
     private val repository: CommissionRepository,
     private val sessionReader: SessionReader
 ) {
-    operator fun invoke(): Flow<Pair<CommissionSummary, List<CommissionEntry>>> {
+    operator fun invoke(): Flow<CommissionSnapshot> {
         val clientId = sessionReader.currentSession().clientId ?: return flowOf(
-            Pair(CommissionSummary(Money.ZERO, Money.ZERO, Money.ZERO, Money.ZERO, "", 0L), emptyList())
+            CommissionSnapshot(
+                summary = CommissionSummary(Money.ZERO, Money.ZERO, Money.ZERO, Money.ZERO, "", 0L),
+                entries = emptyList(),
+                source = CommissionSnapshotSource.UNVERIFIED_EMPTY,
+            )
         )
         return repository.observeCommissions(clientId)
     }

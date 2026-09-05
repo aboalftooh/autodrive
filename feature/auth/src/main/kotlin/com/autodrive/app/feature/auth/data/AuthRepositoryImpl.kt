@@ -200,7 +200,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signOut() = withContext(Dispatchers.IO) {
         val scopeToLogout = SyncScope.from(sessionReader.currentSession())
-        runCatching { pushTokens.deleteCurrentUserToken() }
+        currentPushToken()?.let { token -> runCatching { pushTokens.deleteCurrentUserToken(token) } }
         realtimeController.stop()
         try {
             if (scopeToLogout != null) syncManager.beginLogout(scopeToLogout)

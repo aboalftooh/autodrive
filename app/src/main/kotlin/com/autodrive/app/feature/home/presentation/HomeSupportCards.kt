@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +24,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.autodrive.app.core.designsystem.components.AutoDriveAccent
 import com.autodrive.app.core.designsystem.components.actions.AutoDriveIconButton
 import com.autodrive.app.core.designsystem.components.actions.AutoDriveIconButtonTone
@@ -149,4 +153,39 @@ fun AiInsightCard(dynamoMessage: String, modifier: Modifier = Modifier) {
             }
         }
     }
+}
+
+
+@Composable
+fun HomeLifecycleEffect(viewModel: HomeViewModel) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> viewModel.onScreenActive()
+                Lifecycle.Event.ON_RESUME -> viewModel.refreshDynamoMessage()
+                Lifecycle.Event.ON_STOP -> viewModel.onScreenInactive()
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+            viewModel.onScreenActive()
+        }
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            viewModel.onScreenInactive()
+        }
+    }
+}
+
+@Composable
+fun HomeRefreshMessage(message: String?, modifier: Modifier = Modifier) {
+    if (message.isNullOrBlank()) return
+    Text(
+        text = message,
+        modifier = modifier,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.error,
+    )
 }

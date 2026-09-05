@@ -19,6 +19,7 @@ class LocalDataCleaner @Inject constructor(
             db.paymentDao().deleteByClientId(scope.clientId)
             db.invoiceDao().deleteByClientId(scope.clientId)
             db.commissionPaymentDao().deleteByClientId(scope.clientId)
+            db.commissionEligibilityCacheDao().clearScope(scope.clientId)
 
             db.marketerBalanceDao().deleteByUserId(scope.userId)
             db.balanceTransactionDao().deleteByUserId(scope.userId)

@@ -59,45 +59,40 @@ class DynamoContentRepositoryImpl @Inject constructor(
     override suspend fun syncMessages(
         audienceType: String,
         specialty: String,
-    ) = withContext(Dispatchers.IO) {
+    ): Boolean = withContext(Dispatchers.IO) {
         runCatching {
             AppLogger.d(TAG,"fetching dynamo_content from Supabase")
-
             val all = supabase.client.postgrest["dynamo_content"]
-                .select(Columns.ALL) {
-                    filter { eq("is_active", true) }
-                }
+                .select(Columns.ALL) { filter { eq("is_active", true) } }
                 .decodeList<DynamoContentDto>()
-
-            // فلترة محلية: (audienceType مطابق OR both) AND (specialty مطابق OR general)
             val filtered = all.filter { row ->
                 (row.audienceType == audienceType || row.audienceType == "both") &&
-                (row.specialty == specialty || row.specialty == "general")
+                    (row.specialty == specialty || row.specialty == "general")
             }
-
-            AppLogger.d(TAG,"fetched ${all.size} total, ${filtered.size} matching — saving to Room")
-
-            if (filtered.isNotEmpty()) {
-                dao.clearAndInsert(filtered.map { it.toEntity() })
-                AppLogger.d(TAG,"Room cache updated: ${filtered.size} messages")
-            }
+            // Empty is authoritative too: remove stale content from another audience/account.
+            dao.clearAndInsert(filtered.map { it.toEntity() })
+            AppLogger.d(TAG,"Room scoped cache replaced: ${filtered.size} messages")
+            true
         }.onFailure {
             AppLogger.e(TAG,"syncMessages failed: ${it.message}")
-        }
-        Unit
+        }.getOrDefault(false)
     }
 
-    override suspend fun getRandomLocalMessage(): DynamoContentMessage? =
-        withContext(Dispatchers.IO) {
-            runCatching { dao.getRandomMessage()?.toDomain() }
-                .onFailure { AppLogger.e(TAG,"getRandomLocalMessage error: ${it.message}") }
-                .getOrNull()
-        }
+    override suspend fun getRandomLocalMessage(
+        audienceType: String,
+        specialty: String,
+    ): DynamoContentMessage? = withContext(Dispatchers.IO) {
+        runCatching { dao.getRandomMessage(audienceType, specialty)?.toDomain() }
+            .onFailure { AppLogger.e(TAG,"getRandomLocalMessage error: ${it.message}") }
+            .getOrNull()
+    }
 
     override suspend fun getRandomLocalMessageExcluding(
+        audienceType: String,
+        specialty: String,
         ids: List<String>,
     ): DynamoContentMessage? = withContext(Dispatchers.IO) {
-        runCatching { dao.getRandomMessageExcluding(ids)?.toDomain() }
+        runCatching { dao.getRandomMessageExcluding(audienceType, specialty, ids)?.toDomain() }
             .onFailure { AppLogger.e(TAG,"getRandomMessageExcluding error: ${it.message}") }
             .getOrNull()
     }

@@ -8,16 +8,11 @@ import com.autodrive.app.core.observability.AppLogger
 import androidx.core.app.NotificationCompat
 import com.autodrive.app.AutoDriveApp
 import com.autodrive.app.MainActivity
-import com.autodrive.app.core.database.AutoDriveDatabase
 import com.autodrive.app.core.platform.notifications.AutoDriveNotificationConstants
 import com.autodrive.app.core.platform.notifications.FcmTokenStore
 import com.autodrive.app.core.platform.notifications.PushTokenRepository
 import com.autodrive.app.core.sync.domain.SyncCoordinator
 import com.autodrive.app.core.sync.domain.SyncReason
-import com.autodrive.app.feature.commission.domain.CommissionCalculator
-import com.autodrive.app.feature.commission.domain.repository.CommissionRepository
-import com.autodrive.app.core.session.domain.SessionReader
-import com.autodrive.app.core.model.money.Money
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,8 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.util.Locale
-import java.math.BigDecimal
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,10 +28,6 @@ class AutoDriveFirebaseMessagingService : FirebaseMessagingService() {
 
     @Inject lateinit var pushTokenRepository: PushTokenRepository
     @Inject lateinit var syncCoordinator: SyncCoordinator
-    @Inject lateinit var db: AutoDriveDatabase
-    @Inject lateinit var sessionReader: SessionReader
-    @Inject lateinit var calculator: CommissionCalculator
-    @Inject lateinit var commissionRepository: CommissionRepository
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -69,59 +58,28 @@ class AutoDriveFirebaseMessagingService : FirebaseMessagingService() {
         val navRoute = data[AutoDriveNotificationConstants.DATA_NAV_ROUTE]
             ?: AutoDriveNotificationConstants.routeForType(type)
 
-        if (type in FINANCE_NOTIFICATION_TYPES) {
-            // مزامنة أولاً ثم عرض الإشعار بأرقام محلية (مصدر الحقيقة = Room)
-            scope.launch {
-                runCatching { syncCoordinator.requestSync(SyncReason.FCM_HINT) }
-                val freshBody = buildFreshFinanceBody(body, type)
-                showNotification(title, freshBody, navRoute)
-            }
-        } else {
-            showNotification(title, body, navRoute)
-        }
+        val notificationKey = message.messageId
+            ?: data["notification_id"]
+            ?: data["request_id"]
+            ?: "${type.orEmpty()}:${navRoute.orEmpty()}:${title}:${body}"
+
+        // The server payload is authoritative for notification content in every app state.
+        // Foreground and background must therefore show the same title/body; sync is only a data hint.
+        scope.launch { runCatching { syncCoordinator.requestSync(SyncReason.FCM_HINT) } }
+        showNotification(title, body, navRoute, notificationKey)
     }
 
-    // يحسب body الإشعار من السيرفر (commission_eligibility view) بعد المزامنة
-    private suspend fun buildFreshFinanceBody(fallback: String, type: String?): String {
-        val session = sessionReader.currentSession()
-        val clientId = session.clientId ?: return fallback
-        val userId = session.userId ?: return fallback
-        return runCatching {
-            val entries = commissionRepository.getEligibilities(clientId)
-            val summary = calculator.summarize(entries)
-
-            when (type) {
-                "COMMISSION_WITHDRAWABLE", "WEEK_ENDING_SOON" ->
-                    "لديك ${fmtAmount(summary.withdrawable)} جاهزة للسحب"
-                "NEW_COMMISSION" ->
-                    "عمولة جديدة — المعلقة: ${fmtAmount(summary.pending)}"
-                "COMMISSION_PAID", "BALANCE_CREDITED" -> {
-                    val balance = db.marketerBalanceDao().get(userId)?.balance ?: BigDecimal.ZERO
-                    "رصيدك الحالي: ${fmtAmount(balance)}"
-                }
-                "WITHDRAWAL_APPROVED", "WITHDRAWAL_REJECTED", "WITHDRAWAL_COMPLETED" -> {
-                    val balance = db.marketerBalanceDao().get(userId)?.balance ?: BigDecimal.ZERO
-                    "تم تحديث طلب السحب — رصيدك: ${fmtAmount(balance)}"
-                }
-                else -> fallback
-            }
-        }.getOrElse { fallback }
-    }
-
-    private fun fmtAmount(amount: Money): String = fmtAmount(amount.amount)
-
-    private fun fmtAmount(amount: BigDecimal): String =
-        String.format(Locale.US, "%,d", amount.max(BigDecimal.ZERO).toLong())
-
-    private fun showNotification(title: String, body: String, navRoute: String?) {
+    private fun showNotification(title: String, body: String, navRoute: String?, notificationKey: String) {
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             if (navRoute != null) {
                 putExtra(AutoDriveNotificationConstants.EXTRA_NAV_ROUTE, navRoute)
             }
         }
+        // A distinct requestCode keeps each notification's deep-link isolated from later notifications.
+        val requestCode = notificationKey.hashCode()
         val pi = PendingIntent.getActivity(
-            this, 0, intent,
+            this, requestCode, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val n = NotificationCompat.Builder(this, AutoDriveApp.CHANNEL_ID)
@@ -144,10 +102,5 @@ class AutoDriveFirebaseMessagingService : FirebaseMessagingService() {
 
     private companion object {
         const val TAG = "AutoDriveFcmService"
-        val FINANCE_NOTIFICATION_TYPES = setOf(
-            "COMMISSION_PAID", "COMMISSION_WITHDRAWABLE", "BALANCE_CREDITED",
-            "WITHDRAWAL_APPROVED", "WITHDRAWAL_REJECTED", "WITHDRAWAL_COMPLETED",
-            "NEW_COMMISSION", "WEEK_ENDING_SOON"
-        )
     }
 }

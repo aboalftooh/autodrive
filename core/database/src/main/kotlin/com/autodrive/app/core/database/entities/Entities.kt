@@ -37,6 +37,33 @@ data class PaymentEntity(
 )
 
 @Entity(
+    tableName = "commission_eligibility_cache",
+    indices = [Index(value = ["client_id"], name = "index_commission_eligibility_cache_client_id")],
+)
+data class CommissionEligibilityCacheEntity(
+    @PrimaryKey @ColumnInfo(name = "invoice_id") val invoiceId: String,
+    @ColumnInfo(name = "client_id") val clientId: String,
+    val commission: BigDecimal,
+    @ColumnInfo(name = "invoice_number") val invoiceNumber: Int,
+    @ColumnInfo(name = "created_at") val createdAt: String,
+    val eligibility: String,
+    @ColumnInfo(name = "paid_out_amount") val paidOutAmount: BigDecimal,
+    @ColumnInfo(name = "remaining_amount") val remainingAmount: BigDecimal,
+    @ColumnInfo(name = "withdrawable_amount") val withdrawableAmount: BigDecimal,
+    @ColumnInfo(name = "pending_amount") val pendingAmount: BigDecimal,
+    @ColumnInfo(name = "credit_remaining_amount") val creditRemainingAmount: BigDecimal,
+    @ColumnInfo(name = "reason_code") val reasonCode: String?,
+    @ColumnInfo(name = "reason_message") val reasonMessage: String?,
+)
+
+@Entity(tableName = "commission_eligibility_sync_state")
+data class CommissionEligibilitySyncStateEntity(
+    @PrimaryKey @ColumnInfo(name = "client_id") val clientId: String,
+    @ColumnInfo(name = "week_start_ms") val weekStartMs: Long,
+    @ColumnInfo(name = "synced_at") val syncedAt: Long,
+)
+
+@Entity(
     tableName = "commission_payments",
     indices = [Index(value = ["client_id"], name = "index_commission_payments_client_id")],
 )

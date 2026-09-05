@@ -31,4 +31,33 @@ class CommissionCalculatorTest {
         status = CommissionStatus.WITHDRAWABLE,
         createdAt = createdAt
     )
+    @Test
+    fun summarize_partialPayoutUsesRemainingAmountsWithoutInflatingBalance() {
+        val partial = CommissionEntry(
+            invoiceId = "partial",
+            invoiceNumber = 7,
+            amount = Money.of("100"),
+            status = CommissionStatus.WITHDRAWABLE,
+            createdAt = "2026-01-01T00:00:00Z",
+            paidOutAmount = Money.of("40"),
+            remainingAmount = Money.of("60"),
+            withdrawableAmount = Money.of("60"),
+            pendingAmount = Money.ZERO,
+        )
+        val pending = CommissionEntry(
+            invoiceId = "pending",
+            invoiceNumber = 8,
+            amount = Money.of("50"),
+            status = CommissionStatus.PENDING,
+            createdAt = "2026-01-01T00:00:00Z",
+            pendingAmount = Money.of("50"),
+        )
+
+        val summary = calculator.summarize(listOf(partial, pending), 1L)
+
+        assertEquals(Money.of("60"), summary.withdrawable)
+        assertEquals(Money.of("50"), summary.pending)
+        assertEquals(Money.of("40"), summary.paid)
+    }
+
 }

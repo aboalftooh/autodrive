@@ -21,8 +21,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,9 +29,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.autodrive.app.core.designsystem.components.actions.AutoDriveFab
 import com.autodrive.app.core.designsystem.components.navigation.AutoDriveBottomNavigation
 import com.autodrive.app.core.designsystem.components.navigation.AutoDriveNavigationItem
@@ -59,8 +55,8 @@ private fun getGreeting(): String {
 @Composable
 fun HomeScreen(
     onNavigateRecent: () -> Unit,
-    onNavigateAchievements: () -> Unit,
     onNavigateProfile: () -> Unit,
+    onNavigateAchievements: () -> Unit,
     onNavigateNotifications: () -> Unit,
     onNavigateCompetition: () -> Unit,
     competitionAvailability: CompetitionAvailability = CompetitionAvailability.DISABLED,
@@ -68,15 +64,8 @@ fun HomeScreen(
     unreadMessages: Int = 0,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.uiState.collectAsState()
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) viewModel.refreshDynamoMessage()
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-    }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    HomeLifecycleEffect(viewModel)
 
     val firstName = remember(state.userName) {
         state.userName.trim().split(" ").firstOrNull().orEmpty().ifBlank { state.userName }
@@ -153,6 +142,13 @@ fun HomeScreen(
                                 )
                             },
                         )
+                    }
+                }
+                if (!state.refreshMessage.isNullOrBlank()) {
+                    item {
+                        HomeDashboardWidth(horizontalPadding = true) {
+                            HomeRefreshMessage(state.refreshMessage)
+                        }
                     }
                 }
                 item {

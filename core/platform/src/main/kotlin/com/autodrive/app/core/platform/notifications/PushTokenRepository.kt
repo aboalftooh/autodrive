@@ -2,6 +2,9 @@ package com.autodrive.app.core.platform.notifications
 
 import com.autodrive.app.core.network.AutoDriveSupabase
 import com.autodrive.app.core.session.domain.SessionReader
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlin.coroutines.resume
+import kotlinx.coroutines.suspendCancellableCoroutine
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.rpc
@@ -41,7 +44,7 @@ class PushTokenRepository @Inject constructor(
         }
     }
 
-    suspend fun deleteCurrentUserToken(): kotlin.Result<Unit> = withContext(Dispatchers.IO) {
+    suspend fun deleteCurrentUserToken(token: String?): kotlin.Result<Unit> = withContext(Dispatchers.IO) {
         runCatching {
             val uid = supabase.client.auth.currentSessionOrNull()?.user?.id
                 ?: sessionReader.currentSession().userId
@@ -49,12 +52,25 @@ class PushTokenRepository @Inject constructor(
             val session = sessionReader.currentSession()
             require(session.userId == null || session.userId == uid) { "PUSH_TOKEN_SESSION_MISMATCH" }
 
-            val mutationId = UUID.randomUUID().toString()
-            val receipt = supabase.client.postgrest.rpc(
-                "autodrive_revoke_push_token_command_v1",
-                RevokePushTokenParams(mutationId),
-            ).decodeAs<PushCommandReceipt>()
-            receipt.requireApplied(mutationId, "REVOKE_PUSH_TOKEN")
+            if (!token.isNullOrBlank()) {
+                val mutationId = UUID.randomUUID().toString()
+                val receipt = supabase.client.postgrest.rpc(
+                    "autodrive_revoke_push_token_command_v2",
+                    RevokePushTokenParams(mutationId, token),
+                ).decodeAs<PushCommandReceipt>()
+                receipt.requireApplied(mutationId, "REVOKE_PUSH_TOKEN")
+            }
+        }.also {
+            // Always invalidate this Firebase installation token locally, even when the network/RPC fails.
+            deleteFirebaseInstallationToken()
+        }
+    }
+
+    private suspend fun deleteFirebaseInstallationToken() {
+        suspendCancellableCoroutine { continuation ->
+            FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener {
+                if (continuation.isActive) continuation.resume(Unit)
+            }
         }
     }
 
@@ -81,6 +97,7 @@ private data class RegisterPushTokenParams(
 @Serializable
 private data class RevokePushTokenParams(
     @SerialName("p_mutation_id") val mutationId: String,
+    @SerialName("p_token") val token: String,
 )
 
 @Serializable

@@ -1,33 +1,36 @@
 package com.autodrive.app.feature.commission.data
 
 import com.autodrive.app.core.database.AutoDriveDatabase
-import com.autodrive.app.core.database.entities.InvoiceEntity
+import com.autodrive.app.core.database.entities.CommissionEligibilityCacheEntity
 import com.autodrive.app.core.network.AutoDriveSupabase
-import com.autodrive.app.core.observability.AppLogger
-import com.autodrive.app.core.network.dto.EligibilityDto
 import com.autodrive.app.core.network.dto.InvoiceItemDto
-import com.autodrive.app.feature.commission.domain.model.InvoiceItem
+import com.autodrive.app.core.network.dto.EligibilityDto
+import com.autodrive.app.core.network.dto.CommissionPageParams
+import com.autodrive.app.core.network.dto.CommissionListSummaryDto
 import com.autodrive.app.feature.commission.domain.CommissionCalculator
 import com.autodrive.app.feature.commission.domain.model.CommissionEntry
+import com.autodrive.app.feature.commission.domain.model.CommissionSnapshot
+import com.autodrive.app.feature.commission.domain.model.CommissionSnapshotSource
+import com.autodrive.app.feature.commission.domain.model.CommissionPage
+import com.autodrive.app.feature.commission.domain.model.CommissionPageCursor
+import com.autodrive.app.feature.commission.domain.model.CommissionListSummary
 import com.autodrive.app.feature.commission.domain.model.CommissionStatus
-import com.autodrive.app.feature.commission.domain.model.CommissionSummary
 import com.autodrive.app.feature.commission.domain.model.Invoice
 import com.autodrive.app.feature.commission.domain.model.InvoiceCategory
+import com.autodrive.app.feature.commission.domain.model.InvoiceItem
 import com.autodrive.app.feature.commission.domain.model.InvoiceStatus
 import com.autodrive.app.feature.commission.domain.repository.CommissionRepository
 import com.autodrive.app.core.model.money.Money
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
-import java.math.BigDecimal
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,100 +38,36 @@ import javax.inject.Singleton
 class CommissionRepositoryImpl @Inject constructor(
     private val calculator: CommissionCalculator,
     private val supabase: AutoDriveSupabase,
-    private val db: AutoDriveDatabase
+    private val db: AutoDriveDatabase,
 ) : CommissionRepository {
 
-    override fun observeCommissions(clientId: String): Flow<Pair<CommissionSummary, List<CommissionEntry>>> {
-        // Changes in the local cache, the Friday boundary, and a small periodic
-        // retry all refresh the server-authoritative snapshot. A failed request
-        // must not terminate the Flow and leave the reports screen at zero.
-        return merge(
-            db.invoiceDao().observeByClientId(clientId).map { Unit },
-            weekBoundaryChanges(),
-            periodicRefreshes(),
-        )
-            .onStart { emit(Unit) }
-            .map {
-                runCatching { loadCommissionSnapshot(clientId) }
-                    .onFailure { error ->
-                        AppLogger.e(TAG, "Commission snapshot refresh failed", error)
-                    }
-                    .getOrElse { loadLocalCommissionSnapshot(clientId) }
-            }
-            .flowOn(Dispatchers.IO)
-    }
-
-    @Suppress("DEPRECATION")
-    private suspend fun loadCommissionSnapshot(
-        clientId: String
-    ): Pair<CommissionSummary, List<CommissionEntry>> {
-        val dtos = supabase.client.postgrest["commission_eligibility"]
-            .select(Columns.ALL) { filter { eq("client_id", clientId) } }
-            .decodeList<EligibilityDto>()
-        val weekStartMs = dtos.firstOrNull()
-            ?.weekStart
-            ?.let { calculator.parseIsoMs(it) }
-            ?: calculator.fallbackLastFriday9AM()
-        val entries = dtos.mapNotNull { it.toCommissionEntry() }
-            .sortedByDescending { it.createdAt }
-        return Pair(calculator.summarize(entries, weekStartMs), entries)
-    }
-
-    @Suppress("DEPRECATION")
-    private fun weekBoundaryChanges(): Flow<Unit> = flow {
-        while (true) {
-            val waitMs = (calculator.fallbackNextFriday9AM() - System.currentTimeMillis())
-                .coerceAtLeast(1_000L)
-            delay(waitMs)
-            emit(Unit)
-            delay(1_000L)
-        }
-    }
-
-    private fun periodicRefreshes(): Flow<Unit> = flow {
-        while (true) {
-            delay(SNAPSHOT_RETRY_MS)
-            emit(Unit)
-        }
-    }
-
     /**
-     * Display-only fallback for a temporary View/API failure. It keeps the
-     * report useful from the already synchronized invoice cache; all normal
-     * reads still use commission_eligibility as the source of truth.
+     * Financial SSOT: commission eligibility is never reconstructed from local invoices/payments.
+     * Room only materializes the server-authoritative commission_eligibility snapshot.
      */
-    private suspend fun loadLocalCommissionSnapshot(
-        clientId: String,
-    ): Pair<CommissionSummary, List<CommissionEntry>> {
-        val invoices = db.invoiceDao().getByClientId(clientId)
-        val paymentsByInvoice = if (invoices.isEmpty()) {
-            emptyMap()
-        } else {
-            db.paymentDao()
-                .getByInvoiceIds(invoices.map { it.id })
-                .groupingBy { it.invoiceId }
-                .fold(BigDecimal.ZERO) { total, payment -> total + payment.amount }
-        }
-        val cutoff = calculator.fallbackLastFriday9AM()
-        val entries = invoices.map { invoice ->
-            val createdMs = calculator.parseIsoMs(invoice.createdAt)
-            val paidEnough = paymentsByInvoice[invoice.id]?.let { it >= invoice.totalAmount } == true
-            val status = when {
-                invoice.status.equals("CLOSED_CASH", ignoreCase = true) && createdMs < cutoff ->
-                    CommissionStatus.WITHDRAWABLE
-                invoice.status.equals("CLOSED_CREDIT", ignoreCase = true) &&
-                    createdMs < cutoff && paidEnough -> CommissionStatus.WITHDRAWABLE
-                else -> CommissionStatus.PENDING
+    override fun observeCommissions(clientId: String): Flow<CommissionSnapshot> {
+        val cacheDao = db.commissionEligibilityCacheDao()
+        return combine(
+            cacheDao.observeByClientId(clientId),
+            cacheDao.observeSyncState(clientId),
+        ) { rows, state ->
+            if (state == null) {
+                CommissionSnapshot(
+                    summary = calculator.summarize(emptyList()),
+                    entries = emptyList(),
+                    source = CommissionSnapshotSource.UNVERIFIED_EMPTY,
+                )
+            } else {
+                val entries = rows.mapNotNull { it.toCommissionEntry() }
+                    .sortedByDescending { it.createdAt }
+                CommissionSnapshot(
+                    summary = calculator.summarize(entries, state.weekStartMs),
+                    entries = entries,
+                    source = CommissionSnapshotSource.SERVER_CACHE,
+                    lastSyncedAt = state.syncedAt,
+                )
             }
-            CommissionEntry(
-                invoiceId = invoice.id,
-                invoiceNumber = invoice.invoiceNumber,
-                amount = Money.of(invoice.commission),
-                status = status,
-                createdAt = invoice.createdAt,
-            )
-        }.sortedByDescending { it.createdAt }
-        return calculator.summarize(entries, cutoff) to entries
+        }.flowOn(Dispatchers.IO)
     }
 
     override fun observeInvoices(clientId: String): Flow<List<Invoice>> =
@@ -136,65 +75,149 @@ class CommissionRepositoryImpl @Inject constructor(
             .map { list -> list.map { it.toDomain() } }
             .flowOn(Dispatchers.IO)
 
-    // ── Entity → Domain mappers ──────────────────────────────
-
-    private fun InvoiceEntity.toDomain() = Invoice(
-        id            = id,
-        clientId      = clientId,
-        commission    = Money.of(commission),
-        status        = runCatching { InvoiceStatus.valueOf(status.uppercase()) }.getOrDefault(InvoiceStatus.OPEN),
-        category      = runCatching { InvoiceCategory.valueOf(category.uppercase()) }.getOrDefault(InvoiceCategory.OTHER),
-        totalAmount   = Money.of(totalAmount),
+    private fun com.autodrive.app.core.database.entities.InvoiceEntity.toDomain() = Invoice(
+        id = id,
+        clientId = clientId,
+        commission = Money.of(commission),
+        status = runCatching { InvoiceStatus.valueOf(status.uppercase()) }.getOrDefault(InvoiceStatus.OPEN),
+        category = runCatching { InvoiceCategory.valueOf(category.uppercase()) }.getOrDefault(InvoiceCategory.OTHER),
+        totalAmount = Money.of(totalAmount),
         invoiceNumber = invoiceNumber,
-        createdAt     = createdAt
+        createdAt = createdAt,
     )
 
-    // FIX-7: يستعلم من commission_eligibility view — السيرفر مصدر الحقيقة للأهلية
-    override suspend fun getEligibilities(clientId: String): List<CommissionEntry> =
+    override suspend fun getCommissionPage(cursor: CommissionPageCursor?, limit: Int): CommissionPage =
         withContext(Dispatchers.IO) {
-            supabase.client.postgrest["commission_eligibility"]
-                .select(Columns.ALL) { filter { eq("client_id", clientId) } }
+            val safeLimit = limit.coerceIn(1, 50)
+            val rows = supabase.client.postgrest
+                .rpc(
+                    "autodrive_commission_page_v1",
+                    buildJsonObject {
+                        put("p_limit", (safeLimit + 1).coerceAtMost(50))
+                        put("p_before_created_at", cursor?.createdAt)
+                        put("p_before_invoice_id", cursor?.invoiceId)
+                    },
+                )
                 .decodeList<EligibilityDto>()
-                .mapNotNull { it.toCommissionEntry() }
-                .sortedByDescending { it.createdAt }
+
+            val hasMore = rows.size > safeLimit
+            val pageRows = rows.take(safeLimit)
+            val entries = pageRows.mapNotNull { it.toCommissionEntry() }
+            val nextCursor = entries.lastOrNull()?.let {
+                CommissionPageCursor(createdAt = it.createdAt, invoiceId = it.invoiceId)
+            }
+            CommissionPage(entries = entries, nextCursor = nextCursor, hasMore = hasMore)
         }
 
-    override suspend fun getInvoiceItems(invoiceId: String): List<InvoiceItem> =
+    override suspend fun getCommissionListSummary(): CommissionListSummary =
         withContext(Dispatchers.IO) {
-            supabase.client.postgrest["invoice_items"]
-                .select(Columns.ALL) { filter { eq("invoice_id", invoiceId) } }
-                .decodeList<InvoiceItemDto>()
-                .map { it.toDomain() }
+            val dto = supabase.client.postgrest
+                .rpc("autodrive_commission_summary_v1")
+                .decodeList<CommissionListSummaryDto>()
+                .firstOrNull() ?: CommissionListSummaryDto()
+            CommissionListSummary(
+                totalCount = dto.totalCount,
+                totalAmount = Money.of(dto.totalAmount),
+            )
         }
+
+    override suspend fun getPendingCommissionPage(cursor: CommissionPageCursor?, limit: Int): CommissionPage =
+        withContext(Dispatchers.IO) {
+            val safeLimit = limit.coerceIn(1, 50)
+            val rows = supabase.client.postgrest
+                .rpc(
+                    "autodrive_pending_commission_page_v1",
+                    buildJsonObject {
+                        put("p_limit", (safeLimit + 1).coerceAtMost(50))
+                        put("p_before_created_at", cursor?.createdAt)
+                        put("p_before_invoice_id", cursor?.invoiceId)
+                    },
+                )
+                .decodeList<EligibilityDto>()
+
+            val hasMore = rows.size > safeLimit
+            val pageRows = rows.take(safeLimit)
+            val entries = pageRows.mapNotNull { it.toCommissionEntry() }
+            val nextCursor = entries.lastOrNull()?.let {
+                CommissionPageCursor(createdAt = it.createdAt, invoiceId = it.invoiceId)
+            }
+            CommissionPage(entries = entries, nextCursor = nextCursor, hasMore = hasMore)
+        }
+
+    override suspend fun getPendingCommissionListSummary(): CommissionListSummary =
+        withContext(Dispatchers.IO) {
+            val dto = supabase.client.postgrest
+                .rpc("autodrive_pending_commission_summary_v1")
+                .decodeList<CommissionListSummaryDto>()
+                .firstOrNull() ?: CommissionListSummaryDto()
+            CommissionListSummary(
+                totalCount = dto.totalCount,
+                totalAmount = Money.of(dto.totalAmount),
+            )
+        }
+
+    override suspend fun getInvoiceItems(invoiceId: String): List<InvoiceItem> = withContext(Dispatchers.IO) {
+        supabase.client.postgrest["invoice_items"]
+            .select(Columns.ALL) { filter { eq("invoice_id", invoiceId) } }
+            .decodeList<InvoiceItemDto>()
+            .map { it.toDomain() }
+    }
 
     private fun InvoiceItemDto.toDomain() = InvoiceItem(
-        id          = id,
-        itemName    = itemName,
-        itemType    = itemType,
+        id = id,
+        itemName = itemName,
+        itemType = itemType,
         description = description,
-        quantity    = quantity,
-        sellPrice   = Money.of(sellPrice),
-        totalPrice  = Money.of(totalPrice)
+        quantity = quantity,
+        sellPrice = Money.of(sellPrice),
+        totalPrice = Money.of(totalPrice),
     )
 
     private fun EligibilityDto.toCommissionEntry(): CommissionEntry? {
         val status = when (eligibility) {
-            "PAID"         -> CommissionStatus.PAID
+            "PAID" -> CommissionStatus.PAID
             "WITHDRAWABLE" -> CommissionStatus.WITHDRAWABLE
-            "PENDING"      -> CommissionStatus.PENDING
-            else           -> return null
+            "PENDING" -> CommissionStatus.PENDING
+            else -> return null
         }
+        val paid = Money.of(paidOutAmount ?: java.math.BigDecimal.ZERO)
+        val remaining = Money.of(remainingAmount)
         return CommissionEntry(
-            invoiceId     = invoiceId,
+            invoiceId = invoiceId,
             invoiceNumber = invoiceNumber,
-            amount        = Money.of(commission),
-            status        = status,
-            createdAt     = createdAt
+            amount = Money.of(commission),
+            status = status,
+            createdAt = createdAt,
+            paidOutAmount = paid,
+            remainingAmount = remaining,
+            withdrawableAmount = Money.of(withdrawableAmount),
+            pendingAmount = Money.of(pendingAmount),
+            creditRemainingAmount = Money.of(creditRemainingAmount),
+            reasonCode = reasonCode,
+            reasonMessage = reasonMessage,
         )
     }
 
-    private companion object {
-        const val TAG = "CommissionRepository"
-        const val SNAPSHOT_RETRY_MS = 30_000L
+    private fun CommissionEligibilityCacheEntity.toCommissionEntry(): CommissionEntry? {
+        val status = when (eligibility) {
+            "PAID" -> CommissionStatus.PAID
+            "WITHDRAWABLE" -> CommissionStatus.WITHDRAWABLE
+            "PENDING" -> CommissionStatus.PENDING
+            else -> return null
+        }
+        return CommissionEntry(
+            invoiceId = invoiceId,
+            invoiceNumber = invoiceNumber,
+            amount = Money.of(commission),
+            status = status,
+            createdAt = createdAt,
+            paidOutAmount = Money.of(paidOutAmount),
+            remainingAmount = Money.of(remainingAmount),
+            withdrawableAmount = Money.of(withdrawableAmount),
+            pendingAmount = Money.of(pendingAmount),
+            creditRemainingAmount = Money.of(creditRemainingAmount),
+            reasonCode = reasonCode,
+            reasonMessage = reasonMessage,
+        )
     }
 }

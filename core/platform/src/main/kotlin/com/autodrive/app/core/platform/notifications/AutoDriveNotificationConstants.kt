@@ -14,8 +14,8 @@ object AutoDriveNotificationConstants {
         "NEW_COMMISSION", "COMMISSION_WITHDRAWABLE", "COMMISSION_PAID",
         "BALANCE_CREDITED", "WITHDRAWAL_APPROVED", "WITHDRAWAL_REJECTED",
         "WITHDRAWAL_COMPLETED" -> "balance"
-        "NEW_INVOICE", "WEEKLY_GOAL_ACHIEVED", "WEEK_ENDING_SOON",
-        "INACTIVITY"           -> "activity_log"
+        "NEW_INVOICE"          -> "invoice_list?weekMode=all"
+        "WEEKLY_GOAL_ACHIEVED", "WEEK_ENDING_SOON", "INACTIVITY" -> "home"
         "PROFILE_INCOMPLETE"   -> "profile"
         else                   -> null
     }

@@ -18,18 +18,19 @@ import com.autodrive.app.feature.auth.presentation.register.BasicInfoScreen
 import com.autodrive.app.feature.balance.presentation.BalanceScreen
 import com.autodrive.app.feature.achievements.presentation.AchievementsScreen
 import com.autodrive.app.feature.chat.presentation.ChatScreen
-import com.autodrive.app.feature.commission.presentation.CommissionReportScreen
+import com.autodrive.app.feature.commission.presentation.AllCommissionsScreen
+import com.autodrive.app.feature.commission.presentation.PendingCommissionsScreen
 import com.autodrive.app.feature.competition.domain.model.CompetitionAvailability
 import com.autodrive.app.feature.competition.presentation.WeeklyCompetitionScreen
 import com.autodrive.app.feature.home.presentation.HomeScreen
 import com.autodrive.app.feature.notifications.presentation.NotificationsScreen
 import com.autodrive.app.feature.profile.presentation.ProfileScreen
-import com.autodrive.app.feature.reports.presentation.log.CompetitionHistoryScreen
-import com.autodrive.app.feature.reports.presentation.log.InvoiceDetailScreen
-import com.autodrive.app.feature.reports.presentation.log.InvoiceListScreen
-import com.autodrive.app.feature.reports.presentation.log.WeeklyCommissionsScreen
-import com.autodrive.app.feature.reports.presentation.log.WinWeeksScreen
-import com.autodrive.app.feature.reports.presentation.recent.RecentActivityScreen
+import com.autodrive.app.feature.competition.presentation.CompetitionHistoryScreen
+import com.autodrive.app.feature.commission.presentation.InvoiceDetailScreen
+import com.autodrive.app.feature.commission.presentation.InvoiceListScreen
+import com.autodrive.app.feature.commission.presentation.WeeklyCommissionsScreen
+import com.autodrive.app.feature.competition.presentation.WinWeeksScreen
+import com.autodrive.app.feature.chat.presentation.recent.RecentActivityScreen
 import com.autodrive.app.feature.info.presentation.AboutAppScreen
 import com.autodrive.app.feature.info.presentation.FaqScreen
 import com.autodrive.app.feature.info.presentation.PrivacyPolicyScreen
@@ -58,7 +59,9 @@ composable(Screen.SessionExpired.route) {
 composable(Screen.CodeInput.route) {
     CodeInputScreen(
         onOtpReady = { phone, devOtp ->
-            navController.navigate(Screen.OtpInput.createRoute(phone, devOtp)) { launchSingleTop = true }
+            navController.navigate(Screen.OtpInput.createRoute(phone, devOtp)) {
+                launchSingleTop = true
+            }
         },
         onBack = { navController.popBackStack() }
     )
@@ -74,7 +77,7 @@ composable(Screen.PhoneInput.route) {
             }
             phoneAuthViewModel.resetToIdle()
         },
-        onJoinCodeRequired = {
+        onJoinCodeRequired = { _ ->
             navController.navigate(Screen.CodeInput.route) { launchSingleTop = true }
             phoneAuthViewModel.resetToIdle()
         },
@@ -142,6 +145,20 @@ composable(Screen.Welcome.route) {
 
 }
 
+private fun NavHostController.navigateMainTab(route: String) {
+    if (route == Screen.Home.route) {
+        if (!popBackStack(Screen.Home.route, inclusive = false)) {
+            navigate(Screen.Home.route) { launchSingleTop = true }
+        }
+        return
+    }
+    navigate(route) {
+        popUpTo(Screen.Home.route) { saveState = true }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
 internal fun NavGraphBuilder.mainGraph(
     navController: NavHostController,
     onOpenNewChat: () -> Unit,
@@ -152,9 +169,9 @@ internal fun NavGraphBuilder.mainGraph(
 composable(Screen.Home.route) {
     LaunchedEffect(Unit) { onRefreshCompetitionAvailability() }
     HomeScreen(
-        onNavigateRecent = { navController.navigate(Screen.RecentActivity.createRoute()) },
-        onNavigateAchievements = { navController.navigate(Screen.Achievements.route) },
-        onNavigateProfile = { navController.navigate(Screen.Profile.route) },
+        onNavigateRecent = { navController.navigateMainTab(Screen.RecentActivity.createRoute()) },
+        onNavigateProfile = { navController.navigateMainTab(Screen.Profile.route) },
+        onNavigateAchievements = { navController.navigateMainTab(Screen.Achievements.route) },
         onNavigateNotifications = { navController.navigate(Screen.Notifications.route) },
         onNavigateCompetition = { navController.navigate(Screen.WeeklyCompetition.route) },
         competitionAvailability = competitionAvailability,
@@ -175,12 +192,39 @@ composable(Screen.WeeklyCompetition.route) {
 composable(Screen.Balance.route) {
     BalanceScreen(
         onBack = { navController.popBackStack() },
-        onOpenReport = { navController.navigate(Screen.CommissionReport.route) }
+        onOpenInvoice = { invoiceId -> navController.navigate(Screen.InvoiceDetail.createRoute(invoiceId)) },
     )
 }
 
-composable(Screen.CommissionReport.route) {
-    CommissionReportScreen(onBack = { navController.popBackStack() })
+composable(Screen.Achievements.route) {
+    AchievementsScreen(
+        onNavigateHome = { navController.navigateMainTab(Screen.Home.route) },
+        onNavigateRecent = { navController.navigateMainTab(Screen.RecentActivity.createRoute()) },
+        onNavigateProfile = { navController.navigateMainTab(Screen.Profile.route) },
+        onAddClick = onOpenNewChat,
+        unreadMessages = unreadMessages,
+        onOpenAllCommissions = { navController.navigate(Screen.AllCommissions.route) },
+        onOpenBalance = {
+            if (!navController.popBackStack(Screen.Balance.route, inclusive = false)) {
+                navController.navigate(Screen.Balance.route) { launchSingleTop = true }
+            }
+        },
+        onOpenPendingCommissions = { navController.navigate(Screen.PendingCommissions.route) },
+    )
+}
+
+composable(Screen.AllCommissions.route) {
+    AllCommissionsScreen(
+        onBack = { navController.popBackStack() },
+        onOpenInvoice = { invoiceId -> navController.navigate(Screen.InvoiceDetail.createRoute(invoiceId)) },
+    )
+}
+
+composable(Screen.PendingCommissions.route) {
+    PendingCommissionsScreen(
+        onBack = { navController.popBackStack() },
+        onOpenInvoice = { invoiceId -> navController.navigate(Screen.InvoiceDetail.createRoute(invoiceId)) },
+    )
 }
 
 composable(
@@ -217,28 +261,15 @@ composable(
 ) { backStack ->
     val newChat = backStack.arguments?.getBoolean("newChat") ?: false
     RecentActivityScreen(
-        onNavigateHome = { navController.navigate(Screen.Home.route) },
-        onNavigateAchievements = { navController.navigate(Screen.Achievements.route) },
-        onNavigateProfile = { navController.navigate(Screen.Profile.route) },
+        onNavigateHome = { navController.navigateMainTab(Screen.Home.route) },
+        onNavigateProfile = { navController.navigateMainTab(Screen.Profile.route) },
+        onNavigateAchievements = { navController.navigateMainTab(Screen.Achievements.route) },
         onAddClick = onOpenNewChat,
         onOpenConversation = { id, title ->
             navController.navigate(Screen.Chat.createRoute(id, title))
         },
         autoStartNewChat = newChat,
         unreadMessages = unreadMessages,
-    )
-}
-
-composable(Screen.Achievements.route) {
-    AchievementsScreen(
-        onNavigateHome = { navController.navigate(Screen.Home.route) },
-        onNavigateRecent = { navController.navigate(Screen.RecentActivity.createRoute()) },
-        onNavigateProfile = { navController.navigate(Screen.Profile.route) },
-        onAddClick = onOpenNewChat,
-        unreadMessages = unreadMessages,
-        onOpenAllCommissions = { navController.navigate(Screen.CommissionReport.route) },
-        onOpenBalance = { navController.navigate(Screen.Balance.route) },
-        onOpenPendingCommissions = { navController.navigate(Screen.CommissionReport.route) },
     )
 }
 
@@ -288,9 +319,9 @@ composable(Screen.CompetitionHistory.route) {
 
 composable(Screen.Profile.route) {
     ProfileScreen(
-        onNavigateHome = { navController.navigate(Screen.Home.route) },
-        onNavigateRecent = { navController.navigate(Screen.RecentActivity.createRoute()) },
-        onNavigateAchievements = { navController.navigate(Screen.Achievements.route) },
+        onNavigateHome = { navController.navigateMainTab(Screen.Home.route) },
+        onNavigateRecent = { navController.navigateMainTab(Screen.RecentActivity.createRoute()) },
+        onNavigateAchievements = { navController.navigateMainTab(Screen.Achievements.route) },
         onSignedOut = {
             navController.navigate(Screen.PhoneInput.route) {
                 popUpTo(0) { inclusive = true }

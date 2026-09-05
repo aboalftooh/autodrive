@@ -23,7 +23,6 @@ class FeatureOwnershipArchitectureTest {
         "notifications",
         "chat",
         "competition",
-        "reports",
     )
 
     @Test

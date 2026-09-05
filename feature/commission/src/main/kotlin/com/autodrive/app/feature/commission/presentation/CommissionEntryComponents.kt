@@ -172,8 +172,8 @@ private fun InvoiceDetailRow(label: String, value: String) {
 fun EntryInfoDialog(entry: CommissionEntry, nextFriday9AmMs: Long, onDismiss: () -> Unit) {
     val (title, message, showWithdraw) = when (entry.status) {
         CommissionStatus.PENDING      -> Triple(
-            "عمولة معلّقة",
-            "هذه العمولة في انتظار موعد الصرف الأسبوعي.\nسيكون بإمكانك سحبها يوم الجمعة القادمة الساعة 9:00 صباحاً.",
+            "عمولة معلقة",
+            entry.reasonMessage ?: "هذه العمولة لم تصبح جاهزة للسحب بعد. افتح تفاصيلها لمعرفة شرط الاستحقاق.",
             false
         )
         CommissionStatus.WITHDRAWABLE -> Triple(

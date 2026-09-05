@@ -31,7 +31,6 @@ import com.autodrive.app.feature.balance.domain.model.BalanceTransaction
 import com.autodrive.app.feature.balance.domain.model.WithdrawalRequest
 import com.autodrive.app.feature.balance.domain.model.WithdrawalStatus
 import com.autodrive.app.core.model.money.Money
-import com.autodrive.app.feature.balance.presentation.BalanceHistoryItem
 import com.autodrive.app.core.designsystem.components.actions.AutoDrivePrimaryButton
 import com.autodrive.app.core.designsystem.components.actions.AutoDrivePrimaryButtonTone
 import com.autodrive.app.core.common.format.FormatUtils

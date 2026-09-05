@@ -26,6 +26,18 @@ data class AutoDriveUserDto(
 )
 
 @Serializable
+data class InviteCodeDto(
+    val id: Int = 0,
+    val code: String = "",
+    @SerialName("marketer_client_id") val clientId: String = "",
+    @SerialName("organization_id")    val orgId: String = "",
+    @SerialName("expires_at")         val expiresAt: String? = null,
+    val used: Boolean = false,
+    @SerialName("used_at")            val usedAt: String? = null,
+    @SerialName("created_at")         val createdAt: String = ""
+)
+
+@Serializable
 data class InvoiceDto(
     val id: String = "",
     @SerialName("client_id")      val clientId: String = "",
@@ -169,6 +181,48 @@ data class WithdrawalRequestDto(
     @SerialName("client_request_id") val clientRequestId: String? = null,
 )
 
+@Serializable
+data class MarkInviteUsedDto(
+    val used: Boolean = true,
+    @SerialName("used_at") val usedAt: String
+)
+
+// ── RPC: verify_invite_code_v2 ─────────────────────────────
+@Serializable
+data class VerifyCodeRpcParams(
+    @SerialName("p_code") val code: String
+)
+
+@Serializable
+data class VerifyCodeRpcResult(
+    @SerialName("is_valid")    val isValid: Boolean,
+    val reason: String,
+    @SerialName("client_id")   val clientId: String?,
+    @SerialName("org_id")      val orgId: String?,
+    @SerialName("is_marketer") val isMarketer: Boolean,
+)
+
+// ── RPC: redeem_invite_code ────────────────────────────────
+@Serializable
+data class RedeemInviteCodeParams(
+    @SerialName("p_code")          val code: String,
+    @SerialName("p_full_name")     val fullName: String,
+    @SerialName("p_phone")         val phone: String,
+    @SerialName("p_account_type")  val accountType: String,
+    @SerialName("p_bank_name")     val bankName: String?    = null,
+    @SerialName("p_bank_account")  val bankAccount: String? = null,
+    @SerialName("p_workshop_name") val workshopName: String? = null,
+    @SerialName("p_specialty")     val specialty: String?   = null,
+    @SerialName("p_workers_count") val workersCount: Int?   = null,
+    @SerialName("p_address")       val address: String?     = null,
+)
+
+// ── RPC: link_phone_user (FIX-022) ────────────────────────
+@Serializable
+data class LinkPhoneUserParams(
+    @SerialName("p_invite_code") val inviteCode: String
+)
+
 // ── RPC: request_withdrawal (FIX-008) ─────────────────────
 @Serializable
 data class RequestWithdrawalParams(
@@ -202,7 +256,21 @@ data class EligibilityDto(
     @Serializable(with = BigDecimalSerializer::class)
     val paymentsSum: BigDecimal = BigDecimal.ZERO,
     @SerialName("week_start")      val weekStart: String = "",
-    val eligibility: String = ""
+    val eligibility: String = "",
+    @SerialName("remaining_amount")
+    @Serializable(with = BigDecimalSerializer::class)
+    val remainingAmount: BigDecimal = BigDecimal.ZERO,
+    @SerialName("withdrawable_amount")
+    @Serializable(with = BigDecimalSerializer::class)
+    val withdrawableAmount: BigDecimal = BigDecimal.ZERO,
+    @SerialName("pending_amount")
+    @Serializable(with = BigDecimalSerializer::class)
+    val pendingAmount: BigDecimal = BigDecimal.ZERO,
+    @SerialName("credit_remaining_amount")
+    @Serializable(with = BigDecimalSerializer::class)
+    val creditRemainingAmount: BigDecimal = BigDecimal.ZERO,
+    @SerialName("reason_code") val reasonCode: String? = null,
+    @SerialName("reason_message") val reasonMessage: String? = null,
 )
 
 // ── Edge Function: send-phone-otp / verify-phone-otp ──────
@@ -243,4 +311,41 @@ data class AutoDriveUserUpdateDto(
     val specialty: String? = null,
     @SerialName("workers_count") val workersCount: Int? = null,
     val address: String? = null
+)
+
+// ── RPC: autodrive_commission_page_v1 / summary_v1 ────────
+@Serializable
+data class CommissionPageParams(
+    @SerialName("p_limit") val limit: Int,
+    @SerialName("p_before_created_at") val beforeCreatedAt: String? = null,
+    @SerialName("p_before_invoice_id") val beforeInvoiceId: String? = null,
+)
+
+@Serializable
+data class CommissionListSummaryDto(
+    @SerialName("total_count") val totalCount: Long = 0L,
+    @SerialName("total_amount")
+    @Serializable(with = BigDecimalSerializer::class)
+    val totalAmount: BigDecimal = BigDecimal.ZERO,
+)
+
+// ── RPC: autodrive_balance_activity_page_v1 ─────────────────
+@Serializable
+data class BalanceActivityPageParams(
+    @SerialName("p_limit") val limit: Int,
+    @SerialName("p_before_created_at") val beforeCreatedAt: String? = null,
+    @SerialName("p_before_id") val beforeId: String? = null,
+)
+
+@Serializable
+data class BalanceActivityDto(
+    val id: String = "",
+    val type: String = "",
+    @Serializable(with = BigDecimalSerializer::class)
+    val amount: BigDecimal = BigDecimal.ZERO,
+    @SerialName("reference_type") val referenceType: String = "",
+    @SerialName("reference_id") val referenceId: String? = null,
+    val note: String? = null,
+    @SerialName("created_at") val createdAt: String = "",
+    @SerialName("invoice_number") val invoiceNumber: Int? = null,
 )

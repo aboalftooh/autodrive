@@ -1,165 +1,264 @@
 package com.autodrive.app.feature.balance.presentation
 
-import java.math.BigDecimal
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.autodrive.app.core.common.result.Result
+import com.autodrive.app.core.model.money.Money
 import com.autodrive.app.core.sync.domain.SyncCoordinator
 import com.autodrive.app.core.sync.domain.SyncReason
-import com.autodrive.app.core.common.result.Result
-import com.autodrive.app.feature.balance.domain.model.WithdrawalStatus
+import com.autodrive.app.feature.balance.domain.WithdrawalDecision
+import com.autodrive.app.feature.balance.domain.WithdrawalPolicy
 import com.autodrive.app.feature.balance.domain.model.WithdrawalSubmitResult
-import com.autodrive.app.core.model.money.Money
+import com.autodrive.app.feature.balance.domain.usecase.GetBalanceActivityPageUseCase
 import com.autodrive.app.feature.balance.domain.usecase.ObserveBalanceUseCase
 import com.autodrive.app.feature.balance.domain.usecase.ObserveTransactionsUseCase
 import com.autodrive.app.feature.balance.domain.usecase.ObserveWithdrawalRequestsUseCase
-import com.autodrive.app.feature.balance.domain.usecase.CancelAllPendingWithdrawalsUseCase
 import com.autodrive.app.feature.balance.domain.usecase.RequestWithdrawalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+
+private const val BALANCE_ACTIVITY_PAGE_SIZE = 10
 
 @HiltViewModel
 class BalanceViewModel @Inject constructor(
     private val observeBalance: ObserveBalanceUseCase,
     private val observeTransactions: ObserveTransactionsUseCase,
     private val observeWithdrawalRequests: ObserveWithdrawalRequestsUseCase,
+    private val getBalanceActivityPage: GetBalanceActivityPageUseCase,
     private val requestWithdrawal: RequestWithdrawalUseCase,
-    private val cancelAllPendingWithdrawals: CancelAllPendingWithdrawalsUseCase,
-    private val syncCoordinator: SyncCoordinator
+    private val withdrawalPolicy: WithdrawalPolicy,
+    private val syncCoordinator: SyncCoordinator,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BalanceUiState())
     val state: StateFlow<BalanceUiState> = _state.asStateFlow()
 
     init {
+        observeWalletState()
+        observeBookedMovementChanges()
+        load()
+    }
+
+    private fun observeWalletState() {
         viewModelScope.launch {
             combine(
                 observeBalance(),
-                observeTransactions(),
-                observeWithdrawalRequests()
-            ) { balance, transactions, withdrawals ->
-                Triple(balance, transactions, withdrawals)
-            }.collect { (balance, transactions, withdrawals) ->
-                // دمج حركات الرصيد مع طلبات السحب المعلّقة في سجل موحَّد مرتَّب بالتاريخ
-                val history = buildList {
-                    transactions.forEach { add(BalanceHistoryItem.Transaction(it)) }
-                    withdrawals
-                        .filter { it.status == WithdrawalStatus.PENDING }
-                        .forEach { add(BalanceHistoryItem.PendingWithdrawal(it)) }
-                }.sortedByDescending { it.sortKey }
-
-                _state.update { s ->
-                    s.copy(
-                        isLoading          = false,
-                        balance            = balance,
-                        transactions       = transactions,
-                        withdrawalRequests = withdrawals,
-                        historyItems       = history
-                    )
+                observeWithdrawalRequests(),
+            ) { balance, withdrawals -> balance to withdrawals }
+                .collect { (balance, withdrawals) ->
+                    _state.update { current ->
+                        current.copy(
+                            isLoading = false,
+                            balance = balance,
+                            withdrawalRequests = withdrawals,
+                            activeWithdrawal = withdrawalPolicy.activeRequest(withdrawals),
+                        )
+                    }
                 }
-            }
         }
-        load()
+    }
+
+    /**
+     * Room is used only as a realtime/sync change signal here. The visible statement itself is
+     * always re-read from the server-paged wallet journal; local rows never decide financial truth.
+     */
+    private fun observeBookedMovementChanges() {
+        viewModelScope.launch {
+            observeTransactions()
+                .map { rows -> rows.firstOrNull()?.id to rows.size }
+                .distinctUntilChanged()
+                .drop(1)
+                .collect { loadActivitiesInitial() }
+        }
     }
 
     fun load() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isLoading = it.balance == null) }
             syncCoordinator.requestSync(SyncReason.USER_REFRESH)
+            loadActivitiesInitial()
             _state.update { it.copy(isLoading = false) }
         }
     }
 
-    fun dismissSubmitBanners() { _state.update { it.copy(submitSuccess = false, submitPendingLocal = false) } }
+    fun retryActivities() = loadActivitiesInitial()
 
-    // يُستدعى عند ضغط زر "طلب سحب": يُحدِّث الرصيد من الخادم أولاً ثم يفتح النافذة
-    fun openWithdrawSheet() {
-        if (_state.value.isRefreshingBalance) return
+    fun loadMoreActivities() {
+        val current = _state.value
+        if (
+            current.isLoadingActivities ||
+            current.isLoadingMoreActivities ||
+            !current.hasMoreActivities ||
+            current.nextActivityCursor == null
+        ) return
+
         viewModelScope.launch {
-            _state.update { it.copy(isRefreshingBalance = true, submitError = null) }
-            syncCoordinator.requestSync(SyncReason.USER_REFRESH)
-            _state.update { it.copy(isRefreshingBalance = false, showWithdrawSheet = true,
-                submitSuccess = false, submitPendingLocal = false) }
+            _state.update { it.copy(isLoadingMoreActivities = true, activityError = null) }
+            runCatching {
+                getBalanceActivityPage(current.nextActivityCursor, BALANCE_ACTIVITY_PAGE_SIZE)
+            }.onSuccess { page ->
+                _state.update {
+                    it.copy(
+                        transactions = it.transactions + page.entries,
+                        nextActivityCursor = page.nextCursor,
+                        hasMoreActivities = page.hasMore,
+                        isLoadingMoreActivities = false,
+                    )
+                }
+            }.onFailure { error ->
+                _state.update {
+                    it.copy(
+                        isLoadingMoreActivities = false,
+                        activityError = error.message ?: "تعذّر تحميل المزيد",
+                    )
+                }
+            }
         }
     }
 
-    fun onWithdrawSheetOpen()  { _state.update { it.copy(showWithdrawSheet = true, submitError = null, submitSuccess = false, submitPendingLocal = false) } }
-    fun onWithdrawSheetClose() { _state.update { it.copy(showWithdrawSheet = false, withdrawalAmount = "", withdrawalNote = "") } }
-    fun onAmountChange(v: String) { _state.update { it.copy(withdrawalAmount = v.filter { c -> c.isDigit() || c == '.' }) } }
-    fun onNoteChange(v: String)   { _state.update { it.copy(withdrawalNote = v) } }
-
-    fun onCancelDialogShow()    { _state.update { it.copy(showCancelConfirmDialog = true) } }
-    fun onCancelDialogDismiss() { _state.update { it.copy(showCancelConfirmDialog = false) } }
-
-    fun cancelAllPending() {
+    private fun loadActivitiesInitial() {
+        if (_state.value.isLoadingActivities && _state.value.transactions.isNotEmpty()) return
         viewModelScope.launch {
-            _state.update { it.copy(isCancelling = true, showCancelConfirmDialog = false) }
-            when (val r = cancelAllPendingWithdrawals()) {
-                is Result.Success -> { load() }
-                is Result.Error   -> _state.update { it.copy(submitError = r.message) }
-                else -> {}
+            _state.update {
+                it.copy(
+                    isLoadingActivities = true,
+                    activityError = null,
+                )
             }
-            _state.update { it.copy(isCancelling = false) }
+            runCatching { getBalanceActivityPage(null, BALANCE_ACTIVITY_PAGE_SIZE) }
+                .onSuccess { page ->
+                    _state.update {
+                        it.copy(
+                            transactions = page.entries,
+                            nextActivityCursor = page.nextCursor,
+                            hasMoreActivities = page.hasMore,
+                            isLoadingActivities = false,
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isLoadingActivities = false,
+                            activityError = error.message ?: "تعذّر تحميل سجل الحركات",
+                        )
+                    }
+                }
         }
+    }
+
+    fun dismissSubmitBanners() {
+        _state.update { it.copy(submitSuccess = false, submitPendingLocal = false) }
+    }
+
+    fun openWithdrawSheet() {
+        if (_state.value.isRefreshingBalance || _state.value.activeWithdrawal != null) return
+        viewModelScope.launch {
+            _state.update { it.copy(isRefreshingBalance = true, submitError = null) }
+            syncCoordinator.requestSync(SyncReason.USER_REFRESH)
+            val hasActive = _state.value.activeWithdrawal != null
+            _state.update {
+                it.copy(
+                    isRefreshingBalance = false,
+                    showWithdrawSheet = !hasActive,
+                    submitError = if (hasActive) "يوجد طلب سحب قيد المعالجة بالفعل" else null,
+                    submitSuccess = false,
+                    submitPendingLocal = false,
+                )
+            }
+        }
+    }
+
+    fun onWithdrawSheetClose() {
+        _state.update {
+            it.copy(
+                showWithdrawSheet = false,
+                withdrawalAmount = "",
+                withdrawalNote = "",
+            )
+        }
+    }
+
+    fun onAmountChange(value: String) {
+        _state.update { state ->
+            state.copy(withdrawalAmount = value.filter { it.isDigit() || it == '.' })
+        }
+    }
+
+    fun onNoteChange(value: String) {
+        _state.update { it.copy(withdrawalNote = value) }
     }
 
     fun submitWithdrawal() {
         if (_state.value.isSubmitting) return
-        val amountBD  = _state.value.withdrawalAmount.toBigDecimalOrNull() ?: return
-        val balanceMoney = _state.value.balance?.balance ?: Money.ZERO
-        // يجب أن يطابق حساب السيرفر تماماً: المحجوز = PENDING + APPROVED
-        // (request_withdrawal يحجز كليهما — الخصم الفعلي يقع عند COMPLETED فقط).
-        // خصم PENDING وحدها كان يُظهر رصيداً متاحاً أكبر من الحقيقي فيُفاجأ المستخدم
-        // برفض السيرفر INSUFFICIENT_BALANCE.
-        val holdsBD   = _state.value.withdrawalRequests
-            .filter { it.status == WithdrawalStatus.PENDING || it.status == WithdrawalStatus.APPROVED }
-            .fold(Money.ZERO) { acc, w -> acc + w.amount }
-        val available = (balanceMoney - holdsBD).let { if (it.isNegative()) Money.ZERO else it }
-        val amount = Money.of(amountBD)
-        if (amountBD <= BigDecimal.ZERO) { _state.update { it.copy(submitError = "أدخل مبلغاً صحيحاً") }; return }
-        if (amount > available) { _state.update { it.copy(submitError = "المبلغ أكبر من الرصيد المتاح (${available.toPlainString()})") }; return }
+        val amountDecimal = _state.value.withdrawalAmount.toBigDecimalOrNull() ?: return
+        val amount = Money.of(amountDecimal)
+        val balance = _state.value.balance?.balance ?: Money.ZERO
+
+        when (val decision = withdrawalPolicy.evaluate(amount, balance, _state.value.withdrawalRequests)) {
+            WithdrawalDecision.ActiveRequestExists -> {
+                _state.update { it.copy(submitError = "يوجد طلب سحب قيد المعالجة بالفعل") }
+                return
+            }
+            WithdrawalDecision.InvalidAmount -> {
+                _state.update { it.copy(submitError = "أدخل مبلغاً صحيحاً") }
+                return
+            }
+            is WithdrawalDecision.InsufficientBalance -> {
+                _state.update {
+                    it.copy(submitError = "المبلغ أكبر من الرصيد المتاح (${decision.available.toPlainString()})")
+                }
+                return
+            }
+            WithdrawalDecision.Allowed -> Unit
+        }
 
         viewModelScope.launch {
             _state.update { it.copy(isSubmitting = true, submitError = null) }
-            when (val r = requestWithdrawal(amount, _state.value.withdrawalNote)) {
+            when (val result = requestWithdrawal(amount, _state.value.withdrawalNote)) {
                 is Result.Success -> {
-                    when (r.data) {
+                    when (result.data) {
                         is WithdrawalSubmitResult.Submitted -> {
                             _state.update {
                                 it.copy(
-                                    isSubmitting     = false,
-                                    submitSuccess     = true,
+                                    isSubmitting = false,
+                                    submitSuccess = true,
                                     submitPendingLocal = false,
                                     showWithdrawSheet = false,
-                                    withdrawalAmount  = "",
-                                    withdrawalNote    = ""
+                                    withdrawalAmount = "",
+                                    withdrawalNote = "",
                                 )
                             }
                         }
                         WithdrawalSubmitResult.PendingLocal -> {
-                            // الطلب لم يصل للسيرفر — لا "تم"
                             _state.update {
                                 it.copy(
-                                    isSubmitting      = false,
-                                    submitSuccess      = false,
+                                    isSubmitting = false,
+                                    submitSuccess = false,
                                     submitPendingLocal = true,
-                                    showWithdrawSheet  = false,
-                                    withdrawalAmount   = "",
-                                    withdrawalNote     = ""
+                                    showWithdrawSheet = false,
+                                    withdrawalAmount = "",
+                                    withdrawalNote = "",
                                 )
                             }
                         }
                     }
                     load()
                 }
-                is Result.Error -> _state.update { it.copy(isSubmitting = false, submitError = r.message) }
-                else -> {}
+                is Result.Error -> _state.update {
+                    it.copy(isSubmitting = false, submitError = result.message)
+                }
+                else -> Unit
             }
         }
     }

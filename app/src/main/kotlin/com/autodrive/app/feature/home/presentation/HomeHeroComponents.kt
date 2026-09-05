@@ -105,14 +105,19 @@ fun PumpHeroCard(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center,
             ) {
-                if (state.isLoading) {
-                    CircularProgressIndicator(
+                when {
+                    state.isLoading -> CircularProgressIndicator(
                         color = AutoDriveFinance.Pending,
                         modifier = Modifier.size(AutoDriveIconSize.LG),
                         strokeWidth = AutoDriveBorder.Strong,
                     )
-                } else {
-                    AutoDriveInstrumentNumber(
+                    !state.hasVerifiedCommissionData &&
+                        state.commissionDataStatus in setOf(CommissionDataStatus.OFFLINE, CommissionDataStatus.ERROR) ->
+                        AutoDriveInstrumentNumber(
+                            text = "—",
+                            tone = AutoDriveInstrumentTone.Empty,
+                        )
+                    else -> AutoDriveInstrumentNumber(
                         text = formatLedNumber(displayAmount),
                         tone = instrumentTone(fillPercent),
                     )
@@ -123,6 +128,12 @@ fun PumpHeroCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = AutoDriveSpace.MD),
+            )
+            CommissionFreshnessLabel(
+                status = state.commissionDataStatus,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = AutoDriveSpace.SM),
             )
         },
         supportingContent = {
@@ -143,6 +154,32 @@ fun PumpHeroCard(
             }
         },
     )
+}
+
+@Composable
+private fun CommissionFreshnessLabel(
+    status: CommissionDataStatus,
+    modifier: Modifier = Modifier,
+) {
+    val text = when (status) {
+        CommissionDataStatus.LOADING -> null
+        CommissionDataStatus.FRESH -> null
+        CommissionDataStatus.STALE -> "آخر بيانات محفوظة"
+        CommissionDataStatus.OFFLINE -> "غير متصل — لم يتم تأكيد الإجمالي"
+        CommissionDataStatus.ERROR -> "تعذر تحديث الإجمالي"
+    }
+    if (text != null) {
+        Text(
+            text = text,
+            modifier = modifier,
+            style = MaterialTheme.typography.labelSmall,
+            color = if (status == CommissionDataStatus.ERROR) {
+                MaterialTheme.colorScheme.error
+            } else {
+                AutoDriveText.Secondary
+            },
+        )
+    }
 }
 
 private fun instrumentTone(fillPercent: Float): AutoDriveInstrumentTone = when {

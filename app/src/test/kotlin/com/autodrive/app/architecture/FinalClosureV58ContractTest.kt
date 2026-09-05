@@ -37,30 +37,21 @@ class FinalClosureV58ContractTest {
     }
 
     @Test
-    fun `reports retain weekly semantics hierarchy and no eligibility implementation`() {
-        val viewModel = app("feature/reports/presentation/log/ReportsViewModel.kt")
-        val screen = app("feature/reports/presentation/log/ActivityLogScreen.kt")
+    fun `legacy reports are deleted and embedded features belong to their owners`() {
+        val legacyReports = appRoot.resolve("feature/reports")
+        val chatRecent = root.resolve("feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/recent/RecentActivityScreen.kt")
+        val invoiceDetail = root.resolve("feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/InvoiceDetailScreen.kt")
+        val invoiceList = root.resolve("feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/InvoiceListScreen.kt")
+        val weeklyCommissions = root.resolve("feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/WeeklyCommissionsScreen.kt")
+        val competitionHistory = appRoot.resolve("feature/competition/presentation/CompetitionHistoryScreen.kt")
+        val winWeeks = appRoot.resolve("feature/competition/presentation/WinWeeksScreen.kt")
+        val destinations = app("navigation/AppDestinations.kt")
 
-        assertTrue(viewModel.contains("val currentWeekStart = summary.weekStartMs"))
-        assertTrue(viewModel.contains("currentWeekPurchases"))
-        assertTrue(viewModel.contains("previousWeekPurchases"))
-        assertTrue(viewModel.contains("currentWeekCommissions"))
-        assertTrue(viewModel.contains("previousWeekCommissions"))
-        assertTrue(viewModel.contains("BigDecimal"))
-        assertTrue(viewModel.contains("RoundingMode.HALF_UP"))
-        assertFalse(viewModel.contains("commission_eligibility"))
-        assertFalse(viewModel.contains("calculateEligibility"))
-        assertFalse(viewModel.contains("isEligible"))
-
-        listOf(
-            "هذا الأسبوع",
-            "مقارنة بالأسبوع السابق",
-            "الحالة المالية",
-            "التفاصيل",
-            "منذ انضمامك",
-        ).forEach { assertTrue("Missing reports section: $it", screen.contains(it)) }
-        assertTrue(screen.contains("competitionAvailability == CompetitionAvailability.ACTIVE"))
-        assertFalse(screen.contains("Color(0x"))
+        assertFalse("Legacy reports package must not exist", legacyReports.exists())
+        listOf(chatRecent, invoiceDetail, invoiceList, weeklyCommissions, competitionHistory, winWeeks)
+            .forEach { assertTrue("Owned feature missing: $it", it.isFile) }
+        assertFalse(destinations.contains("activity_log"))
+        assertFalse(destinations.contains("ActivityLog"))
     }
 
     @Test

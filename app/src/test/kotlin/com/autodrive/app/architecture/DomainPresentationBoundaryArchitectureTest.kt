@@ -82,7 +82,7 @@ class DomainPresentationBoundaryArchitectureTest {
 
     @Test
     fun `invoice detail view model depends on domain use case only`() {
-        val viewModel = appRoot.resolve("feature/reports/presentation/log/InvoiceDetailViewModel.kt").readText()
+        val viewModel = appRoot.resolve("feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/InvoiceDetailViewModel.kt").readText()
 
         assertTrue(viewModel.contains("GetInvoiceDetailsUseCase"))
         assertFalse(viewModel.contains("AutoDriveDatabase"))
@@ -92,9 +92,9 @@ class DomainPresentationBoundaryArchitectureTest {
 
     @Test
     fun `invoice detail database access is hidden behind repository contract`() {
-        val contract = appRoot.resolve("feature/reports/domain/repository/InvoiceDetailRepository.kt").readText()
-        val adapter = appRoot.resolve("feature/reports/data/InvoiceDetailRepositoryImpl.kt").readText()
-        val module = appRoot.resolve("feature/reports/di/ReportsFeatureModule.kt").readText()
+        val contract = appRoot.resolve("feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/domain/repository/InvoiceDetailRepository.kt").readText()
+        val adapter = appRoot.resolve("feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/data/InvoiceDetailRepositoryImpl.kt").readText()
+        val module = appRoot.resolve("feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/di/CommissionFeatureModule.kt").readText()
 
         assertTrue(contract.contains("interface InvoiceDetailRepository"))
         assertFalse(contract.contains("AutoDriveDatabase"))

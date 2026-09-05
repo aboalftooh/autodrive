@@ -13,6 +13,7 @@ internal fun MarketerBalanceDto.toEntity(userId: String) = MarketerBalanceEntity
     userId = userId,
     clientId = clientId,
     balance = balance,
+    // Storage compatibility only; active withdrawal state lives in withdrawal_requests.
     pendingWithdrawal = BigDecimal.ZERO,
     updatedAt = updatedAt,
 )
