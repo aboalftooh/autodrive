@@ -41,8 +41,14 @@ class LegacyRemotePuller @Inject constructor(
             val remote = postgrest["autodrive_users"]
                 .select(Columns.ALL) { filter { eq("user_id", scope.userId) } }
                 .decodeSingleOrNull<AutoDriveUserDto>()
-            if (remote != null) snapshotTransaction(scope) {
-                db.autoDriveUserDao().upsert(guard.profile(scope, remote))
+            if (remote != null) {
+                val merged = guard.profile(scope, remote)
+                snapshotTransaction(scope) {
+                    // A user can be re-linked to another client/org. Remove stale local rows first so
+                    // downstream account-sensitive reads never resolve an arbitrary historic profile.
+                    db.autoDriveUserDao().deleteByUserId(scope.userId)
+                    db.autoDriveUserDao().upsert(merged)
+                }
             }
         }
 
