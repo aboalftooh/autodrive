@@ -107,6 +107,8 @@ jobs:
           grep -q 'phone split is existing otp or new join code only' "$AUTH_TEST"
           echo 'Current auth architecture regression contract restored: PASS'
 
+          python3 .ci/fix_achievements_navigation.py
+
           rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
           test -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
@@ -114,6 +116,8 @@ jobs:
           test ! -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           grep -q 'CodeInputScreen' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
           grep -q 'onJoinCodeRequired' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
+          grep -q 'onNavigateAchievements' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
+          grep -q 'selectedItemId = "achievements"' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
           test "$(grep -c 'WaitingScreen\|AccountTypeScreen' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt || true)" -eq 0
           echo 'Latest financial UI overlay: PASS'
 
@@ -130,6 +134,9 @@ jobs:
             core/database
             core/model
             app/src/main/kotlin/com/autodrive/app/navigation
+            app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeScreen.kt
+            feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/recent/RecentActivityScreen.kt
+            feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileScreen.kt
           if-no-files-found: error
           retention-days: 2
 
