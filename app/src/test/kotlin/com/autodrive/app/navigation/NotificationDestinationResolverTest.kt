@@ -26,8 +26,8 @@ class NotificationDestinationResolverTest {
         NotificationDestinationResolver.resolve(null, NotificationType.WITHDRAWAL_COMPLETED),
     )
 
-    @Test fun `invoice opens activity log`() = assertEquals(
-        Screen.ActivityLog.createRoute(),
+    @Test fun `invoice opens achievements`() = assertEquals(
+        Screen.Achievements.route,
         NotificationDestinationResolver.resolve(null, NotificationType.NEW_INVOICE),
     )
 
