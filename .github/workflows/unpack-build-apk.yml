@@ -5,7 +5,7 @@ on:
     branches: [ main, build-latest-20260904, achievements-weekly-performance-v1 ]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
@@ -109,6 +109,13 @@ jobs:
 
           python3 .ci/fix_achievements_navigation.py
 
+          # The overlay is the legacy build source. Restore the branch-owned weekly
+          # performance implementation after compatibility/navigation patches run.
+          git checkout HEAD -- feature/achievements
+          git checkout HEAD -- app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeViewModel.kt
+          git checkout HEAD -- feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileViewModel.kt
+          git checkout HEAD -- core/network/src/main/kotlin/com/autodrive/app/core/network/WeeklyPerformanceApi.kt
+
           rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
           test -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
@@ -118,22 +125,13 @@ jobs:
           grep -q 'onJoinCodeRequired' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
           grep -q 'onNavigateAchievements' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
           grep -q 'selectedItemId = "achievements"' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
+          grep -q 'WeeklyPerformanceCard' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
+          grep -q 'WeeklyPerformanceApi' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsViewModel.kt
+          grep -q 'targetSuggestionVisible' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsUiState.kt
+          grep -q 'weeklyPerformanceApi' app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeViewModel.kt
+          grep -q 'weeklyPerformanceApi' feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileViewModel.kt
           test "$(grep -c 'WaitingScreen\|AccountTypeScreen' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt || true)" -eq 0
-          echo 'Latest financial UI overlay: PASS'
-
-      - name: Materialize resolved achievements source
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add feature/achievements
-          if git diff --cached --quiet; then
-            echo 'Achievements source already materialized.'
-            exit 0
-          fi
-          git commit -m 'chore: materialize resolved achievements sources [resolved-snapshot]'
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo 'Latest financial UI + weekly performance sources: PASS'
 
       - name: Upload resolved financial sources
         uses: actions/upload-artifact@v4
@@ -149,8 +147,10 @@ jobs:
             core/model
             app/src/main/kotlin/com/autodrive/app/navigation
             app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeScreen.kt
+            app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeViewModel.kt
             feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/recent/RecentActivityScreen.kt
             feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileScreen.kt
+            feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileViewModel.kt
           if-no-files-found: error
           retention-days: 2
 
