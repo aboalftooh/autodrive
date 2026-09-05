@@ -17,7 +17,7 @@ internal object NotificationDestinationResolver {
             NotificationType.WEEKLY_GOAL_ACHIEVED,
             NotificationType.WEEK_ENDING_SOON,
             NotificationType.INACTIVITY,
-            NotificationType.NEW_INVOICE -> Screen.ActivityLog.createRoute()
+            NotificationType.NEW_INVOICE -> Screen.Achievements.route
 
             NotificationType.NEW_CHAT_MESSAGE -> Screen.RecentActivity.createRoute()
             NotificationType.PROFILE_INCOMPLETE -> Screen.Profile.route
