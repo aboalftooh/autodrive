@@ -221,7 +221,8 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun refreshWeeklyTarget() {
-        runCatching { weeklyPerformanceApi.getSnapshot() }
+        val legacyTarget = dashboardPreferences.weeklyTarget
+        runCatching { weeklyPerformanceApi.getSnapshot(legacyTarget.amount) }
             .onSuccess { snapshot ->
                 val serverTarget = Money.of(snapshot.weeklyTarget)
                 dashboardPreferences.weeklyTarget = serverTarget
