@@ -190,7 +190,8 @@ class AchievementsViewModel @Inject constructor(
 
     private suspend fun refreshPerformanceInternal() {
         performance.update { it.copy(isRefreshing = true) }
-        runCatching { weeklyPerformanceApi.getSnapshot() }
+        val legacyTarget = dashboardPreferences.weeklyTarget
+        runCatching { weeklyPerformanceApi.getSnapshot(legacyTarget.amount) }
             .onSuccess { dto ->
                 val ui = dto.toUiState()
                 dashboardPreferences.weeklyTarget = ui.weeklyTarget
@@ -226,7 +227,7 @@ class AchievementsViewModel @Inject constructor(
         targetAchieved = targetAchieved,
         targetAchievedEarly = targetAchievedEarly,
         targetSuggestionVisible = targetSuggestionVisible,
-        suggestedTarget = suggestedTarget?.let(Money::of),
+        suggestedTarget = suggestedTarget?.let { Money.of(it) },
         loadError = false,
     )
 
