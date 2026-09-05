@@ -29,10 +29,7 @@ sealed class Screen(val route: String) {
         fun createRoute(newChat: Boolean = false) =
             if (newChat) "recent_activity?newChat=true" else "recent_activity"
     }
-    data object ActivityLog     : Screen("activity_log?filter={filter}") {
-        fun createRoute(filter: String? = null) =
-            if (filter != null) "activity_log?filter=$filter" else "activity_log"
-    }
+    data object Achievements    : Screen("achievements")
     data object Profile         : Screen("profile")
     data object Balance         : Screen("balance")
     data object CommissionReport : Screen("commission_report")

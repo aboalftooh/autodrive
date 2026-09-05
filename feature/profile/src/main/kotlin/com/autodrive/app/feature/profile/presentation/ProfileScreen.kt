@@ -15,7 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.BarChart
+import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Message
 import androidx.compose.material.icons.rounded.Settings
@@ -73,7 +73,7 @@ import java.util.Locale
 fun ProfileScreen(
     onNavigateHome: () -> Unit,
     onNavigateRecent: () -> Unit,
-    onNavigateLog: () -> Unit,
+    onNavigateAchievements: () -> Unit,
     onSignedOut: () -> Unit,
     onAddClick: () -> Unit = {},
     onNavigateAbout: () -> Unit = {},
@@ -157,7 +157,7 @@ fun ProfileScreen(
                     when (item.id) {
                         "home" -> onNavigateHome()
                         "messages" -> onNavigateRecent()
-                        "reports" -> onNavigateLog()
+                        "achievements" -> onNavigateAchievements()
                     }
                 },
                 centerAction = {
@@ -537,6 +537,6 @@ private fun formatMoney(value: Money): String =
 private fun profileRootItems(unreadMessages: Int) = listOf(
     AutoDriveNavigationItem("home", "الرئيسية", Icons.Rounded.Home),
     AutoDriveNavigationItem("messages", "المحادثات", Icons.Rounded.Message, unreadMessages),
-    AutoDriveNavigationItem("reports", "التقارير", Icons.Rounded.BarChart),
+    AutoDriveNavigationItem("achievements", "إنجازاتي", Icons.Rounded.EmojiEvents),
     AutoDriveNavigationItem("settings", "الإعدادات", Icons.Rounded.Settings),
 )

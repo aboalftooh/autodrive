@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.BarChart
+import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Message
 import androidx.compose.material.icons.rounded.SearchOff
@@ -49,7 +49,7 @@ import java.util.Locale
 @Composable
 fun RecentActivityScreen(
     onNavigateHome: () -> Unit,
-    onNavigateLog: () -> Unit,
+    onNavigateAchievements: () -> Unit,
     onNavigateProfile: () -> Unit,
     onAddClick: () -> Unit = {},
     onOpenConversation: (id: String, title: String) -> Unit = { _, _ -> },
@@ -99,7 +99,7 @@ fun RecentActivityScreen(
                 onItemClick = { item ->
                     when (item.id) {
                         "home" -> onNavigateHome()
-                        "reports" -> onNavigateLog()
+                        "achievements" -> onNavigateAchievements()
                         "settings" -> onNavigateProfile()
                     }
                 },
@@ -162,7 +162,7 @@ fun RecentActivityScreen(
 private fun rootNavigationItems(unreadMessages: Int) = listOf(
     AutoDriveNavigationItem("home", "الرئيسية", Icons.Rounded.Home),
     AutoDriveNavigationItem("messages", "المحادثات", Icons.Rounded.Message, unreadMessages),
-    AutoDriveNavigationItem("reports", "التقارير", Icons.Rounded.BarChart),
+    AutoDriveNavigationItem("achievements", "إنجازاتي", Icons.Rounded.EmojiEvents),
     AutoDriveNavigationItem("settings", "الإعدادات", Icons.Rounded.Settings),
 )
 

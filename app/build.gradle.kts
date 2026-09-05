@@ -96,6 +96,7 @@ dependencies {
     implementation(project(":feature:commission"))
     implementation(project(":feature:balance"))
     implementation(project(":feature:profile"))
+    implementation(project(":feature:achievements"))
     // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

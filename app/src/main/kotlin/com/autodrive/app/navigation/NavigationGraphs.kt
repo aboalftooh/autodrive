@@ -16,6 +16,7 @@ import com.autodrive.app.feature.auth.presentation.login.PhoneInputScreen
 import com.autodrive.app.feature.auth.presentation.login.SessionExpiredScreen
 import com.autodrive.app.feature.auth.presentation.register.BasicInfoScreen
 import com.autodrive.app.feature.balance.presentation.BalanceScreen
+import com.autodrive.app.feature.achievements.presentation.AchievementsScreen
 import com.autodrive.app.feature.chat.presentation.ChatScreen
 import com.autodrive.app.feature.commission.presentation.CommissionReportScreen
 import com.autodrive.app.feature.competition.domain.model.CompetitionAvailability
@@ -23,7 +24,6 @@ import com.autodrive.app.feature.competition.presentation.WeeklyCompetitionScree
 import com.autodrive.app.feature.home.presentation.HomeScreen
 import com.autodrive.app.feature.notifications.presentation.NotificationsScreen
 import com.autodrive.app.feature.profile.presentation.ProfileScreen
-import com.autodrive.app.feature.reports.presentation.log.ActivityLogScreen
 import com.autodrive.app.feature.reports.presentation.log.CompetitionHistoryScreen
 import com.autodrive.app.feature.reports.presentation.log.InvoiceDetailScreen
 import com.autodrive.app.feature.reports.presentation.log.InvoiceListScreen
@@ -153,7 +153,7 @@ composable(Screen.Home.route) {
     LaunchedEffect(Unit) { onRefreshCompetitionAvailability() }
     HomeScreen(
         onNavigateRecent = { navController.navigate(Screen.RecentActivity.createRoute()) },
-        onNavigateLog = { filter -> navController.navigate(Screen.ActivityLog.createRoute(filter)) },
+        onNavigateAchievements = { navController.navigate(Screen.Achievements.route) },
         onNavigateProfile = { navController.navigate(Screen.Profile.route) },
         onNavigateNotifications = { navController.navigate(Screen.Notifications.route) },
         onNavigateCompetition = { navController.navigate(Screen.WeeklyCompetition.route) },
@@ -218,7 +218,7 @@ composable(
     val newChat = backStack.arguments?.getBoolean("newChat") ?: false
     RecentActivityScreen(
         onNavigateHome = { navController.navigate(Screen.Home.route) },
-        onNavigateLog = { navController.navigate(Screen.ActivityLog.createRoute()) },
+        onNavigateAchievements = { navController.navigate(Screen.Achievements.route) },
         onNavigateProfile = { navController.navigate(Screen.Profile.route) },
         onAddClick = onOpenNewChat,
         onOpenConversation = { id, title ->
@@ -229,29 +229,16 @@ composable(
     )
 }
 
-composable(
-    route = Screen.ActivityLog.route,
-    arguments = listOf(
-        navArgument("filter") {
-            type = NavType.StringType
-            nullable = true
-            defaultValue = null
-        }
-    )
-) {
-    ActivityLogScreen(
+composable(Screen.Achievements.route) {
+    AchievementsScreen(
         onNavigateHome = { navController.navigate(Screen.Home.route) },
         onNavigateRecent = { navController.navigate(Screen.RecentActivity.createRoute()) },
         onNavigateProfile = { navController.navigate(Screen.Profile.route) },
-        onNavigateBalance = { navController.navigate(Screen.Balance.route) },
-        onNavigateInvoiceDetail = { id -> navController.navigate(Screen.InvoiceDetail.createRoute(id)) },
-        onNavigateInvoiceList = { weekMode -> navController.navigate(Screen.InvoiceList.createRoute(weekMode)) },
-        onNavigateWinWeeks = { navController.navigate(Screen.WinWeeks.route) },
-        onNavigateWeeklyCommissions = { navController.navigate(Screen.WeeklyCommissions.route) },
-        onNavigateCompetitionHistory = { navController.navigate(Screen.CompetitionHistory.route) },
         onAddClick = onOpenNewChat,
         unreadMessages = unreadMessages,
-        competitionAvailability = competitionAvailability,
+        onOpenAllCommissions = { navController.navigate(Screen.CommissionReport.route) },
+        onOpenBalance = { navController.navigate(Screen.Balance.route) },
+        onOpenPendingCommissions = { navController.navigate(Screen.CommissionReport.route) },
     )
 }
 
@@ -303,7 +290,7 @@ composable(Screen.Profile.route) {
     ProfileScreen(
         onNavigateHome = { navController.navigate(Screen.Home.route) },
         onNavigateRecent = { navController.navigate(Screen.RecentActivity.createRoute()) },
-        onNavigateLog = { navController.navigate(Screen.ActivityLog.createRoute()) },
+        onNavigateAchievements = { navController.navigate(Screen.Achievements.route) },
         onSignedOut = {
             navController.navigate(Screen.PhoneInput.route) {
                 popUpTo(0) { inclusive = true }
