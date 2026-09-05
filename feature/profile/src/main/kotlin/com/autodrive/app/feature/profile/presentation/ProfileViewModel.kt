@@ -7,6 +7,7 @@ import com.autodrive.app.core.common.session.SignOutAction
 import com.autodrive.app.core.model.account.AccountType
 import com.autodrive.app.core.model.account.AutoDriveUser
 import com.autodrive.app.core.model.money.Money
+import com.autodrive.app.core.network.WeeklyPerformanceApi
 import com.autodrive.app.core.session.domain.CurrentSession
 import com.autodrive.app.core.session.domain.DashboardPreferences
 import com.autodrive.app.core.session.domain.SessionReader
@@ -17,6 +18,8 @@ import com.autodrive.app.feature.profile.domain.usecase.ObserveProfileUseCase
 import com.autodrive.app.feature.profile.domain.usecase.UpdateProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,7 +35,8 @@ class ProfileViewModel @Inject constructor(
     private val observeBalance: ObserveBalanceUseCase,
     private val syncCoordinator: SyncCoordinator,
     private val sessionReader: SessionReader,
-    private val dashboardPreferences: DashboardPreferences
+    private val dashboardPreferences: DashboardPreferences,
+    private val weeklyPerformanceApi: WeeklyPerformanceApi,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -42,6 +46,7 @@ class ProfileViewModel @Inject constructor(
         )
     )
     val state: StateFlow<ProfileUiState> = _state.asStateFlow()
+    private var targetPersistJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -54,7 +59,15 @@ class ProfileViewModel @Inject constructor(
                 _state.update { it.copy(balance = balance.balance, balanceLoaded = true) }
             }
         }
-        viewModelScope.launch { syncCoordinator.requestSync(SyncReason.USER_REFRESH) }
+        viewModelScope.launch {
+            runCatching { syncCoordinator.requestSync(SyncReason.USER_REFRESH) }
+            runCatching { weeklyPerformanceApi.getSnapshot() }
+                .onSuccess { snapshot ->
+                    val serverTarget = Money.of(snapshot.weeklyTarget)
+                    dashboardPreferences.weeklyTarget = serverTarget
+                    _state.update { it.copy(weeklyTarget = serverTarget) }
+                }
+        }
     }
 
     private fun buildUserFromSession(session: CurrentSession): AutoDriveUser? {
@@ -83,6 +96,24 @@ class ProfileViewModel @Inject constructor(
         }
         _state.update { it.copy(weeklyTarget = clamped) }
         dashboardPreferences.weeklyTarget = clamped
+
+        // The legacy sheet changes the value on every +/- tap. Debounce remote
+        // persistence so rapid taps cannot race and leave an older value on the server.
+        targetPersistJob?.cancel()
+        targetPersistJob = viewModelScope.launch {
+            delay(350)
+            runCatching { weeklyPerformanceApi.setWeeklyTarget(clamped.amount) }
+                .onSuccess { update ->
+                    val serverTarget = Money.of(update.weeklyTarget)
+                    dashboardPreferences.weeklyTarget = serverTarget
+                    _state.update { it.copy(weeklyTarget = serverTarget) }
+                }
+                .onFailure {
+                    _state.update {
+                        it.copy(successMessage = "تم حفظ الهدف على الجهاز، وتعذرت مزامنته الآن")
+                    }
+                }
+        }
     }
 
     fun startEditing(section: ProfileEditSection) = _state.update {
