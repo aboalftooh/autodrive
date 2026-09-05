@@ -2,34 +2,34 @@ package com.autodrive.app.feature.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.autodrive.app.core.sync.domain.SyncCoordinator
-import com.autodrive.app.core.sync.domain.SyncReason
-import com.autodrive.app.feature.commission.domain.model.CommissionSummary
-import com.autodrive.app.feature.home.domain.repository.AiInsightRepository
-import com.autodrive.app.feature.home.domain.repository.DynamoContentRepository
-import com.autodrive.app.feature.competition.domain.repository.WeeklyCompetitionRepository
-import com.autodrive.app.feature.balance.domain.usecase.ObserveBalanceUseCase
-import com.autodrive.app.feature.commission.domain.usecase.ObserveCommissionsUseCase
-import com.autodrive.app.feature.notifications.domain.usecase.ObserveNotificationsUseCase
-import com.autodrive.app.feature.notifications.domain.repository.NotificationRepository
-import com.autodrive.app.feature.commission.domain.CommissionCalculator
-import com.autodrive.app.feature.home.presentation.audio.BenzineSound
-import com.autodrive.app.core.session.domain.DashboardPreferences
 import com.autodrive.app.core.model.money.Money
 import com.autodrive.app.core.network.WeeklyPerformanceApi
-import com.autodrive.app.core.session.domain.SessionReader
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.autodrive.app.core.observability.AppLogger
+import com.autodrive.app.core.session.domain.DashboardPreferences
+import com.autodrive.app.core.session.domain.SessionReader
+import com.autodrive.app.core.sync.domain.SyncCoordinator
+import com.autodrive.app.core.sync.domain.SyncReason
+import com.autodrive.app.feature.balance.domain.usecase.ObserveBalanceUseCase
+import com.autodrive.app.feature.commission.domain.CommissionCalculator
+import com.autodrive.app.feature.commission.domain.model.CommissionSummary
+import com.autodrive.app.feature.commission.domain.usecase.ObserveCommissionsUseCase
+import com.autodrive.app.feature.competition.domain.repository.WeeklyCompetitionRepository
+import com.autodrive.app.feature.home.domain.repository.AiInsightRepository
+import com.autodrive.app.feature.home.domain.repository.DynamoContentRepository
+import com.autodrive.app.feature.home.presentation.audio.BenzineSound
+import com.autodrive.app.feature.notifications.domain.repository.NotificationRepository
+import com.autodrive.app.feature.notifications.domain.usecase.ObserveNotificationsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 private const val TAG = "HomeViewModel"
 
@@ -52,17 +52,17 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    private var rotationJob: Job? = null   // AI Insight rotation
-
-    // ─── نصيحة اليوم ───────────────────────────────
+    private var rotationJob: Job? = null
+    private var dynamoRotationJob: Job? = null
     private var lastMessageChangedAt = 0L
-    private val recentDynamoIds      = ArrayDeque<String>()
+    private val recentDynamoIds = ArrayDeque<String>()
 
     private companion object {
-        const val ROTATION_INTERVAL_MS = 30_000L   // تغيير الرسالة كل 30 ثانية
-        const val RESUME_COOLDOWN_MS   = 30_000L   // cooldown عند العودة للشاشة
-        const val MAX_RECENT_IDS       = 10
-        const val FALLBACK_MSG         = "جاري تحميل النصائح..."
+        const val ROTATION_INTERVAL_MS = 30_000L
+        const val RESUME_COOLDOWN_MS = 30_000L
+        const val MAX_RECENT_IDS = 10
+        const val FALLBACK_MSG = "جاري تحميل النصائح..."
+        const val DEFAULT_SPECIALTY = "general"
     }
 
     init {
@@ -70,21 +70,18 @@ class HomeViewModel @Inject constructor(
         val session = sessionReader.currentSession()
         _uiState.update {
             it.copy(
-                nextFriday9AmMs = calculator.fallbackNextFriday9AM(), // fallback — يُحدَّث من summary
+                nextFriday9AmMs = calculator.fallbackNextFriday9AM(),
                 weeklyTarget = dashboardPreferences.weeklyTarget,
                 displayedTotal = dashboardPreferences.lastDisplayedTotal,
-                userName = session.userName.orEmpty()
+                userName = session.userName.orEmpty(),
             )
         }
 
-        // 1. تشغيل التحديث التلقائي كل 60 ثانية (من Room فقط)
         startDynamoRotation()
-
-        // 2. عرض رسالة فورية من Room ثم sync من Supabase في الخلفية
         viewModelScope.launch {
-            pickAndShowMessage()              // من Room (سريع، حتى لو فارغ)
-            syncDynamoFromSupabase()          // شبكة في الخلفية
-            pickAndShowMessage()              // تحديث بعد الـ sync
+            pickAndShowMessage()
+            syncDynamoFromSupabase()
+            pickAndShowMessage()
         }
 
         viewModelScope.launch { refreshWeeklyTarget() }
@@ -104,60 +101,75 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    // ─── نصيحة اليوم: اختيار رسالة من Room ────────
-
     private suspend fun pickAndShowMessage() {
         try {
+            val audienceType = resolveAudienceType()
             val ids = recentDynamoIds.toList()
             val msg = if (ids.isNotEmpty()) {
-                dynamoContentRepository.getRandomLocalMessageExcluding(ids)
-                    ?: dynamoContentRepository.getRandomLocalMessage()
+                dynamoContentRepository.getRandomLocalMessageExcluding(
+                    audienceType,
+                    DEFAULT_SPECIALTY,
+                    ids,
+                ) ?: dynamoContentRepository.getRandomLocalMessage(
+                    audienceType,
+                    DEFAULT_SPECIALTY,
+                )
             } else {
-                dynamoContentRepository.getRandomLocalMessage()
+                dynamoContentRepository.getRandomLocalMessage(
+                    audienceType,
+                    DEFAULT_SPECIALTY,
+                )
             }
 
             if (msg != null) {
                 addToRecentIds(msg.id)
                 _uiState.update { it.copy(dynamoMessage = msg.message) }
                 lastMessageChangedAt = System.currentTimeMillis()
-                AppLogger.d(TAG,"dynamo message shown: ${msg.contentType}")
+                AppLogger.d(TAG, "dynamo message shown: ${msg.contentType}")
             } else if (_uiState.value.dynamoMessage.isBlank()) {
                 _uiState.update { it.copy(dynamoMessage = FALLBACK_MSG) }
-                AppLogger.d(TAG,"dynamo fallback: Room empty, showing placeholder")
+                AppLogger.d(TAG, "dynamo fallback: Room empty, showing placeholder")
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG,"pickAndShowMessage error: ${e.message}", e)
+            AppLogger.e(TAG, "pickAndShowMessage error: ${e.message}", e)
         }
     }
 
     private suspend fun syncDynamoFromSupabase() {
         try {
             val audienceType = resolveAudienceType()
-            AppLogger.d(TAG,"syncing dynamo from Supabase (audience=$audienceType)")
-            dynamoContentRepository.syncMessages(audienceType, "general")
+            AppLogger.d(TAG, "syncing dynamo from Supabase (audience=$audienceType)")
+            dynamoContentRepository.syncMessages(audienceType, DEFAULT_SPECIALTY)
         } catch (e: Exception) {
-            AppLogger.e(TAG,"syncDynamoFromSupabase error: ${e.message}", e)
+            AppLogger.e(TAG, "syncDynamoFromSupabase error: ${e.message}", e)
         }
     }
 
-    // تحديث تلقائي كل 60 ثانية من Room فقط — لا شبكة
     private fun startDynamoRotation() {
-        viewModelScope.launch {
+        if (dynamoRotationJob?.isActive == true) return
+        dynamoRotationJob = viewModelScope.launch {
             while (isActive) {
                 delay(ROTATION_INTERVAL_MS)
                 pickAndShowMessage()
-                AppLogger.d(TAG,"auto-rotation: message updated")
+                AppLogger.d(TAG, "auto-rotation: message updated")
             }
         }
     }
 
-    // يُستدعى عند العودة للشاشة بعد cooldown (ON_RESUME)
+    fun onScreenActive() {
+        startDynamoRotation()
+        refreshDynamoMessage()
+    }
+
+    fun onScreenInactive() {
+        dynamoRotationJob?.cancel()
+        dynamoRotationJob = null
+    }
+
     fun refreshDynamoMessage() {
         val now = System.currentTimeMillis()
         if (now - lastMessageChangedAt < RESUME_COOLDOWN_MS) return
-        viewModelScope.launch {
-            pickAndShowMessage()
-        }
+        viewModelScope.launch { pickAndShowMessage() }
     }
 
     private fun addToRecentIds(id: String) {
@@ -170,14 +182,11 @@ class HomeViewModel @Inject constructor(
         return if (raw == "marketer") "marketer" else "workshop"
     }
 
-    // ─── Data Observation ──────────────────────────
-
     private fun observeCommissionsData() {
         viewModelScope.launch {
             try {
                 observeCommissions().collect { (summary, _) ->
                     applySummary(summary)
-                    // update countdown with server-authoritative week boundary
                     if (summary.weekStartMs > 0L) {
                         val nextFriday = summary.weekStartMs + 7L * 24 * 3_600_000L
                         _uiState.update { it.copy(nextFriday9AmMs = nextFriday, isLoading = false) }
@@ -186,7 +195,7 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG,"observeCommissionsData error: ${e.message}", e)
+                AppLogger.e(TAG, "observeCommissionsData error: ${e.message}", e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
@@ -229,12 +238,13 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { it.copy(weeklyTarget = serverTarget) }
             }
             .onFailure { error ->
-                // Local preference is a deliberate offline cache. The server remains canonical.
                 AppLogger.w(TAG, "weekly target refresh failed: ${error.message}")
             }
     }
 
-    fun loadUnreadCount() { syncNotificationsNow() }
+    fun loadUnreadCount() {
+        syncNotificationsNow()
+    }
 
     fun loadData(forceRefresh: Boolean = false) {
         viewModelScope.launch {
@@ -256,8 +266,6 @@ class HomeViewModel @Inject constructor(
         loadInsight(forceReload = true)
     }
 
-    // ─── AI Insight ───────────────────────────────
-
     private fun loadInsight(forceReload: Boolean = false) {
         val userId = sessionReader.currentSession().userId ?: return
         if (!forceReload && _uiState.value.insights.isNotEmpty()) return
@@ -266,10 +274,10 @@ class HomeViewModel @Inject constructor(
             val list = aiInsightRepository.getLatestN(userId)
             _uiState.update {
                 it.copy(
-                    insights            = list,
+                    insights = list,
                     currentInsightIndex = 0,
-                    isInsightLoading    = false,
-                    insightError        = list.isEmpty(),
+                    isInsightLoading = false,
+                    insightError = list.isEmpty(),
                 )
             }
             startRotation(list.size)
@@ -282,17 +290,17 @@ class HomeViewModel @Inject constructor(
         rotationJob = viewModelScope.launch {
             while (isActive) {
                 delay(8_000)
-                _uiState.update { it.copy(currentInsightIndex = (it.currentInsightIndex + 1) % count) }
+                _uiState.update {
+                    it.copy(currentInsightIndex = (it.currentInsightIndex + 1) % count)
+                }
             }
         }
     }
 
-    // ─── Pump ─────────────────────────────────────
-
     private fun applySummary(summary: CommissionSummary) {
-        val newTotal       = summary.weeklyTotal
+        val newTotal = summary.weeklyTotal
         val currentDisplay = _uiState.value.displayedTotal
-        val weekChanged    = summary.weekStartMs > 0L &&
+        val weekChanged = summary.weekStartMs > 0L &&
             summary.weekStartMs != dashboardPreferences.lastDisplayedWeekStartMs
 
         when {
@@ -305,11 +313,15 @@ class HomeViewModel @Inject constructor(
             }
             newTotal < currentDisplay -> {
                 dashboardPreferences.lastDisplayedTotal = newTotal
-                _uiState.update { it.copy(summary = summary, syncedTotal = newTotal, displayedTotal = newTotal) }
+                _uiState.update {
+                    it.copy(summary = summary, syncedTotal = newTotal, displayedTotal = newTotal)
+                }
             }
             currentDisplay.isZero() && newTotal.isPositive() -> {
                 dashboardPreferences.lastDisplayedTotal = newTotal
-                _uiState.update { it.copy(summary = summary, syncedTotal = newTotal, displayedTotal = newTotal) }
+                _uiState.update {
+                    it.copy(summary = summary, syncedTotal = newTotal, displayedTotal = newTotal)
+                }
             }
             else -> _uiState.update { it.copy(summary = summary, syncedTotal = newTotal) }
         }
