@@ -2,10 +2,10 @@ name: Build AutoDrive APK
 
 on:
   push:
-    branches: [ main, build-latest-20260904 ]
+    branches: [ main, build-latest-20260904, achievements-weekly-performance-v1 ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -120,6 +120,20 @@ jobs:
           grep -q 'selectedItemId = "achievements"' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
           test "$(grep -c 'WaitingScreen\|AccountTypeScreen' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt || true)" -eq 0
           echo 'Latest financial UI overlay: PASS'
+
+      - name: Materialize resolved achievements source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add feature/achievements
+          if git diff --cached --quiet; then
+            echo 'Achievements source already materialized.'
+            exit 0
+          fi
+          git commit -m 'chore: materialize resolved achievements sources [resolved-snapshot]'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Upload resolved financial sources
         uses: actions/upload-artifact@v4
