@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Message
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -59,7 +59,7 @@ private fun getGreeting(): String {
 @Composable
 fun HomeScreen(
     onNavigateRecent: () -> Unit,
-    onNavigateLog: (String?) -> Unit,
+    onNavigateAchievements: () -> Unit,
     onNavigateProfile: () -> Unit,
     onNavigateNotifications: () -> Unit,
     onNavigateCompetition: () -> Unit,
@@ -91,7 +91,7 @@ fun HomeScreen(
                 onItemClick = { item ->
                     when (item.id) {
                         "messages" -> onNavigateRecent()
-                        "reports" -> onNavigateLog(null)
+                        "achievements" -> onNavigateAchievements()
                         "settings" -> onNavigateProfile()
                     }
                 },
@@ -217,6 +217,6 @@ private fun HomeDashboardWidth(
 private fun homeRootItems(unreadMessages: Int) = listOf(
     AutoDriveNavigationItem("home", "الرئيسية", Icons.Rounded.Home),
     AutoDriveNavigationItem("messages", "الرسائل", Icons.Outlined.Message, unreadMessages),
-    AutoDriveNavigationItem("reports", "التقارير", Icons.Outlined.BarChart),
+    AutoDriveNavigationItem("achievements", "إنجازاتي", Icons.Rounded.EmojiEvents),
     AutoDriveNavigationItem("settings", "الإعدادات", Icons.Outlined.Settings),
 )
