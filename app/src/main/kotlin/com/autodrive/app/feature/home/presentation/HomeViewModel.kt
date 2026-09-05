@@ -16,6 +16,7 @@ import com.autodrive.app.feature.commission.domain.CommissionCalculator
 import com.autodrive.app.feature.home.presentation.audio.BenzineSound
 import com.autodrive.app.core.session.domain.DashboardPreferences
 import com.autodrive.app.core.model.money.Money
+import com.autodrive.app.core.network.WeeklyPerformanceApi
 import com.autodrive.app.core.session.domain.SessionReader
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.autodrive.app.core.observability.AppLogger
@@ -45,6 +46,7 @@ class HomeViewModel @Inject constructor(
     private val aiInsightRepository: AiInsightRepository,
     private val weeklyCompetitionRepository: WeeklyCompetitionRepository,
     private val dynamoContentRepository: DynamoContentRepository,
+    private val weeklyPerformanceApi: WeeklyPerformanceApi,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -85,6 +87,7 @@ class HomeViewModel @Inject constructor(
             pickAndShowMessage()              // تحديث بعد الـ sync
         }
 
+        viewModelScope.launch { refreshWeeklyTarget() }
         observeCommissionsData()
         observeBalanceData()
         observeUnreadCount()
@@ -217,16 +220,33 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private suspend fun refreshWeeklyTarget() {
+        runCatching { weeklyPerformanceApi.getSnapshot() }
+            .onSuccess { snapshot ->
+                val serverTarget = Money.of(snapshot.weeklyTarget)
+                dashboardPreferences.weeklyTarget = serverTarget
+                _uiState.update { it.copy(weeklyTarget = serverTarget) }
+            }
+            .onFailure { error ->
+                // Local preference is a deliberate offline cache. The server remains canonical.
+                AppLogger.w(TAG, "weekly target refresh failed: ${error.message}")
+            }
+    }
+
     fun loadUnreadCount() { syncNotificationsNow() }
 
     fun loadData(forceRefresh: Boolean = false) {
-        viewModelScope.launch { syncCoordinator.requestSync(SyncReason.USER_REFRESH) }
+        viewModelScope.launch {
+            syncCoordinator.requestSync(SyncReason.USER_REFRESH)
+            refreshWeeklyTarget()
+        }
     }
 
     fun refresh() {
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true) }
             syncCoordinator.requestSync(SyncReason.USER_REFRESH)
+            refreshWeeklyTarget()
             syncNotificationsNow()
             _uiState.update { it.copy(isRefreshing = false) }
             syncDynamoFromSupabase()
