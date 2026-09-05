@@ -12,7 +12,6 @@ import com.autodrive.app.core.sync.domain.SyncReason
 import com.autodrive.app.feature.balance.domain.model.WithdrawalStatus
 import com.autodrive.app.feature.balance.domain.usecase.ObserveBalanceUseCase
 import com.autodrive.app.feature.balance.domain.usecase.ObserveWithdrawalRequestsUseCase
-import com.autodrive.app.feature.commission.domain.model.CommissionSnapshotSource
 import com.autodrive.app.feature.commission.domain.usecase.ObserveCommissionsUseCase
 import com.autodrive.app.feature.profile.domain.usecase.ObserveProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,13 +51,13 @@ class AchievementsViewModel @Inject constructor(
         observeWithdrawals(),
         observeProfile(),
     ) { commissions, balance, withdrawals, profile ->
-        val hasVerifiedCommissions = commissions.source == CommissionSnapshotSource.SERVER_CACHE
+        val summary = commissions.first
+        val hasVerifiedCommissions = true
         val hasVerifiedBalance = balance.updatedAt.isNotBlank()
-        val summary = commissions.summary
         val fallbackTarget = dashboardPreferences.weeklyTarget
 
         AchievementsUiState(
-            isLoading = !hasVerifiedCommissions || profile == null,
+            isLoading = profile == null,
             hasVerifiedCommissions = hasVerifiedCommissions,
             hasVerifiedBalance = hasVerifiedBalance,
             lifetimeCommission = Money.sum(
