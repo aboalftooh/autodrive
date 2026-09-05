@@ -20,11 +20,23 @@ import kotlinx.serialization.Serializable
 class WeeklyPerformanceApi @Inject constructor(
     private val supabase: AutoDriveSupabase,
 ) {
-    suspend fun getSnapshot(): WeeklyPerformanceDto =
-        supabase.client.postgrest
-            .rpc("autodrive_weekly_performance_v1")
-            .decodeList<WeeklyPerformanceDto>()
-            .single()
+    /**
+     * [legacyTarget] is sent during normal app reads so the backend can perform
+     * the one-time migration from the pre-server local preference. The backend
+     * only accepts it while the account target is uninitialized; afterwards the
+     * server value always wins, including across devices.
+     */
+    suspend fun getSnapshot(legacyTarget: BigDecimal? = null): WeeklyPerformanceDto {
+        val response = if (legacyTarget == null) {
+            supabase.client.postgrest.rpc("autodrive_weekly_performance_v1")
+        } else {
+            supabase.client.postgrest.rpc(
+                "autodrive_weekly_performance_v1",
+                LegacyWeeklyTargetParams(legacyTarget),
+            )
+        }
+        return response.decodeList<WeeklyPerformanceDto>().single()
+    }
 
     suspend fun setWeeklyTarget(target: BigDecimal): WeeklyTargetUpdateDto =
         supabase.client.postgrest
@@ -80,6 +92,13 @@ data class WeeklyPerformanceDto(
     @SerialName("suggested_target")
     @Serializable(with = BigDecimalSerializer::class)
     val suggestedTarget: BigDecimal? = null,
+)
+
+@Serializable
+private data class LegacyWeeklyTargetParams(
+    @SerialName("p_legacy_target")
+    @Serializable(with = BigDecimalSerializer::class)
+    val target: BigDecimal,
 )
 
 @Serializable
