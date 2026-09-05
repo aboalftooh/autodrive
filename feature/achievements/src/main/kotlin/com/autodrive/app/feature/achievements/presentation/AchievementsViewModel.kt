@@ -9,7 +9,7 @@ import com.autodrive.app.core.network.WeeklyPerformanceDto
 import com.autodrive.app.core.session.domain.DashboardPreferences
 import com.autodrive.app.core.sync.domain.SyncCoordinator
 import com.autodrive.app.core.sync.domain.SyncReason
-import com.autodrive.app.feature.balance.domain.WithdrawalPolicy
+import com.autodrive.app.feature.balance.domain.model.WithdrawalStatus
 import com.autodrive.app.feature.balance.domain.usecase.ObserveBalanceUseCase
 import com.autodrive.app.feature.balance.domain.usecase.ObserveWithdrawalRequestsUseCase
 import com.autodrive.app.feature.commission.domain.model.CommissionSnapshotSource
@@ -32,7 +32,6 @@ class AchievementsViewModel @Inject constructor(
     observeBalance: ObserveBalanceUseCase,
     observeWithdrawals: ObserveWithdrawalRequestsUseCase,
     observeProfile: ObserveProfileUseCase,
-    private val withdrawalPolicy: WithdrawalPolicy,
     private val syncCoordinator: SyncCoordinator,
     private val weeklyPerformanceApi: WeeklyPerformanceApi,
     private val dashboardPreferences: DashboardPreferences,
@@ -70,7 +69,9 @@ class AchievementsViewModel @Inject constructor(
             joinedAtLabel = profile?.createdAt
                 ?.let(FormatUtils::formatJoinDateShort)
                 .orEmpty(),
-            hasActiveWithdrawal = withdrawalPolicy.activeRequest(withdrawals) != null,
+            hasActiveWithdrawal = withdrawals.any {
+                it.status == WithdrawalStatus.PENDING || it.status == WithdrawalStatus.APPROVED
+            },
             weeklyPerformance = WeeklyPerformanceUiState(
                 hasServerSnapshot = false,
                 isRefreshing = true,
