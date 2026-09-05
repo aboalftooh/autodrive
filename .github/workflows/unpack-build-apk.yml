@@ -102,6 +102,11 @@ jobs:
           unzip -o /tmp/testfix.zip -d . >/dev/null
           echo 'Unit test compatibility fixes: PASS'
 
+          AUTH_TEST='app/src/test/kotlin/com/autodrive/app/architecture/AuthLaunchRegressionTest.kt'
+          git checkout -- "$AUTH_TEST"
+          grep -q 'phone split is existing otp or new join code only' "$AUTH_TEST"
+          echo 'Current auth architecture regression contract restored: PASS'
+
           rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
           test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
           test -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
