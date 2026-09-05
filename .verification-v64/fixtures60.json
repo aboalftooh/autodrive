@@ -1,0 +1,432 @@
+{
+  "schemaVersion": 60,
+  "tool": "test_designsystem_verification_v60",
+  "fixtureCount": 40,
+  "coreRuleOutcomes": 18,
+  "candidateGuardOutcomes": 5,
+  "exceptionOutcomes": 5,
+  "toolErrorOutcomes": 12,
+  "results": [
+    {
+      "fixture_id": "DS-A11Y-001:missing_required_input",
+      "rule_id": "DS-A11Y-001",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "required fixture input deliberately absent"
+    },
+    {
+      "fixture_id": "DS-A11Y-001:must_fail",
+      "rule_id": "DS-A11Y-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 1,
+      "finding_fingerprints": [
+        "b2eda6578f863ca13560f192bbefabe06e90d447e14e3e87c9252c34e01a4fcf"
+      ],
+      "status": "PASS",
+      "detail": "confirmed=1 candidates=0"
+    },
+    {
+      "fixture_id": "DS-A11Y-001:must_pass",
+      "rule_id": "DS-A11Y-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "DS-BORDER-001:missing_required_input",
+      "rule_id": "DS-BORDER-001",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "required fixture input deliberately absent"
+    },
+    {
+      "fixture_id": "DS-BORDER-001:must_fail",
+      "rule_id": "DS-BORDER-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 1,
+      "finding_fingerprints": [
+        "e549e69359399b7bb957b35bb4402f25406d8493a50e87020b9066aef293383a"
+      ],
+      "status": "PASS",
+      "detail": "confirmed=1 candidates=0"
+    },
+    {
+      "fixture_id": "DS-BORDER-001:must_pass",
+      "rule_id": "DS-BORDER-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "DS-COLOR-001:missing_required_input",
+      "rule_id": "DS-COLOR-001",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "required fixture input deliberately absent"
+    },
+    {
+      "fixture_id": "DS-COLOR-001:must_fail",
+      "rule_id": "DS-COLOR-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 2,
+      "finding_fingerprints": [
+        "22e97e1d340e02d6f5dcce6752a34bb99c47a40d8bc18ea5f37a1da7b9f79cb4",
+        "b242680c673cd8c52ca3498860c2d3cbd2afffe2c297e03a43712b7920c41007"
+      ],
+      "status": "PASS",
+      "detail": "confirmed=2 candidates=0"
+    },
+    {
+      "fixture_id": "DS-COLOR-001:must_pass",
+      "rule_id": "DS-COLOR-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "DS-DUP-001:missing_required_input",
+      "rule_id": "DS-DUP-001",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "required fixture input deliberately absent"
+    },
+    {
+      "fixture_id": "DS-DUP-001:must_fail",
+      "rule_id": "DS-DUP-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 1,
+      "finding_fingerprints": [
+        "500cbfa916141dbc3b34e50cfc26de09c82a757dccc166c61791326241be5c61"
+      ],
+      "status": "PASS",
+      "detail": "confirmed=1 candidates=0"
+    },
+    {
+      "fixture_id": "DS-DUP-001:must_pass",
+      "rule_id": "DS-DUP-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "DS-ELEVATION-001:missing_required_input",
+      "rule_id": "DS-ELEVATION-001",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "required fixture input deliberately absent"
+    },
+    {
+      "fixture_id": "DS-ELEVATION-001:must_fail",
+      "rule_id": "DS-ELEVATION-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 1,
+      "finding_fingerprints": [
+        "8a5d8a4b01c05c004a03b61ce76826b7d988c2e99e93d51fb71949cc559bd673"
+      ],
+      "status": "PASS",
+      "detail": "confirmed=1 candidates=0"
+    },
+    {
+      "fixture_id": "DS-ELEVATION-001:must_pass",
+      "rule_id": "DS-ELEVATION-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "DS-MATERIAL-001:missing_required_input",
+      "rule_id": "DS-MATERIAL-001",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "required fixture input deliberately absent"
+    },
+    {
+      "fixture_id": "DS-MATERIAL-001:must_fail",
+      "rule_id": "DS-MATERIAL-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 1,
+      "finding_fingerprints": [
+        "55ceba135941a94ef967b8fc9787a49b46f95520635a625b905dd8c478134964"
+      ],
+      "status": "PASS",
+      "detail": "confirmed=1 candidates=0"
+    },
+    {
+      "fixture_id": "DS-MATERIAL-001:must_pass",
+      "rule_id": "DS-MATERIAL-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "DS-SHAPE-001:missing_required_input",
+      "rule_id": "DS-SHAPE-001",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "required fixture input deliberately absent"
+    },
+    {
+      "fixture_id": "DS-SHAPE-001:must_fail",
+      "rule_id": "DS-SHAPE-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 1,
+      "finding_fingerprints": [
+        "9ac9dc1df138d4aeafe9fa0a933db4e26d687fdf1ab32f3cf8b41c6893038909"
+      ],
+      "status": "PASS",
+      "detail": "confirmed=1 candidates=0"
+    },
+    {
+      "fixture_id": "DS-SHAPE-001:must_pass",
+      "rule_id": "DS-SHAPE-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "DS-SPACE-001:missing_required_input",
+      "rule_id": "DS-SPACE-001",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "required fixture input deliberately absent"
+    },
+    {
+      "fixture_id": "DS-SPACE-001:must_fail",
+      "rule_id": "DS-SPACE-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 1,
+      "finding_fingerprints": [
+        "d43f3b48d3ee7ced3eff71abd1f0efda94a88cba248833c0e43ce34b79af461d"
+      ],
+      "status": "PASS",
+      "detail": "confirmed=1 candidates=0"
+    },
+    {
+      "fixture_id": "DS-SPACE-001:must_pass",
+      "rule_id": "DS-SPACE-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "DS-TYPE-001:missing_required_input",
+      "rule_id": "DS-TYPE-001",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "required fixture input deliberately absent"
+    },
+    {
+      "fixture_id": "DS-TYPE-001:must_fail",
+      "rule_id": "DS-TYPE-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 1,
+      "finding_fingerprints": [
+        "e3a8673402b4660b18614c9191a3f6846ad0ff5e8a7f44fbfbfbbbe07fc1f8bd"
+      ],
+      "status": "PASS",
+      "detail": "confirmed=1 candidates=2"
+    },
+    {
+      "fixture_id": "DS-TYPE-001:must_pass",
+      "rule_id": "DS-TYPE-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "EXCEPTION:blank_reason",
+      "rule_id": "DS-EXCEPTION-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "record[0]: reason is too general"
+    },
+    {
+      "fixture_id": "EXCEPTION:expired",
+      "rule_id": "DS-EXCEPTION-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "record[0]: exception expired in v60"
+    },
+    {
+      "fixture_id": "EXCEPTION:unknown_rule",
+      "rule_id": "DS-EXCEPTION-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "record[0]: unknown rule_id: 'DS-UNKNOWN-999'"
+    },
+    {
+      "fixture_id": "EXCEPTION:valid",
+      "rule_id": "DS-EXCEPTION-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "fixture_id": "EXCEPTION:wildcard",
+      "rule_id": "DS-EXCEPTION-001",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "record[0]: wildcard file path is forbidden"
+    },
+    {
+      "fixture_id": "GUARD-CPI",
+      "rule_id": "DS-MATERIAL-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=1"
+    },
+    {
+      "fixture_id": "GUARD-DIFFERENT-SEMANTICS",
+      "rule_id": "DS-DUP-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "GUARD-MATERIAL-IMPORT",
+      "rule_id": "DS-MATERIAL-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "GUARD-ONE-OFF-DP",
+      "rule_id": "DS-SPACE-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=0"
+    },
+    {
+      "fixture_id": "GUARD-TOPAPPBAR",
+      "rule_id": "DS-MATERIAL-001",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": "confirmed=0 candidates=1"
+    },
+    {
+      "fixture_id": "TOOLERR:malformed_json",
+      "rule_id": "TOOL",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "fixture_id": "TOOLERR:missing_baseline",
+      "rule_id": "TOOL",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "fixture_id": "TOOLERR:missing_mapping",
+      "rule_id": "TOOL",
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "finding_count": 0,
+      "finding_fingerprints": [],
+      "status": "PASS",
+      "detail": ""
+    }
+  ],
+  "failures": [],
+  "verdict": "PASS"
+}

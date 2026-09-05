@@ -1,0 +1,21 @@
+{
+  "session": 71,
+  "status": "IMPLEMENTED_STATIC_MODEL_VERIFIED_SERVER_RUNTIME_NOT_RUN",
+  "outboxOperation": "CREATE_CHAT_CONVERSATION",
+  "commandRpc": "autodrive_create_chat_conversation_command_v1",
+  "semantics": {
+    "stableConversationId": true,
+    "stableMutationId": true,
+    "localConversationAndOutboxAtomic": true,
+    "canonicalReceipt": true,
+    "sameMutationReplayModel": "PASS",
+    "changedPayloadConflictModel": "PASS",
+    "createSendDependency": true,
+    "childBlockedWhileParentPresent": true
+  },
+  "historicalV69ReceiptLedgerReused": true,
+  "runtime": {
+    "serverCommandVerifiedLive": false,
+    "reason": "SERVER_RUNTIME_NOT_DEPLOYED"
+  }
+}

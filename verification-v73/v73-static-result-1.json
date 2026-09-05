@@ -1,0 +1,194 @@
+{
+  "assertions": [
+    {
+      "detail": "",
+      "name": "room_version_19",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "migration_18_19_exists",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "observability_entity_registered",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "observability_exact_scope_pk",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "required_observability_columns",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "logout_cleans_exact_scope_observability",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "historical_migrations_unchanged",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "no_destructive_migration",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "sync_run_context_fields",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "unique_run_id_generated",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "correlation_propagates_to_engine",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "health_snapshot_api",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "unknown_remote_head_truth",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "outbox_metrics_scoped",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "raw_scope_redaction",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "scope_fingerprint_not_phone_redacted",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "diagnostics_has_run_correlation",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "diagnostics_has_core_metrics",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "outbox_operation_correlation",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "inbound_group_correlation",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "stable_failure_code_only",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "realtime_observability_scope_guard",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "production_fault_binding_noop",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "no_production_fault_switch",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "fault_points_complete",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "fault_hooks_wired",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "realtime_no_business_room_authority",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "push_before_canonical_pull",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "recover_before_push",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "generation_safety_preserved",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "legacy_incremental_authority_zero",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "separate_deletion_authority_zero",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "v72_authorities_still_wired",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "canonical_stream_preserved",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "observability_not_correctness_authority",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "raw_android_log_policy",
+      "passed": true
+    },
+    {
+      "detail": "",
+      "name": "no_v73_waiver",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "passedCount": 37,
+  "session": 73,
+  "totalCount": 37,
+  "verifier": "static"
+}

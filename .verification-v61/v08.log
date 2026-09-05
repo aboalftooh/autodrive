@@ -1,0 +1,5 @@
+V08 SCREEN MIGRATION STATIC VERIFICATION: PASS
+ - hard invariants: PASS
+ - historical v59 baseline: 77 confirmed findings
+ - current accepted open confirmed: 57
+ - Home migrated under HOME_V1; Reports/Settings remain delegated to Ratchet

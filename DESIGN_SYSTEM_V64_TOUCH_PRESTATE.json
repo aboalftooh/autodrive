@@ -1,0 +1,408 @@
+{
+  "schemaVersion": 64,
+  "session": 64,
+  "acceptedVersion": "v63",
+  "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+  "files": [
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/competition/presentation/WeeklyCompetitionScreen.kt",
+      "preSha256": "69fc0bc1c8a2333948b40c2b84000aaa150917ce9d93a820deddfcd9735e5447",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 1,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-78B406A1AA"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/AboutAppScreen.kt",
+      "preSha256": "302fac510879bf9014a02d9202d2dd0589cb2b12c45d52e4a324350f2324b836",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 1,
+        "DS-A11Y-001": 1
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-6CD5AA263C"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/FaqScreen.kt",
+      "preSha256": "ec846f455a8ecb44ef05b05ce426e798056ea5fe2ed8b9e6e524e2578e2e10f7",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 4,
+        "DS-A11Y-001": 1
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-7C671B14F4",
+        "DS59-MAT-9B3C851CB9",
+        "DS59-MAT-6799D3BC58",
+        "DS59-MAT-02296B2D92"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/PrivacyPolicyScreen.kt",
+      "preSha256": "81a72a3603f315b10d8884bdc8d90a5c7927e714f8196502626d31a0e5786115",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 2,
+        "DS-A11Y-001": 1
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-6197FF510A",
+        "DS59-MAT-26D2D5FFC4"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/actions/ActionComponents.kt",
+      "preSha256": "dc28cd3efe428f3c01b82b81fcc2256d651562909daf95cd4dd43c1e81f2598a",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 8,
+        "DS-A11Y-001": 2
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/feedback/FeedbackComponents.kt",
+      "preSha256": "3848eea77a1d518baab3931d2cb125fc5f078b5d16159ac3365189e794932498",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 2,
+        "DS-A11Y-001": 3
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt",
+      "preSha256": "164789512b062fe2bc300115f12a1101e1b0cee53baeb582b09fa2deb9caddca",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 5,
+        "DS-A11Y-001": 2
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/navigation/NavigationComponents.kt",
+      "preSha256": "75f9522969fc76bae8a04869b3f2e88038648919a4f6fd8852471f9f57806538",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 0,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/CodeInputScreen.kt",
+      "preSha256": "2c7124596398d941629a401e8dc94e44b4cf6448b6e3f608097e492e0ec8aacc",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 3,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-D071B2A0EA",
+        "DS59-MAT-544BAE9C14",
+        "DS59-MAT-79C15801ED"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/WaitingScreen.kt",
+      "preSha256": "0f77936bd7f2469be778839d5d81263b6b451aa4196dfff2ac737c13977a7fa8",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 1,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-D686E776D8"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/OtpInputScreen.kt",
+      "preSha256": "95f367e4d61da485ee1d469dea74669f9c0646e3877ba217e622eb5dcdade924",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 1,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-027E5AFDF5"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/PhoneInputScreen.kt",
+      "preSha256": "6155413d2889d8dad7f739a3ae99867cb24a91bbd2dbe7b633b5f30344497f8d",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 2,
+        "DS-A11Y-001": 1
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-EB816DB417",
+        "DS59-MAT-AD270FAD58"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/TermsScreen.kt",
+      "preSha256": "e28cf7dd94d21f9553c1c00884c46316d2a96f0e3b7cd003fdec92c2a36f04a5",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 1,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-CF13DDC2AA"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/RegisterScreens.kt",
+      "preSha256": "1bf84a0baa974d0a8bf0c447ebf11e37fdded6ea0df9bbbc621e7d8de2b32e9a",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 2,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-9EB48F8635",
+        "DS59-MAT-139CBEC2E6"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/presentation/BalanceComponents.kt",
+      "preSha256": "8766c151eb4fdc653c6de8732ac526fa84eb15bd4a06a1a6caad044eb370ea9d",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 2,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [
+        "DS59-MATC-AFC7933F73"
+      ],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-D32F041B86"
+      ],
+      "acceptedCandidateIdsInFile": [
+        "DS59-MATC-AFC7933F73"
+      ],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatComposer.kt",
+      "preSha256": "a48ac2845376f69abc8a573dec2b297c5e7ebb69f377f75a7047e3cfac0eb07f",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 11,
+        "DS-A11Y-001": 4
+      },
+      "candidateSignals": [
+        "DS59-A11Y2C-9DB9049F24",
+        "DS59-A11Y2C-5E868149DD",
+        "DS59-A11Y2C-C00B365524"
+      ],
+      "acceptedFindingIdsInFile": [
+        "DS59-A11Y-9AEB8C866B",
+        "DS59-A11Y-CDDE3825F9",
+        "DS59-MAT-A340CA44C4",
+        "DS59-MAT-507CF8E50C",
+        "DS59-MAT-DCB7ADBC74",
+        "DS59-MAT-1F136AECB1",
+        "DS59-MAT-4D44160C64",
+        "DS59-MAT-64F7319A28",
+        "DS59-MAT-7A5ED65DD6",
+        "DS59-MAT-AB97443291",
+        "DS59-MAT-29FBED754E",
+        "DS59-MAT-A62108624A",
+        "DS59-MAT-74539FBD18"
+      ],
+      "acceptedCandidateIdsInFile": [
+        "DS59-A11Y2C-9DB9049F24",
+        "DS59-A11Y2C-5E868149DD",
+        "DS59-A11Y2C-C00B365524"
+      ],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatImageViewer.kt",
+      "preSha256": "397880dbb9fc3d8b2306ea60d1cc7a140b772ab0a1b5afbaea2aba4ddc7df6fc",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 2,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [
+        "DS59-A11Y2C-467153365F",
+        "DS59-A11Y2C-CEF649D3E7"
+      ],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-BE9B4C80B7",
+        "DS59-MAT-39AA2FA238"
+      ],
+      "acceptedCandidateIdsInFile": [
+        "DS59-A11Y2C-467153365F",
+        "DS59-A11Y2C-CEF649D3E7"
+      ],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatMessageComponents.kt",
+      "preSha256": "6375b79497252cc9ee2c0fc8657358cdd07770826377980cb6cef30e7ac838e8",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 4,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [
+        "DS59-A11Y2C-C2A837EC4E",
+        "DS59-MATC-67E12A5D39"
+      ],
+      "acceptedFindingIdsInFile": [
+        "DS59-A11Y-C2A837EC4E",
+        "DS59-MAT-B4AC09E4D7",
+        "DS59-MAT-843B8B1A4A",
+        "DS59-MAT-498FA71016"
+      ],
+      "acceptedCandidateIdsInFile": [
+        "DS59-A11Y2C-C2A837EC4E",
+        "DS59-MATC-67E12A5D39"
+      ],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatScreen.kt",
+      "preSha256": "d31bf1fc6c41fc4a5332bb9a4e014cc90b7d5652b7b3cdbbec116d0483b7bdf0",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 1,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [
+        "DS59-MATC-61EC00345B"
+      ],
+      "acceptedFindingIdsInFile": [],
+      "acceptedCandidateIdsInFile": [
+        "DS59-MATC-61EC00345B"
+      ],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionEntryComponents.kt",
+      "preSha256": "7dd23b0bf3a3692f472f75d741c6a4c8f3fa67c8e9701ec7c911e0b5a862b2d6",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 6,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-FB32BA80CD",
+        "DS59-MAT-226B9C8A53",
+        "DS59-MAT-F3AAC88E93",
+        "DS59-MAT-7864E52047",
+        "DS59-MAT-5556A29491",
+        "DS59-MAT-0668DF89DF"
+      ],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt",
+      "preSha256": "667226b3d182a8f043073e523262bc32e55f001ed3d54fa2e9f28e580d5bc539",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 2,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [
+        "DS59-MATC-A04F621C83"
+      ],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-14A3E53094"
+      ],
+      "acceptedCandidateIdsInFile": [
+        "DS59-MATC-A04F621C83"
+      ],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionStatusBadge.kt",
+      "preSha256": "d01cae03a44545c945b2a6519ada4e73af66eaf21dc2b1e12a4b1270e11ecb22",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 0,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [],
+      "acceptedFindingIdsInFile": [],
+      "acceptedCandidateIdsInFile": [],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    },
+    {
+      "path": "feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/presentation/NotificationsScreen.kt",
+      "preSha256": "d30172be7085bad9db3511ab78afba95a4210d571c32f49038d17c76082a880d",
+      "scannerSignalsByRule": {
+        "DS-MATERIAL-001": 3,
+        "DS-A11Y-001": 0
+      },
+      "candidateSignals": [
+        "DS59-MATC-C90A33FCBB",
+        "DS59-MATC-8E52AED6C1"
+      ],
+      "acceptedFindingIdsInFile": [
+        "DS59-MAT-3457B1E784"
+      ],
+      "acceptedCandidateIdsInFile": [
+        "DS59-MATC-C90A33FCBB",
+        "DS59-MATC-8E52AED6C1"
+      ],
+      "inputZipSha256": "b6c8f4c65c2a462cd2b5deedcc788a3478c50b3a097d413fa56e04a20b432c25",
+      "acceptedVersion": "v63"
+    }
+  ]
+}

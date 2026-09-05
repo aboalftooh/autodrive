@@ -1,0 +1,37 @@
+name: Export AutoDrive Project ZIP
+
+on:
+  push:
+    branches: [ achievements-weekly-performance-v1 ]
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create project zip
+        shell: bash
+        run: |
+          set -euo pipefail
+          zip -qr /tmp/AutoDrive-latest-github-project.zip . \
+            -x '.git/*' \
+            -x '.gradle/*' \
+            -x '*/build/*' \
+            -x '*.apk' \
+            -x '*.aab'
+          unzip -t /tmp/AutoDrive-latest-github-project.zip >/dev/null
+          sha256sum /tmp/AutoDrive-latest-github-project.zip
+          ls -lh /tmp/AutoDrive-latest-github-project.zip
+
+      - name: Upload project zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoDrive-latest-github-project
+          path: /tmp/AutoDrive-latest-github-project.zip
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,317 @@
+{
+  "schemaVersion": 60,
+  "mappings": [
+    {
+      "mapping_id": "MAT-ICONBUTTON",
+      "primitive": "IconButton",
+      "official_replacement": "AutoDriveIconButton",
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "ENFORCE_WHEN_SEMANTIC_MATCH",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 21,
+      "baseline_candidate_count": 0,
+      "notes": "Confirmed exact-equivalent family in v59; never blind-replace without slot/state check."
+    },
+    {
+      "mapping_id": "MAT-TEXTBUTTON",
+      "primitive": "TextButton",
+      "official_replacement": "AutoDriveTextButton",
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "ENFORCE_WHEN_SEMANTIC_MATCH",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 13,
+      "baseline_candidate_count": 0,
+      "notes": "Confirmed exact-equivalent family in v59."
+    },
+    {
+      "mapping_id": "MAT-DIVIDER",
+      "primitive": "HorizontalDivider",
+      "official_replacement": "AutoDriveDivider",
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "ENFORCE_WHEN_SEMANTIC_MATCH",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 5,
+      "baseline_candidate_count": 0,
+      "notes": "Confirmed exact-equivalent family in v59."
+    },
+    {
+      "mapping_id": "MAT-OUTLINEDTEXTFIELD",
+      "primitive": "OutlinedTextField",
+      "official_replacement": "AutoDriveTextField",
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "ENFORCE_WHEN_SEMANTIC_MATCH",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 4,
+      "baseline_candidate_count": 0,
+      "notes": "Confirmed exact-equivalent family in v59."
+    },
+    {
+      "mapping_id": "MAT-FAB",
+      "primitive": "FloatingActionButton",
+      "official_replacement": "AutoDriveFab",
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "ENFORCE_WHEN_SEMANTIC_MATCH",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 2,
+      "baseline_candidate_count": 0,
+      "notes": "Confirmed exact-equivalent family in v59."
+    },
+    {
+      "mapping_id": "MAT-BUTTON",
+      "primitive": "Button",
+      "official_replacement": "AutoDrivePrimaryButton",
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "ENFORCE_WHEN_SEMANTIC_MATCH",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 2,
+      "baseline_candidate_count": 0,
+      "notes": "Confirmed exact-equivalent family in v59."
+    },
+    {
+      "mapping_id": "MAT-ALERTDIALOG",
+      "primitive": "AlertDialog",
+      "official_replacement": "AutoDriveDialog",
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "ENFORCE_WHEN_SEMANTIC_MATCH",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 2,
+      "baseline_candidate_count": 0,
+      "notes": "Confirmed exact-equivalent family in v59."
+    },
+    {
+      "mapping_id": "MAT-BOTTOMSHEET",
+      "primitive": "ModalBottomSheet",
+      "official_replacement": "AutoDriveBottomSheet",
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "ENFORCE_WHEN_SEMANTIC_MATCH",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 1,
+      "baseline_candidate_count": 0,
+      "notes": "Confirmed exact-equivalent family in v59."
+    },
+    {
+      "mapping_id": "MAT-TOPAPPBAR",
+      "primitive": "TopAppBar",
+      "official_replacement": null,
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "NO_GLOBAL_REPLACEMENT_PROVEN",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 0,
+      "baseline_candidate_count": 4,
+      "notes": "v59 candidate only; ScreenHeader/AutoDriveTopHeader do not prove global semantic equivalence."
+    },
+    {
+      "mapping_id": "MAT-CPI",
+      "primitive": "CircularProgressIndicator",
+      "official_replacement": null,
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "NO_GLOBAL_REPLACEMENT_PROVEN",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 0,
+      "baseline_candidate_count": 8,
+      "notes": "v59 candidate only; inline progress has no proven global DS replacement."
+    },
+    {
+      "mapping_id": "MAT-SURFACE",
+      "primitive": "Surface",
+      "official_replacement": null,
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "NO_GLOBAL_REPLACEMENT",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 0,
+      "baseline_candidate_count": 0,
+      "notes": "Material primitive is not globally banned by name."
+    },
+    {
+      "mapping_id": "MAT-SCAFFOLD",
+      "primitive": "Scaffold",
+      "official_replacement": null,
+      "rule_id": "DS-MATERIAL-001",
+      "policy": "NO_GLOBAL_REPLACEMENT",
+      "semantic_requirements": [
+        "same semantic responsibility"
+      ],
+      "slot_requirements": [
+        "replacement supports required content slots"
+      ],
+      "state_requirements": [
+        "enabled/loading/selected state contract must match where applicable"
+      ],
+      "interaction_requirements": [
+        "click/dismiss/focus interaction semantics must be preserved"
+      ],
+      "allowed_cases": [
+        "inside core/designsystem implementation",
+        "semantic mismatch explicitly classified"
+      ],
+      "baseline_confirmed_count": 0,
+      "baseline_candidate_count": 0,
+      "notes": "Material primitive is not globally banned by name."
+    }
+  ]
+}

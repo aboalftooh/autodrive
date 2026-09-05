@@ -1,0 +1,27 @@
+{
+  "session": 71,
+  "component": "ChatRecoverySynchronizer",
+  "status": "IMPLEMENTED_STATIC_MODEL_VERIFIED",
+  "authority": "conversation-scoped compatibility recovery; not Session 72 global change feed",
+  "cursor": {
+    "type": "server_owned_chat_recovery_seq",
+    "pageSize": 200,
+    "checkpointTable": "chat_recovery_checkpoints",
+    "atomicApplyAndCheckpoint": true,
+    "deviceClockAuthority": false
+  },
+  "coverage": {
+    "tenThousandMessagesModel": "PASS",
+    "message101Reachable": true,
+    "realtimeRequired": false,
+    "adminAndMarketerRows": true,
+    "duplicateReplayIdempotent": true,
+    "scopeValidation": true,
+    "pendingLocalIntentProtection": true
+  },
+  "serverMigration": "supabase/migrations/20260821224500_autodrive_chat_recovery_commands_v1.sql",
+  "limitations": [
+    "Server runtime migration/RPC not deployed or exercised in this environment.",
+    "Old-row mutation completeness/global revision remains Session 72 scope."
+  ]
+}

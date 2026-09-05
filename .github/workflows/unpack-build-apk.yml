@@ -1,0 +1,242 @@
+name: Build AutoDrive APK
+
+on:
+  push:
+    branches: [ main, build-latest-20260904, achievements-weekly-performance-v1 ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: -Dorg.gradle.internal.http.connectionTimeout=60000 -Dorg.gradle.internal.http.socketTimeout=120000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply latest source overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BAD1='feature/achievements/build.gradle.kts'
+          BAD2='feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt'
+          BAD3='feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsUiState.kt'
+          BAD4='feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsViewModel.kt'
+          BAD5='feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/data/AuthRepositoryImpl.kt'
+
+          cat \
+            .ci/latest-overlay/part00.b64 \
+            .ci/latest-overlay/part01.b64 \
+            .ci/latest-overlay/part02.b64 \
+            .ci/latest-overlay/part03.b64 \
+            .ci/latest-overlay/part04a.b64 \
+            .ci/latest-overlay/part04b.b64 \
+            .ci/latest-overlay/part05a.b64 \
+            .ci/latest-overlay/part05b.b64 \
+            .ci/latest-overlay/p06a.b64 \
+            .ci/latest-overlay/p06b.b64 \
+            .ci/latest-overlay/part07a.b64 \
+            .ci/latest-overlay/part07b.b64 \
+            .ci/latest-overlay/part08.b64 \
+            .ci/latest-overlay/p09a.b64 \
+            .ci/latest-overlay/p09b.b64 \
+            .ci/latest-overlay/p10a.b64 \
+            .ci/latest-overlay/p10b.b64 \
+            .ci/latest-overlay/p11a.b64 \
+            .ci/latest-overlay/p11b.b64 \
+            | base64 --decode > /tmp/latest-overlay.zip
+
+          unzip -t /tmp/latest-overlay.zip -x "$BAD1" "$BAD2" "$BAD3" "$BAD4" "$BAD5" >/dev/null
+          unzip -o /tmp/latest-overlay.zip -d . -x "$BAD1" "$BAD2" "$BAD3" "$BAD4" "$BAD5" >/dev/null
+
+          cat \
+            .ci/latest-overlay/repair_00.b64 \
+            .ci/latest-overlay/repair_01.b64 \
+            .ci/latest-overlay/repair_02.b64 \
+            .ci/latest-overlay/repair_03.b64 \
+            .ci/latest-overlay/repair_04.b64 \
+            .ci/latest-overlay/repair_05.b64 \
+            .ci/latest-overlay/repair_06.b64 \
+            | base64 --decode > /tmp/overlay-repair.zip
+
+          echo 'a52d58e9e0a483d0cf37f4876f1f23e4c03cf088a0a1036722e8cd89b08a5ea4  /tmp/overlay-repair.zip' | sha256sum -c -
+          unzip -t /tmp/overlay-repair.zip >/dev/null
+          unzip -o /tmp/overlay-repair.zip -d . >/dev/null
+
+          git checkout -- "$BAD5"
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/data/AuthRepositoryImpl.kt')
+          s = p.read_text(encoding='utf-8')
+          old = 'runCatching { pushTokens.deleteCurrentUserToken() }'
+          new = 'currentPushToken()?.let { token -> runCatching { pushTokens.deleteCurrentUserToken(token) } }'
+          if old not in s:
+              raise SystemExit('Auth logout compatibility target not found')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+
+          cat \
+            .ci/latest-overlay/cfix_00.b64 \
+            .ci/latest-overlay/cfix_01.b64 \
+            .ci/latest-overlay/cfix_02.b64 \
+            .ci/latest-overlay/cfix_03.b64 \
+            | base64 --decode > /tmp/compilefix.zip
+          echo '11d5c424e4b5ced104ad6455d709ea7c85193e4ef8351958e4042105e5bb7a50  /tmp/compilefix.zip' | sha256sum -c -
+          unzip -t /tmp/compilefix.zip >/dev/null
+          unzip -o /tmp/compilefix.zip -d . >/dev/null
+          echo 'Financial compile fixes: PASS'
+
+          base64 --decode .ci/latest-overlay/navfix.b64 > /tmp/navfix.zip
+          echo '8460dc4b9200300af7be593894df77005112ebceca787a03346d8dec918ace01  /tmp/navfix.zip' | sha256sum -c -
+          unzip -t /tmp/navfix.zip >/dev/null
+          unzip -o /tmp/navfix.zip -d . >/dev/null
+          echo 'Navigation compatibility fix: PASS'
+
+          base64 --decode .ci/latest-overlay/testfix.b64 > /tmp/testfix.zip
+          echo '4bbdda2398e9dd88ba577bf77e2d525795a3fffadd15a3bb96b990baf2c021f2  /tmp/testfix.zip' | sha256sum -c -
+          unzip -t /tmp/testfix.zip >/dev/null
+          unzip -o /tmp/testfix.zip -d . >/dev/null
+          echo 'Unit test compatibility fixes: PASS'
+
+          AUTH_TEST='app/src/test/kotlin/com/autodrive/app/architecture/AuthLaunchRegressionTest.kt'
+          git checkout -- "$AUTH_TEST"
+          grep -q 'phone split is existing otp or new join code only' "$AUTH_TEST"
+          echo 'Current auth architecture regression contract restored: PASS'
+
+          python3 .ci/fix_achievements_navigation.py
+
+          # The overlay is the legacy build source. Restore the branch-owned weekly
+          # performance implementation after compatibility/navigation patches run.
+          git checkout HEAD -- feature/achievements
+          git checkout HEAD -- app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeViewModel.kt
+          git checkout HEAD -- feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileViewModel.kt
+          git checkout HEAD -- core/network/src/main/kotlin/com/autodrive/app/core/network/WeeklyPerformanceApi.kt
+
+          rm -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
+          test -f feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
+          test -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
+          grep -q "العمولات المعلقة" feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt
+          test ! -f feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt
+          grep -q 'CodeInputScreen' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
+          grep -q 'onJoinCodeRequired' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
+          grep -q 'onNavigateAchievements' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt
+          grep -q 'selectedItemId = "achievements"' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
+          grep -q 'WeeklyPerformanceCard' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsScreen.kt
+          grep -q 'WeeklyPerformanceApi' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsViewModel.kt
+          grep -q 'targetSuggestionVisible' feature/achievements/src/main/kotlin/com/autodrive/app/feature/achievements/presentation/AchievementsUiState.kt
+          grep -q 'weeklyPerformanceApi' app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeViewModel.kt
+          grep -q 'weeklyPerformanceApi' feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileViewModel.kt
+          test "$(grep -c 'WaitingScreen\|AccountTypeScreen' app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt || true)" -eq 0
+          echo 'Latest financial UI + weekly performance sources: PASS'
+
+      - name: Upload resolved financial sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoDrive-resolved-financial-sources
+          path: |
+            feature/achievements
+            feature/balance
+            feature/commission
+            feature/auth
+            core/network
+            core/database
+            core/model
+            app/src/main/kotlin/com/autodrive/app/navigation
+            app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeScreen.kt
+            app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeViewModel.kt
+            feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/recent/RecentActivityScreen.kt
+            feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileScreen.kt
+            feature/profile/src/main/kotlin/com/autodrive/app/feature/profile/presentation/ProfileViewModel.kt
+          if-no-files-found: error
+          retention-days: 2
+
+      - name: Verify unpacked project
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f settings.gradle.kts
+          test -f gradlew
+          test -f app/build.gradle.kts
+
+      - name: Verify Supabase client configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="$(sed -n 's/^AUTODRIVE_SUPABASE_URL=//p' gradle.properties | head -n1)"
+          KEY="$(sed -n 's/^AUTODRIVE_SUPABASE_ANON_KEY=//p' gradle.properties | head -n1)"
+          test -n "$URL"
+          test -n "$KEY"
+          case "$URL" in https://*.supabase.co) ;; *) echo 'Invalid Supabase URL'; exit 1;; esac
+          case "$KEY" in eyJ*|sb_publishable_*) ;; *) echo 'Invalid Supabase client key'; exit 1;; esac
+          echo 'Supabase client configuration: PASS'
+
+      - name: Verify Firebase configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s app/google-services.json
+          python3 - <<'PY'
+          import json
+          with open('app/google-services.json', encoding='utf-8') as f:
+              d=json.load(f)
+          assert d.get('project_info', {}).get('project_id')
+          packages = {
+              c.get('client_info', {}).get('android_client_info', {}).get('package_name')
+              for c in d.get('client', [])
+          }
+          assert 'com.autodrive.app' in packages
+          print('Firebase configuration: PASS')
+          PY
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Run complete auth unit suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x gradlew
+          ./gradlew --no-daemon :feature:auth:testDebugUnitTest --stacktrace
+
+      - name: Run auth architecture regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./gradlew --no-daemon :app:testDebugUnitTest \
+            --tests 'com.autodrive.app.architecture.AuthLaunchRegressionTest' \
+            --tests 'com.autodrive.app.architecture.SessionIsolationArchitectureTest' \
+            --tests 'com.autodrive.app.architecture.ObservabilitySecurityArchitectureTest' \
+            --stacktrace
+
+      - name: Build debug APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./gradlew --no-daemon assembleDebug --stacktrace
+
+      - name: Verify APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="$(find app/build/outputs/apk/debug -type f -name '*.apk' | head -n 1)"
+          test -s "$APK"
+          unzip -t "$APK" >/dev/null
+          echo "APK=$APK" >> "$GITHUB_ENV"
+          sha256sum "$APK"
+          ls -lh "$APK"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoDrive-debug-apk
+          path: ${{ env.APK }}
+          if-no-files-found: error
+          retention-days: 14

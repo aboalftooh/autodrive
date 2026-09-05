@@ -1,0 +1,228 @@
+{
+  "acceptanceCounters": {
+    "atomicInboxFixtureFailures": 0,
+    "commandReceiptRevisionCursorContaminationCount": 0,
+    "cursorAdvanceOutsideApplyTransactionCount": 0,
+    "eventIdentityConflictSilentlyAcceptedCount": 0,
+    "firstSubscriberGlobalConnectedCount": 0,
+    "historicalMigrationMutationCount": 0,
+    "inboxAppliedOutsideAtomicTransactionCount": 0,
+    "inboxSyntheticEventIdCount": 0,
+    "inboxSyntheticServerRevisionCount": 0,
+    "inboxUnscopedAccessCount": 0,
+    "inputDriftCount": 0,
+    "lostHintFixtureFailures": 0,
+    "newV70WaiverCount": 0,
+    "productionUiFilesChanged": 0,
+    "realtimeDirectRoomWriteCount": 0,
+    "realtimeOldRecordDeleteAuthorityCount": 0,
+    "realtimePayloadBusinessApplyCount": 0,
+    "realtimePayloadUserVisibleSideEffectCount": 0,
+    "realtimeTransitiveRoomWriteCount": 0,
+    "scopeIsolationFixtureFailures": 0,
+    "scopeMismatchSilentlyAppliedCount": 0,
+    "snapshotCompatClaimedAsEventCount": 0,
+    "unexpectedProductionMutationCount": 0,
+    "unknownEntitySilentlyIgnoredCount": 0
+  },
+  "baseline": {
+    "archive": "AutoDrive-v69-idempotent-command-contract.zip",
+    "handoff70Authorized": false,
+    "predecessorGateSatisfied": false,
+    "productionKotlinFiles": 260,
+    "roomVersion": 15,
+    "sha256": "45193784dadacf5d78501265468a48f51803ee5577e5a8c27bfe6db6561f6fa9",
+    "testKotlinFiles": 45,
+    "v69FinalVerdict": "IMPLEMENTED_STATIC_BUT_PREDECESSOR_BLOCKED"
+  },
+  "diffInventory": {
+    "historicalMigrationsModified": [],
+    "productionFilesTouched": [
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/AutoDriveDatabase.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/dao/SyncInboxDao.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/entities/SyncInboxEntity.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/DeletionSynchronizer.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/LegacyRemotePuller.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/LocalDataCleaner.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/RemoteSyncSemantics.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/domain/RealtimeConnectionObserver.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/realtime/RealtimeHintDispatcher.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/realtime/RealtimeManager.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/realtime/RealtimeParticipant.kt",
+      "feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/data/realtime/BalanceRealtimeParticipant.kt",
+      "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/data/realtime/ChatRealtimeParticipant.kt",
+      "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/data/realtime/BillingRealtimeParticipant.kt",
+      "feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/data/realtime/NotificationsRealtimeParticipant.kt"
+    ],
+    "roomMigrationsAdded": [
+      "MIGRATION_15_16"
+    ],
+    "serverMigrationsAdded": [],
+    "testFilesTouched": [
+      "app/src/androidTest/kotlin/com/autodrive/app/core/database/DatabaseMigrationTest.kt",
+      "app/src/test/kotlin/com/autodrive/app/architecture/MoneyArchitectureTest.kt",
+      "app/src/test/kotlin/com/autodrive/app/architecture/OutboxArchitectureTest.kt",
+      "app/src/test/kotlin/com/autodrive/app/architecture/RealtimeArchitectureTest.kt",
+      "app/src/test/kotlin/com/autodrive/app/architecture/RoomPerformanceArchitectureTest.kt"
+    ],
+    "uiFilesTouched": [],
+    "unexpectedProductionFiles": []
+  },
+  "finalVerdict": "IMPLEMENTED_STATIC_BUT_PREDECESSOR_BLOCKED",
+  "handoff71Authorized": false,
+  "implementation": {
+    "ANDROID_MIGRATION_TESTED": false,
+    "COMPILED": false,
+    "IMPLEMENTED": true,
+    "MODEL_VERIFIED": true,
+    "PREDECESSOR_GATE_SATISFIED": false,
+    "REALTIME_RUNTIME_TESTED": false,
+    "SERVER_TOMBSTONE_RUNTIME_VERIFIED": false,
+    "STATIC_VERIFIED": true,
+    "UNIT_TESTED": false,
+    "compileBlocker": "Gradle bootstrap UnknownHostException: services.gradle.org",
+    "newRoomMigrations": 1,
+    "newServerMigrations": 0,
+    "productionKotlinFiles": 263,
+    "roomVersion": 16,
+    "testKotlinFiles": 45
+  },
+  "inboxTruth": {
+    "inboxCursorAtomicityVerified": true,
+    "inboxDeletionPathWired": true,
+    "inboxIdentityConflictVerified": true,
+    "inboxPositiveEventFeedCoverage": false,
+    "inboxPresent": true,
+    "inboxReplayDedupeVerified": true,
+    "inboxScoped": true,
+    "inboxServerRevisionAuthorityVerified": false
+  },
+  "inheritedRegression": {
+    "v67Model": "22/22 PASS",
+    "v68MigrationModel": "PASS",
+    "v68ModelFixtures": "36/36 PASS",
+    "v68ModelRawOverall": "FAIL only because legacy structural assertion requires Room 15",
+    "v69CommandChecks": "all remaining 91 checks PASS",
+    "v69Model": "15/15 PASS",
+    "v69StaticRaw": "91/93 PASS; only obsolete Room-15/no-Room16 assertions fail"
+  },
+  "migrationVerification": {
+    "allPassed": true,
+    "checkCount": 16,
+    "checks": [
+      {
+        "name": "room_version_16",
+        "passed": true
+      },
+      {
+        "name": "migration_15_16",
+        "passed": true
+      },
+      {
+        "name": "column_user_id",
+        "passed": true
+      },
+      {
+        "name": "column_client_id",
+        "passed": true
+      },
+      {
+        "name": "column_org_id",
+        "passed": true
+      },
+      {
+        "name": "column_stream",
+        "passed": true
+      },
+      {
+        "name": "column_event_id",
+        "passed": true
+      },
+      {
+        "name": "column_server_revision",
+        "passed": true
+      },
+      {
+        "name": "column_transaction_group_id",
+        "passed": true
+      },
+      {
+        "name": "column_received_at",
+        "passed": true
+      },
+      {
+        "name": "column_applied_at",
+        "passed": true
+      },
+      {
+        "name": "scoped_primary_key",
+        "passed": true
+      },
+      {
+        "name": "no_business_drop",
+        "passed": true
+      },
+      {
+        "name": "migration_registered",
+        "passed": true
+      },
+      {
+        "name": "m13_14_unchanged",
+        "passed": true
+      },
+      {
+        "name": "m14_15_unchanged",
+        "passed": true
+      }
+    ],
+    "instrumentationReason": "Gradle bootstrap blocked by UnknownHostException: services.gradle.org",
+    "instrumentationRun": false,
+    "passedCount": 16
+  },
+  "modelVerification": {
+    "deterministic": true,
+    "fixturePassed": 36,
+    "fixtureTotal": 36,
+    "passed": true
+  },
+  "predecessorTruth": {
+    "handoff70AuthorizedAtStart": false,
+    "predecessorGateSatisfied": false,
+    "userExecutionOverride": true,
+    "v67TombstoneBlockerOpen": true,
+    "v69AndroidCompileRun": false,
+    "v69ServerRuntimeRun": false
+  },
+  "realtimeTruth": {
+    "aggregateDegradedStatePresent": true,
+    "connectedRequiresHealthyRequiredSet": true,
+    "participantHealthTracked": true,
+    "realtimeDirectRoomWriteCount": 0,
+    "realtimeDisabledCorrectnessIndependent": true,
+    "realtimeHintOnlyVerified": true,
+    "realtimeOldRecordAuthorityCount": 0,
+    "realtimePayloadSideEffectCount": 0,
+    "realtimeTransitiveRoomWriteCount": 0
+  },
+  "remaining": [
+    "Session 71 chat scale/recovery/media",
+    "Session 72 unified change feed/global revision/bootstrap/anti-entropy",
+    "Session 73 observability/fault injection",
+    "Inherited server tombstone runtime blocker"
+  ],
+  "session": 70,
+  "snapshotCompatibilityTruth": {
+    "invoicePaymentLocalAtomicApplyVerified": true,
+    "legacyPositivePullUsesCanonicalEventFeed": false,
+    "legacySnapshotApplyTransactional": true,
+    "serverTransactionGroupSnapshotConsistencyVerified": false,
+    "syntheticEventIdentityIntroduced": false,
+    "syntheticServerRevisionIntroduced": false
+  },
+  "staticVerification": {
+    "checkCount": 78,
+    "deterministic": true,
+    "passed": true,
+    "passedCount": 78
+  }
+}

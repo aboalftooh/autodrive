@@ -1,0 +1,155 @@
+{
+  "session": 71,
+  "generatedAtUtc": "2026-08-21T21:09:21.249037+00:00",
+  "baseline": {
+    "archive": "AutoDrive-v70-durable-inbox-realtime-hints.zip",
+    "sha256": "ed96aad130545287aefacc0f8d80ebd5f00960baac038815a3dd59a7c1739b78",
+    "expectedSha256": "ed96aad130545287aefacc0f8d80ebd5f00960baac038815a3dd59a7c1739b78",
+    "roomBefore": 16,
+    "roomAfter": 17,
+    "productionKotlinFilesCurrent": 269,
+    "testKotlinFilesCurrent": 46
+  },
+  "override": {
+    "userAuthorizedPredecessorBypass": true,
+    "predecessorGateSatisfied": false,
+    "v70FinalVerdict": "IMPLEMENTED_STATIC_BUT_PREDECESSOR_BLOCKED",
+    "v70Handoff71Authorized": false,
+    "handoff72Authorized": false,
+    "rule": "Implementation/package allowed by explicit user override; FULL_RELEASE_PASS remains forbidden."
+  },
+  "truthTable": {
+    "IMPLEMENTED": true,
+    "STATIC_VERIFIED": true,
+    "MODEL_VERIFIED": true,
+    "COMPILED": false,
+    "UNIT_TESTED": false,
+    "ANDROID_MIGRATION_TESTED": false,
+    "SERVER_CHAT_RUNTIME_VERIFIED": false,
+    "MEDIA_STORAGE_RUNTIME_VERIFIED": false,
+    "CHAT_10K_VERIFIED": true,
+    "PREDECESSOR_GATE_SATISFIED": false
+  },
+  "verification": {
+    "v71Static": {
+      "passed": true,
+      "passedCount": 59,
+      "checkCount": 59,
+      "deterministicTwoRuns": true
+    },
+    "v71Model": {
+      "passed": true,
+      "passedCount": 38,
+      "checkCount": 38,
+      "deterministicTwoRuns": true
+    },
+    "v71MigrationModel": {
+      "passed": true,
+      "passedCount": 9,
+      "checkCount": 9,
+      "deterministicTwoRuns": true
+    },
+    "inherited": {
+      "v67Model": "22/22 PASS",
+      "v68Model": "36/36 PASS",
+      "v69Model": "15/15 PASS",
+      "v70Model": "36/36 PASS",
+      "v70Migration": "16/16 PASS"
+    }
+  },
+  "runtimeBlockers": [
+    {
+      "code": "GRADLE_BOOTSTRAP_UNKNOWN_HOST",
+      "command": "./gradlew --version --console=plain",
+      "result": "FAILED_BEFORE_BUILD",
+      "evidence": "V71_GRADLE_BOOTSTRAP_BLOCKER.log",
+      "message": "java.net.UnknownHostException: services.gradle.org",
+      "effect": [
+        "COMPILED=false",
+        "UNIT_TESTED=false",
+        "ANDROID_MIGRATION_TESTED=false"
+      ]
+    },
+    {
+      "code": "SERVER_RUNTIME_NOT_DEPLOYED",
+      "result": "NOT_RUN",
+      "effect": [
+        "SERVER_CHAT_RUNTIME_VERIFIED=false"
+      ]
+    },
+    {
+      "code": "MEDIA_STORAGE_RUNTIME_NOT_RUN",
+      "result": "NOT_RUN",
+      "effect": [
+        "MEDIA_STORAGE_RUNTIME_VERIFIED=false"
+      ]
+    }
+  ],
+  "implementationFacts": {
+    "chatRecoveryCursor": "server_owned_chat_recovery_seq",
+    "chatPageSize": 200,
+    "chatTerminalLimit100Count": 0,
+    "independentChatRemoteApplyPathCount": 1,
+    "durableMediaReference": "media_object_path",
+    "mediaUploadBeforeDurableIntentCount": 0,
+    "randomMediaObjectIdentityRetryCount": 0,
+    "unsafeDirectCreateConversationCount": 0,
+    "createSendDependencyBypassCount": 0,
+    "realtimeDirectRoomWriteCount": 0,
+    "newV71WaiverCount": 0,
+    "productionUiFilesChanged": 0,
+    "historicalServerMigrationMutationCount": 0,
+    "historicalRoomMigrationMutationCount": 0
+  },
+  "hashes": {
+    "baselineZipSha256": "ed96aad130545287aefacc0f8d80ebd5f00960baac038815a3dd59a7c1739b78",
+    "v69ServerMigrationSha256": "6663381c4bf177c7cc22c75fb4c1eee1683290894307ec9ade85e4fe7620c01e",
+    "v71ServerMigrationSha256": "e945ca54902b28e592250e3763a5584e84cd2ac08f35d53c03f8b918151ec641",
+    "session71ContractSha256": "f394170f9983aafaaca1be939fdbd37e71d2ec33636e601f9c3f9711515dc2d3"
+  },
+  "diff": {
+    "changedExistingFiles": [
+      "app/src/androidTest/kotlin/com/autodrive/app/core/database/DatabaseMigrationTest.kt",
+      "app/src/test/kotlin/com/autodrive/app/architecture/MoneyArchitectureTest.kt",
+      "app/src/test/kotlin/com/autodrive/app/architecture/OutboxArchitectureTest.kt",
+      "app/src/test/kotlin/com/autodrive/app/architecture/RoomPerformanceArchitectureTest.kt",
+      "app/src/test/kotlin/com/autodrive/app/feature/chat/data/ChatRepositoryImplTest.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/AutoDriveDatabase.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/dao/ChatMessageDao.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/dao/ConversationDao.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/dao/PendingOperationDao.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/entities/Entities.kt",
+      "core/network/src/main/kotlin/com/autodrive/app/core/network/dto/chat/ChatDtos.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/LegacyRemotePuller.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/LocalDataCleaner.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/OutboxSynchronizer.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/SyncEntityMappers.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/outbox/IdempotentServerCommandGateway.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/outbox/OutboxContracts.kt",
+      "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/data/ChatMediaManager.kt",
+      "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/data/ChatRepositoryImpl.kt",
+      "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/data/worker/RetryFailedMessagesWorker.kt",
+      "scripts/verify-v68-model.py",
+      "scripts/verify-v70-migration.py"
+    ],
+    "addedFilesAtVerificationTime": [
+      "SESSION_71_FINAL.md",
+      "SESSION_71_FINAL.md.sha256",
+      "V71_GRADLE_BOOTSTRAP_BLOCKER.log",
+      "app/src/test/kotlin/com/autodrive/app/architecture/ChatSyncV71ArchitectureTest.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/dao/ChatMediaTransferDao.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/dao/ChatRecoveryCheckpointDao.kt",
+      "core/database/src/main/kotlin/com/autodrive/app/core/database/entities/ChatSyncEntities.kt",
+      "core/sync/src/main/kotlin/com/autodrive/app/core/sync/data/ChatRecoverySynchronizer.kt",
+      "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/data/ChatMediaTransferProcessor.kt",
+      "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/data/worker/ChatMediaTransferScheduler.kt",
+      "scripts/verify-v71-migration.py",
+      "scripts/verify-v71-model.py",
+      "scripts/verify-v71-static.py",
+      "supabase/migrations/20260821224500_autodrive_chat_recovery_commands_v1.sql",
+      "tools/verify_v71_chat_server_contract.sql"
+    ],
+    "deletedFiles": []
+  },
+  "finalVerdict": "IMPLEMENTED_STATIC_MODEL_RUNTIME_BLOCKED_PREDECESSOR_OVERRIDDEN"
+}

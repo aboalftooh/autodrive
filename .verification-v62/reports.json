@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 62,
+  "session": 62,
+  "tool": "verify_designsystem_v62_reports",
+  "targetResolvedIds": [
+    "DS59-MAT-40A566C71D",
+    "DS59-MAT-6FEF7AF6CB",
+    "DS59-MAT-83500757C5",
+    "DS59-MAT-A0FB9B1576",
+    "DS59-MAT-D6C993673C",
+    "DS59-MAT-D9E88F5DA5",
+    "DS59-MAT-FEEC3D97F3",
+    "DS59-REPORTS-001",
+    "DS59-REPORTS-002",
+    "DS59-REPORTS-003"
+  ],
+  "contractChecks": [
+    {
+      "id": "REPORTS-CONTRACT",
+      "status": "PASS",
+      "message": "Reports source contract satisfied"
+    },
+    {
+      "id": "REPORTS-TARGET-IDS",
+      "status": "PASS",
+      "message": "exact 10 v62 target IDs exist in immutable baseline"
+    },
+    {
+      "id": "REPORTS-COVERAGE-V61",
+      "status": "PASS",
+      "message": "v61 coverage contains exactly six v62 rows"
+    },
+    {
+      "id": "REPORTS-CANDIDATES",
+      "status": "PASS",
+      "message": "five Reports candidates retained; accepted candidate total=18"
+    },
+    {
+      "id": "REPORTS-RATCHET-POST",
+      "status": "PASS",
+      "message": "post-accept state is v62/47 with exact target set resolved"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_BASELINE_v59.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_BASELINE_v59.json"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_UI_COVERAGE_v59.csv"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_V1_CONTRACT_REGISTRY_v59.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_UI_COVERAGE_v61.csv"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_VERIFICATION_v61.json"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "DESIGN_SYSTEM_VERIFICATION_v61.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "AutoDrive-v61-report.md"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/presentation/log/WinWeeksScreen.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/presentation/log/ReportsViewModel.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/presentation/log/ReportsUiState.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/presentation/log/InvoiceDetailViewModel.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/navigation/NavigationGraphs.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/presentation/recent/RecentActivityScreen.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/presentation/recent/RecentActivityUiState.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/presentation/recent/RecentActivityViewModel.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/data/InvoiceDetailRepositoryImpl.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/domain/repository/InvoiceDetailRepository.kt"
+    },
+    {
+      "id": "PROTECTED-HASH",
+      "status": "PASS",
+      "message": "app/src/main/kotlin/com/autodrive/app/feature/reports/domain/usecase/GetInvoiceDetailsUseCase.kt"
+    },
+    {
+      "id": "PROTECTED-DS-MAIN",
+      "status": "PASS",
+      "message": "core/designsystem/src/main unchanged"
+    },
+    {
+      "id": "PROTECTED-REGION",
+      "status": "PASS",
+      "message": "competition-vm"
+    },
+    {
+      "id": "PROTECTED-REGION",
+      "status": "PASS",
+      "message": "invoice-list-vm"
+    },
+    {
+      "id": "PROTECTED-REGION",
+      "status": "PASS",
+      "message": "weekly-vm"
+    },
+    {
+      "id": "REPORTS-COVERAGE-V62",
+      "status": "PASS",
+      "message": "v62 Reports rows closed 6/6"
+    }
+  ],
+  "errors": [],
+  "verdict": "PASS"
+}
