@@ -81,7 +81,7 @@ import kotlinx.coroutines.launch
 
 private const val PAGE_SIZE = 10
 
-data class AllCommissionsUiState(
+internal data class AllCommissionsUiState(
     val totalCount: Long = 0L,
     val totalAmount: Money = Money.ZERO,
     val entries: List<CommissionEntry> = emptyList(),
@@ -191,7 +191,7 @@ fun AllCommissionsScreen(
                 when {
                     state.loading -> InitialLoading()
                     state.error != null && state.entries.isEmpty() -> InitialError(
-                        message = state.error.orEmpty(),
+                        message = state.error,
                         onRetry = viewModel::retry,
                     )
                     else -> AllCommissionsContent(
