@@ -1,0 +1,65 @@
+name: Apply Drive import
+
+on:
+  push:
+    branches: [ upload-achievements-no-legacy ]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild exact Drive source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            .ci/import_delta/part00.b64 \
+            .ci/import_delta/part01.b64 \
+            .ci/import_delta/part02.b64 \
+            .ci/import_delta/part03.b64 \
+            .ci/import_delta/part04.b64 \
+            .ci/import_delta/part05.b64 \
+            .ci/import_delta/part06.b64 \
+            .ci/import_delta/part07.b64 \
+            .ci/import_delta/part08.b64 \
+            .ci/import_delta/part09.b64 \
+            .ci/import_delta/part10.b64 \
+            .ci/import_delta/part11.b64 \
+            .ci/import_delta/part12.b64 \
+            .ci/import_delta/part13.b64 \
+            .ci/import_delta/part14.b64 \
+            .ci/import_delta/part15.b64 \
+            .ci/import_delta/part16.b64 \
+            .ci/import_delta/part17.b64 \
+            .ci/import_delta/tail00.b64 \
+            .ci/import_delta/tail01.b64 \
+            .ci/import_delta/tail02.b64 \
+            .ci/import_delta/tail03.b64 \
+            .ci/import_delta/tail04.b64 \
+            .ci/import_delta/tail05.b64 \
+            .ci/import_delta/tail06.b64 \
+            .ci/import_delta/tail07.b64 \
+            .ci/import_delta/tail08.b64 \
+            .ci/import_delta/tail09.b64 \
+            .ci/import_delta/tail10.b64 \
+            .ci/import_delta/tail11.b64 \
+            .ci/import_delta/tail12.b64 \
+            | base64 --decode > /tmp/delta.zip
+          echo '05c630de7fa2f7a0834cecd5e72eb416c7121a39e8464737185dd5eec33dbfb2  /tmp/delta.zip' | sha256sum -c -
+          unzip -t /tmp/delta.zip >/dev/null
+          unzip -o /tmp/delta.zip -d . >/dev/null
+          rm -rf .ci/import_delta
+          rm -f .github/workflows/apply-drive-import.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Import AutoDrive source from Drive'
+          git push origin HEAD:upload-achievements-no-legacy
