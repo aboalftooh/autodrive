@@ -1,0 +1,29 @@
+name: Assemble exact pending screen
+on:
+  push:
+    branches: [upload-achievements-no-legacy]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Materialize exact pending file
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/PendingCommissionsScreen.kt'
+          mkdir -p "$(dirname "$target")"
+          cat .ci/pending_parts/p0 .ci/pending_parts/p1 .ci/pending_parts/p2 .ci/pending_parts/p3 .ci/pending_parts/p4 .ci/pending_parts/p5 | base64 --decode > "$target"
+          actual="$(git hash-object "$target")"
+          test "$actual" = '42c46f32b302dee141fcf0084a71449f2a6dac48'
+          rm -rf .ci/pending_parts
+          rm -f .github/workflows/assemble-pending.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Materialize exact pending commission screen'
+          git push origin HEAD:upload-achievements-no-legacy
