@@ -76,7 +76,7 @@ import kotlinx.coroutines.launch
 
 private const val PENDING_PAGE_SIZE = 10
 
-data class PendingCommissionsUiState(
+internal data class PendingCommissionsUiState(
     val totalCount: Long = 0L,
     val totalAmount: Money = Money.ZERO,
     val entries: List<CommissionEntry> = emptyList(),
@@ -185,7 +185,7 @@ fun PendingCommissionsScreen(
                 when {
                     state.loading -> PendingInitialLoading()
                     state.error != null && state.entries.isEmpty() -> PendingInitialError(
-                        message = state.error.orEmpty(),
+                        message = state.error,
                         onRetry = viewModel::retry,
                     )
                     else -> PendingCommissionsContent(
