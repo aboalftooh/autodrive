@@ -1,0 +1,29 @@
+name: Assemble exact commission screen
+on:
+  push:
+    branches: [upload-achievements-no-legacy]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Materialize exact file
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/AllCommissionsScreen.kt'
+          mkdir -p "$(dirname "$target")"
+          cat .ci/ac_parts/p0 .ci/ac_parts/p1 .ci/ac_parts/p2 .ci/ac_parts/p3 .ci/ac_parts/p4 .ci/ac_parts/p5 | base64 --decode > "$target"
+          actual="$(git hash-object "$target")"
+          test "$actual" = 'c2f720a158547168ad386fa81992a40a3bbbfae5'
+          rm -rf .ci/ac_parts
+          rm -f .github/workflows/assemble-ac.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Materialize exact commission screen'
+          git push origin HEAD:upload-achievements-no-legacy
