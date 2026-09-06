@@ -1,0 +1,5 @@
+AutoDrive v01 production integrity
+Scope: app/, core/, feature/
+Before aggregate SHA-256: 465dc3fcb5e6ea6add43db385a27df3092f49cf42602ff6ce8d3107aa532b9a9
+After aggregate SHA-256:  465dc3fcb5e6ea6add43db385a27df3092f49cf42602ff6ce8d3107aa532b9a9
+Result: MATCH — no production file changed.

@@ -1,0 +1,43 @@
+{
+  "android": {
+    "finalInstallAtomic": true,
+    "paymentClientScopeAdded": true,
+    "pendingLocalPreserved": true,
+    "roomAfter": 18,
+    "roomBefore": 17,
+    "runtimeMigrationTested": false,
+    "stagingScope": [
+      "user_id",
+      "client_id",
+      "org_id",
+      "bootstrap_id"
+    ],
+    "stagingTable": "sync_bootstrap_staging",
+    "stateTable": "sync_bootstrap_state",
+    "syntheticInboxEvents": false
+  },
+  "contractVersion": 2,
+  "entityTypes": [
+    "autodrive_users",
+    "invoices",
+    "payments",
+    "commission_payments",
+    "marketer_balance",
+    "balance_transactions",
+    "withdrawal_requests",
+    "notifications",
+    "conversations",
+    "internal_messages"
+  ],
+  "server": {
+    "baseline": "max committed DATA_CHANGE revision under same consistency point",
+    "beginRpc": "autodrive_sync_bootstrap_begin_v1",
+    "consistency": "exclusive advisory transaction lock paired with shared mutation trigger lock",
+    "pageRpc": "autodrive_sync_bootstrap_page_v1",
+    "rowsTable": "autodrive_sync_bootstrap_rows_v1",
+    "runtimeVerified": false,
+    "sessionTable": "autodrive_sync_bootstrap_sessions_v1",
+    "ttl": "1 hour"
+  },
+  "session": 72
+}

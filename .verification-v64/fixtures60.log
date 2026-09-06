@@ -1,0 +1,6 @@
+V60 VERIFICATION FIXTURES: PASS
+ - explicit outcomes: 40
+ - core pass/fail outcomes: 18
+ - false-positive guards: 5
+ - exception outcomes: 5
+ - expected tool-error outcomes: 12

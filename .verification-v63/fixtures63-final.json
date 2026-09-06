@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 63,
+  "tool": "test_designsystem_verification_v63",
+  "explicitOutcomes": 19,
+  "cases": [
+    {
+      "name": "positive typed titleTone default null",
+      "status": "PASS",
+      "errors": [],
+      "expected": "clean"
+    },
+    {
+      "name": "negative remove titleTone forwarding",
+      "status": "PASS",
+      "errors": [
+        "DESTRUCTIVE_FORWARD"
+      ],
+      "expected": "DESTRUCTIVE_FORWARD"
+    },
+    {
+      "name": "negative computed color unused",
+      "status": "PASS",
+      "errors": [
+        "DESTRUCTIVE_FORWARD",
+        "STALE_TITLE_COLOR"
+      ],
+      "expected": "DESTRUCTIVE_FORWARD"
+    },
+    {
+      "name": "negative raw Color parameter",
+      "status": "PASS",
+      "errors": [
+        "RAW_COLOR_ESCAPE"
+      ],
+      "expected": "RAW_COLOR_ESCAPE"
+    },
+    {
+      "name": "negative Error wins over disabled",
+      "status": "PASS",
+      "errors": [
+        "DISABLED_PRECEDENCE"
+      ],
+      "expected": "DISABLED_PRECEDENCE"
+    },
+    {
+      "name": "negative local Row clone",
+      "status": "PASS",
+      "errors": [
+        "LOCAL_ROW_CLONE"
+      ],
+      "expected": "LOCAL_ROW_CLONE"
+    },
+    {
+      "name": "negative remove disabled semantics",
+      "status": "PASS",
+      "errors": [
+        "DISABLED_SEMANTICS"
+      ],
+      "expected": "DISABLED_SEMANTICS"
+    },
+    {
+      "name": "negative callback when disabled",
+      "status": "PASS",
+      "errors": [
+        "CLICK_GUARD"
+      ],
+      "expected": "CLICK_GUARD"
+    },
+    {
+      "name": "negative non mirrored icon",
+      "status": "PASS",
+      "errors": [
+        "RTL_ICON"
+      ],
+      "expected": "RTL_ICON"
+    },
+    {
+      "name": "negative divider after final row",
+      "status": "PASS",
+      "errors": [
+        "DIVIDER_RULE"
+      ],
+      "expected": "DIVIDER_RULE"
+    },
+    {
+      "name": "negative remove status chip",
+      "status": "PASS",
+      "errors": [
+        "STATUS_CHIP"
+      ],
+      "expected": "STATUS_CHIP"
+    },
+    {
+      "name": "negative resolve v64 material finding",
+      "status": "PASS",
+      "errors": [
+        "MATERIAL_DEBT_MUTATION",
+        "RATCHET_POST"
+      ],
+      "expected": "MATERIAL_DEBT_MUTATION"
+    },
+    {
+      "name": "negative remove v65 a11y finding",
+      "status": "PASS",
+      "errors": [
+        "A11Y_DEBT_MUTATION",
+        "RATCHET_POST"
+      ],
+      "expected": "A11Y_DEBT_MUTATION"
+    },
+    {
+      "name": "negative candidate washing",
+      "status": "PASS",
+      "errors": [
+        "CANDIDATE_WASHING"
+      ],
+      "expected": "CANDIDATE_WASHING"
+    },
+    {
+      "name": "negative modify ProfileScreen",
+      "status": "PASS",
+      "errors": [],
+      "expected": "protected hash mismatch"
+    },
+    {
+      "name": "negative modify ProfileViewModel",
+      "status": "PASS",
+      "errors": [],
+      "expected": "protected hash mismatch"
+    },
+    {
+      "name": "negative modify ProfileUiState",
+      "status": "PASS",
+      "errors": [],
+      "expected": "protected hash mismatch"
+    },
+    {
+      "name": "negative modify ProfileRepository",
+      "status": "PASS",
+      "errors": [],
+      "expected": "protected hash mismatch"
+    },
+    {
+      "name": "negative modify NavigationGraphs",
+      "status": "PASS",
+      "errors": [],
+      "expected": "protected hash mismatch"
+    }
+  ],
+  "verdict": "PASS",
+  "failed": []
+}

@@ -1,0 +1,1 @@
+{"allPassed":true,"checkCount":9,"checks":{"checkpoint_table":true,"dependency_column":true,"media_object_path":true,"media_table":true,"migration16_17":true,"no_sync_inbox_mutation":true,"old_15_16_present":true,"registered":true,"room17":true},"passedCount":9}

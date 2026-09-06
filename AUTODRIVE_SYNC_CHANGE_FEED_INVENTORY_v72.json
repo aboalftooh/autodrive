@@ -1,0 +1,182 @@
+{
+  "canonicalStream": "autodrive-global-change-v1",
+  "contractVersion": 2,
+  "dataRevisionSequence": "autodrive_data_revision_seq_v1",
+  "entities": [
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "autodrive_users",
+      "operations": "UPSERT+DELETE",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "user/client/org",
+      "scopeDerivation": "auth.uid + client_id + org_id",
+      "serverTable": "autodrive_users",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    },
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "invoices",
+      "operations": "UPSERT+DELETE incl visibility exit",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "client/org",
+      "scopeDerivation": "autodrive_users(client_id,org_id)->user; visible SALE commission>0",
+      "serverTable": "invoices",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    },
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "payments",
+      "operations": "UPSERT+DELETE",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "client/org",
+      "scopeDerivation": "autodrive_users(client_id,organization_id)->user",
+      "serverTable": "payments",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    },
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "commission_payments",
+      "operations": "UPSERT+DELETE",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "client/org",
+      "scopeDerivation": "autodrive_users(client_id,organization_id)->user",
+      "serverTable": "commission_payments",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    },
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "marketer_balance",
+      "operations": "UPSERT+DELETE",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "client/org",
+      "scopeDerivation": "autodrive_users(client_id,org_id)->user",
+      "serverTable": "marketer_balance",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    },
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "balance_transactions",
+      "operations": "UPSERT+DELETE",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "client/org",
+      "scopeDerivation": "autodrive_users(client_id,org_id)->user",
+      "serverTable": "balance_transactions",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    },
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "withdrawal_requests",
+      "operations": "UPSERT+DELETE",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "client/org",
+      "scopeDerivation": "autodrive_users(client_id,org_id)->user",
+      "serverTable": "withdrawal_requests",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    },
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "notifications",
+      "operations": "UPSERT+DELETE",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "user/client/org",
+      "scopeDerivation": "user_id + client_id + org_id validated against current profile",
+      "serverTable": "notifications",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    },
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "conversations",
+      "operations": "UPSERT+DELETE",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "client/org",
+      "scopeDerivation": "autodrive_users(client_id,org_id)->user",
+      "serverTable": "conversations",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    },
+    {
+      "changeCaptureMechanism": "autodrive_sync_capture_v1",
+      "deleteCovered": true,
+      "entityType": "internal_messages",
+      "operations": "UPSERT+DELETE",
+      "payloadStrategy": "explicit allowlisted jsonb projection",
+      "primaryKeyType": "uuid",
+      "runtimeVerified": false,
+      "scopeColumns": "client/org",
+      "scopeDerivation": "autodrive_users(client_id,org_id)->user",
+      "serverTable": "internal_messages",
+      "transactionGroupCovered": true,
+      "upsertCovered": true,
+      "writers": [
+        "ALL table writer paths via AFTER row trigger"
+      ]
+    }
+  ],
+  "pageBoundary": "extends final page boundary through complete scoped transaction group",
+  "revisionKind": "DATA_CHANGE",
+  "runtimeVerified": false,
+  "session": 72,
+  "transactionGroup": "pg_current_xact_id()"
+}

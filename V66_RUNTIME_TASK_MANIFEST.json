@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 66,
+  "bootstrapCommand": "./gradlew --version --no-daemon",
+  "bootstrapStatus": "BLOCKED_UNKNOWN_HOST",
+  "taskDiscoveryStatus": "NOT_RUN",
+  "tasks": [],
+  "reason": "Gradle 8.7 distribution cannot resolve services.gradle.org in execution environment.",
+  "timestamp": "2026-08-21T08:43:57+00:00",
+  "bootstrapReturnCode": 1,
+  "bootstrapLogSha256": "a061409323d5c895230ceabdbd1e4ad6dba013d21d34dd902f6efc91b21b3b74"
+}

@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 62,
+  "tool": "test_designsystem_verification_v62",
+  "results": [
+    {
+      "case": "positive_current_tree",
+      "detected": false,
+      "errors": [],
+      "status": "PASS"
+    },
+    {
+      "case": "remove_reportstattile",
+      "detected": true,
+      "errors": [
+        "REPORTS-001 ReportStatTile not functionally reachable from ReportsContent"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "raw_840",
+      "detected": true,
+      "errors": [
+        "REPORTS-002 Dashboard width not functionally applied to reports body",
+        "REPORTS-002 raw 840.dp forbidden"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "raw_360",
+      "detected": true,
+      "errors": [
+        "REPORTS-003 responsive token branch incomplete",
+        "REPORTS-003 raw 360.dp forbidden"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "always_two_column",
+      "detected": true,
+      "errors": [
+        "REPORTS-003 responsive token branch incomplete"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "competition_textbutton",
+      "detected": true,
+      "errors": [
+        "raw primitive remains: TextButton(",
+        "official replacement missing: AutoDriveTextButton("
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "detail_iconbutton",
+      "detected": true,
+      "errors": [
+        "raw primitive remains: IconButton(",
+        "official replacement missing: AutoDriveIconButton("
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "detail_fab",
+      "detected": true,
+      "errors": [
+        "raw primitive remains: FloatingActionButton(",
+        "official replacement missing: AutoDriveFab("
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "detail_divider",
+      "detected": true,
+      "errors": [
+        "raw primitive remains: HorizontalDivider(",
+        "official replacement missing: AutoDriveDivider("
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "list_textbutton",
+      "detected": true,
+      "errors": [
+        "raw primitive remains: TextButton(",
+        "official replacement missing: AutoDriveTextButton("
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "weekly_textbutton",
+      "detected": true,
+      "errors": [
+        "raw primitive remains: TextButton(",
+        "official replacement missing: AutoDriveTextButton("
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "competition_disabled",
+      "detected": true,
+      "errors": [
+        "competition is not ACTIVE-only"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "current_route_changed",
+      "detected": true,
+      "errors": [
+        "current invoice route changed"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "failures": [],
+  "verdict": "PASS"
+}

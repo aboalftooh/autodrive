@@ -1,0 +1,485 @@
+{
+  "behaviorChecks": [
+    {
+      "id": "HOME-BEHAVIOR-RESUME",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-REFRESH",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-PUMP-START",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-PUMP-COMPLETE",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-PUMP-EARLY",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-PUMP-DURATION",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-PUMP-SOUND",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-COUNTDOWN",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-DISABLED",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-LOCKED",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-ACTIVE",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-RECENT",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-LOG",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-PROFILE",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-NOTIFICATIONS",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-FAB",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-BEHAVIOR-INSIGHT",
+      "message": "behavior contract retained",
+      "status": "PASS"
+    }
+  ],
+  "buildRuntimeStatus": {
+    "compileDebugAndroidTestKotlin": "NOT_EXECUTED_RUNTIME_BLOCKED",
+    "compileDebugKotlin": "NOT_EXECUTED_RUNTIME_BLOCKED",
+    "connectedDebugAndroidTest": "NOT_EXECUTED_RUNTIME_BLOCKED",
+    "gradleBootstrap": {
+      "command": "./gradlew --version",
+      "evidenceSha256": "a061409323d5c895230ceabdbd1e4ad6dba013d21d34dd902f6efc91b21b3b74",
+      "exitCode": 1,
+      "firstCausalError": "java.net.UnknownHostException: services.gradle.org",
+      "status": "BLOCKED"
+    },
+    "resumeCondition": "Provide network access to services.gradle.org or an already available Gradle 8.7 distribution.",
+    "screenshots": "NOT_EXECUTED_RUNTIME_BLOCKED"
+  },
+  "candidateChanges": {
+    "currentAcceptedCount": 18,
+    "newCandidateIds": [],
+    "previousAcceptedCount": 19,
+    "resolvedCandidateIds": [
+      "DS59-DUPC-HOMEHEADER"
+    ],
+    "retainedHomeCandidateIds": [
+      "DS59-MATC-FC49FB269C"
+    ],
+    "retainedKnownCandidateCount": 18
+  },
+  "changedProductionFiles": [
+    {
+      "afterSha256": "7aaddb37639e9dd24eb9e26ed5363019095fd86646cb4cdbb2ad902bed7af093",
+      "allowlisted": true,
+      "beforeSha256": "e5f95dda54d7da9861ada7ac51cf7b591fe90d03acb36f5610fd025d0b554635",
+      "classification": "SESSION_61_HOME_V1_REPAIR",
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeHeroComponents.kt",
+      "reason": "Migrate pump hero/instrument styling to DashboardHero and AutoDriveInstrumentNumber while preserving pump animation, sounds, countdown, and callbacks."
+    },
+    {
+      "afterSha256": "07188a8105b509f2443766182387fc3748040510ab35c777313f89b122efcc18",
+      "allowlisted": true,
+      "beforeSha256": "538cfa58e741ba256e365f468cceb2a69b582a4c63a98523e5337f94ec014a27",
+      "classification": "SESSION_61_HOME_V1_REPAIR",
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeScreen.kt",
+      "reason": "Migrate Home root/header/width to ScreenHeader and dashboard width contracts while preserving navigation, refresh, competition, FAB, and notification behavior."
+    },
+    {
+      "afterSha256": "0ef2f25f24066e7af13ebb280a0040713f9c9d513d0fcd2559011b7f1f035837",
+      "allowlisted": true,
+      "beforeSha256": "6c9d3270f2e663b62fa19c57f4f391010a1dc13dad3fb2d8fe511610e97f41d9",
+      "classification": "SESSION_61_HOME_V1_REPAIR",
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeSupportCards.kt",
+      "reason": "Migrate Home support cards and notification interaction to governed Design System components/tokens while preserving visible behavior."
+    }
+  ],
+  "exceptionSummary": {
+    "activeExceptions": 0,
+    "verdict": "PASS"
+  },
+  "finalVerdict": "STATIC_HOME_COMPLETE / UI_RUNTIME_BLOCKED",
+  "fixtureSummary": {
+    "negativeGates": {
+      "count": 6,
+      "results": [
+        {
+          "case": "reintroduce_home_header",
+          "detected": true,
+          "exit": 1,
+          "verdict": "FAIL_HOME_V61_CONTRACT"
+        },
+        {
+          "case": "raw_color",
+          "detected": true,
+          "exit": 1,
+          "verdict": "FAIL_HOME_V61_CONTRACT"
+        },
+        {
+          "case": "remove_instrument",
+          "detected": true,
+          "exit": 1,
+          "verdict": "FAIL_HOME_V61_CONTRACT"
+        },
+        {
+          "case": "remove_dashboard_hero",
+          "detected": true,
+          "exit": 1,
+          "verdict": "FAIL_HOME_V61_CONTRACT"
+        },
+        {
+          "case": "remove_dashboard_width",
+          "detected": true,
+          "exit": 1,
+          "verdict": "FAIL_HOME_V61_CONTRACT"
+        },
+        {
+          "case": "break_refresh",
+          "detected": true,
+          "exit": 1,
+          "verdict": "FAIL_HOME_V61_CONTRACT"
+        }
+      ],
+      "verdict": "PASS"
+    },
+    "v60": {
+      "failureCount": 0,
+      "fixtureCount": 40,
+      "verdict": "PASS"
+    },
+    "v61": {
+      "failureCount": 0,
+      "fixtureCount": 10,
+      "verdict": "PASS"
+    }
+  },
+  "homeContractChecks": [
+    {
+      "id": "HOME-CONTRACT-HEADER",
+      "message": "ScreenHeader owns Home header",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-CONTRACT-NO-LOCAL-HEADER",
+      "message": "local HomeHeader responsibility absent",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-CONTRACT-HERO",
+      "message": "DashboardHero owns pump hero container",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-CONTRACT-INSTRUMENT",
+      "message": "official instrument number replaces local LED renderer",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-CONTRACT-WIDTH",
+      "message": "Dashboard max-width applied functionally",
+      "status": "PASS"
+    }
+  ],
+  "inputSource": {
+    "archiveEntries": 934,
+    "name": "AutoDrive-v60-static-ratchet-runtime-blocked.zip",
+    "sha256": "5c07e8cd1426f515ff5b83426ac88061e9710a4c8e316ad9559c8a21c516b5b7"
+  },
+  "inputSourceSha256": "5c07e8cd1426f515ff5b83426ac88061e9710a4c8e316ad9559c8a21c516b5b7",
+  "perRule": [
+    {
+      "current_total": 3,
+      "new_violation_count": 0,
+      "previous_accepted_total": 3,
+      "resolved_count": 0,
+      "rule_id": "DS-A11Y-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 0,
+      "resolved_count": 0,
+      "rule_id": "DS-A11Y-002",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 0,
+      "resolved_count": 0,
+      "rule_id": "DS-A11Y-003",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 0,
+      "resolved_count": 0,
+      "rule_id": "DS-BORDER-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 3,
+      "resolved_count": 3,
+      "rule_id": "DS-COLOR-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 4,
+      "new_violation_count": 0,
+      "previous_accepted_total": 12,
+      "resolved_count": 8,
+      "rule_id": "DS-CONTRACT-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 0,
+      "resolved_count": 0,
+      "rule_id": "DS-CONTRAST-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 0,
+      "resolved_count": 0,
+      "rule_id": "DS-DUP-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 0,
+      "resolved_count": 0,
+      "rule_id": "DS-ELEVATION-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 0,
+      "resolved_count": 0,
+      "rule_id": "DS-EXCEPTION-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 50,
+      "new_violation_count": 0,
+      "previous_accepted_total": 50,
+      "resolved_count": 0,
+      "rule_id": "DS-MATERIAL-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 3,
+      "resolved_count": 3,
+      "rule_id": "DS-SHAPE-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 3,
+      "resolved_count": 3,
+      "rule_id": "DS-SPACE-001",
+      "status": "PASS"
+    },
+    {
+      "current_total": 0,
+      "new_violation_count": 0,
+      "previous_accepted_total": 3,
+      "resolved_count": 3,
+      "rule_id": "DS-TYPE-001",
+      "status": "PASS"
+    }
+  ],
+  "postAcceptRatchetStateSha": "0653e5250cb26c345e3c7b80f20f1ddaee8f71a71843564955d0152b266429b6",
+  "preAcceptRatchetReportSha256": "b2ffe02a28344ae04002cc8f7ee884f8c079dba472dc3ccbfc725b8ba67f81b2",
+  "preAcceptRatchetStateSha": "650f698c98b6f580e00997f909c4b5c9206a2ab6f657ba4f549d7c39e29c86bf",
+  "preStateHashes": {
+    "homeProduction": {
+      "app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeHeroComponents.kt": "e5f95dda54d7da9861ada7ac51cf7b591fe90d03acb36f5610fd025d0b554635",
+      "app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeScreen.kt": "538cfa58e741ba256e365f468cceb2a69b582a4c63a98523e5337f94ec014a27",
+      "app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeSupportCards.kt": "6c9d3270f2e663b62fa19c57f4f391010a1dc13dad3fb2d8fe511610e97f41d9"
+    },
+    "immutableAuthorities": {
+      "DESIGN_SYSTEM_BASELINE_v59.json": "906c12831752daa2f7fce190a3aab37a75817c415b055c09ab367d8207248abc",
+      "DESIGN_SYSTEM_BASELINE_v59.md": "f6b59f0e09c58262a19438462da309a6739d9abe0e861c715fb21f8971a49438",
+      "DESIGN_SYSTEM_UI_COVERAGE_v59.csv": "191d4497d0433ba078fb7b71bee080763cd013cc64f34ab3220477649d568dea",
+      "DESIGN_SYSTEM_V1_CONTRACT_REGISTRY_v59.md": "ed758157e064bb1f8fc61d13e2efdd4b09938ec54640f49d603e0df18a215e0d"
+    },
+    "ratchetStateSha256": "650f698c98b6f580e00997f909c4b5c9206a2ab6f657ba4f549d7c39e29c86bf"
+  },
+  "productionScope": {
+    "addedCount": 0,
+    "afterCount": 251,
+    "allowlistSatisfied": true,
+    "beforeCount": 251,
+    "changedCount": 3,
+    "removedCount": 0
+  },
+  "protectedChecks": [
+    {
+      "id": "HOME-PROTECTED-REALTIMESTATUSBAR",
+      "message": "protected hash unchanged: app/src/main/kotlin/com/autodrive/app/feature/home/presentation/RealtimeStatusBar.kt",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-PROTECTED-HOMEVIEWMODEL",
+      "message": "protected hash unchanged: app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeViewModel.kt",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-PROTECTED-HOMEUISTATE",
+      "message": "protected hash unchanged: app/src/main/kotlin/com/autodrive/app/feature/home/presentation/HomeUiState.kt",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-PROTECTED-DYNAMOSTATEUIMAPPER",
+      "message": "protected hash unchanged: app/src/main/kotlin/com/autodrive/app/feature/home/presentation/DynamoStateUiMapper.kt",
+      "status": "PASS"
+    }
+  ],
+  "ratchet": {
+    "acceptedState": {
+      "acceptedCandidates": 18,
+      "acceptedVersion": "v61",
+      "confirmedFindings": 57,
+      "previousAcceptedVersion": "v60",
+      "schemaVersion": 61
+    },
+    "postAccept": {
+      "acceptedVersionBeforeRun": "v61",
+      "confirmed": 57,
+      "knownCandidates": 18,
+      "newCandidates": 0,
+      "newViolations": 0,
+      "resolved": 0,
+      "touchedProductionFiles": 0,
+      "verdict": "PASS"
+    },
+    "preAccept": {
+      "acceptedVersionBeforeRun": "v59",
+      "confirmed": 57,
+      "knownCandidates": 18,
+      "newCandidates": 0,
+      "newViolations": 0,
+      "resolved": 20,
+      "touchedProductionFiles": 3,
+      "verdict": "PASS"
+    }
+  },
+  "resolvedHomeFindingIds": [
+    "DS59-COLOR-HOMEHEROCOMPONENTS",
+    "DS59-COLOR-HOMESCREEN",
+    "DS59-COLOR-HOMESUPPORTCARDS",
+    "DS59-HOME-001",
+    "DS59-HOME-002",
+    "DS59-HOME-003",
+    "DS59-HOME-004",
+    "DS59-HOME-005",
+    "DS59-HOME-006",
+    "DS59-HOME-007",
+    "DS59-HOME-008",
+    "DS59-SHAPE-HOMEHEROCOMPONENTS",
+    "DS59-SHAPE-HOMESCREEN",
+    "DS59-SHAPE-HOMESUPPORTCARDS",
+    "DS59-SPACE-HOMEHEROCOMPONENTS",
+    "DS59-SPACE-HOMESCREEN",
+    "DS59-SPACE-HOMESUPPORTCARDS",
+    "DS59-TYPE-HOMEHEROCOMPONENTS",
+    "DS59-TYPE-HOMESCREEN",
+    "DS59-TYPE-HOMESUPPORTCARDS"
+  ],
+  "schemaVersion": 61,
+  "session": 61,
+  "staticGateResults": {
+    "deterministic": true,
+    "v07": "PASS",
+    "v08": "PASS",
+    "v58": {
+      "failed": 0,
+      "passed": 67,
+      "verdict": "PASS"
+    },
+    "verifyV61Static": "PASS"
+  },
+  "styleChecks": [
+    {
+      "id": "HOME-STYLE-COLOR",
+      "message": "no raw Color ownership",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-STYLE-SP",
+      "message": "no direct raw typography",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-STYLE-SHAPE",
+      "message": "no repeated raw shape ownership",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-STYLE-SPACING",
+      "message": "Home shared spacing is token-governed",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME-STYLE-BORDER",
+      "message": "no raw repeated border decision",
+      "status": "PASS"
+    }
+  ]
+}

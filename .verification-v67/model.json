@@ -1,0 +1,95 @@
+{
+  "allPassed": true,
+  "fixtureCount": 22,
+  "fixtures": [
+    {
+      "name": "01_cursor_scope_A_B_isolation",
+      "passed": true
+    },
+    {
+      "name": "02_cursor_unchanged_on_apply_failure",
+      "passed": true
+    },
+    {
+      "name": "03_entity_rollback_on_cursor_failure",
+      "passed": true
+    },
+    {
+      "name": "04_replay_same_deletion_page_idempotent",
+      "passed": true
+    },
+    {
+      "name": "05_unknown_entity_blocks_cursor",
+      "passed": true
+    },
+    {
+      "name": "06_scope_mismatch_blocks_cursor",
+      "passed": true
+    },
+    {
+      "name": "07_stale_session_scope_blocks_commit",
+      "passed": true
+    },
+    {
+      "name": "08_offline_delete_removes_stale_local_row",
+      "passed": true
+    },
+    {
+      "name": "09_absence_is_not_deletion",
+      "passed": true
+    },
+    {
+      "name": "10_pending_profile_survives_stale_pull",
+      "passed": true
+    },
+    {
+      "name": "11_notification_read_survives_stale_pull",
+      "passed": true
+    },
+    {
+      "name": "12_withdrawal_client_request_id_reconciliation",
+      "passed": true
+    },
+    {
+      "name": "13_recover_lease_before_send",
+      "passed": true
+    },
+    {
+      "name": "14_push_before_pull",
+      "passed": true
+    },
+    {
+      "name": "15_hint_during_push_followup_generation",
+      "passed": true
+    },
+    {
+      "name": "16_hint_during_pull_followup_generation",
+      "passed": true
+    },
+    {
+      "name": "17_completion_edge_hint_not_lost",
+      "passed": true
+    },
+    {
+      "name": "18_hint_burst_coalesces_to_latest",
+      "passed": true
+    },
+    {
+      "name": "19_cancellation_future_owner_possible",
+      "passed": true
+    },
+    {
+      "name": "20_non_advancing_cursor_is_failure",
+      "passed": true
+    },
+    {
+      "name": "21_empty_page_does_not_corrupt_cursor",
+      "passed": true
+    },
+    {
+      "name": "22_malformed_tombstone_id_blocks_commit",
+      "passed": true
+    }
+  ],
+  "passedCount": 22
+}

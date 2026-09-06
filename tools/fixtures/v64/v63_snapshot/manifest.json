@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 64,
+  "files": [
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/competition/presentation/WeeklyCompetitionScreen.kt",
+      "snapshot": "00__app__src__main__kotlin__com__autodrive__app__feature__competition__presentation__WeeklyCompetitionScreen.kt",
+      "sha256": "69fc0bc1c8a2333948b40c2b84000aaa150917ce9d93a820deddfcd9735e5447"
+    },
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/AboutAppScreen.kt",
+      "snapshot": "01__app__src__main__kotlin__com__autodrive__app__feature__info__presentation__AboutAppScreen.kt",
+      "sha256": "302fac510879bf9014a02d9202d2dd0589cb2b12c45d52e4a324350f2324b836"
+    },
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/FaqScreen.kt",
+      "snapshot": "02__app__src__main__kotlin__com__autodrive__app__feature__info__presentation__FaqScreen.kt",
+      "sha256": "ec846f455a8ecb44ef05b05ce426e798056ea5fe2ed8b9e6e524e2578e2e10f7"
+    },
+    {
+      "path": "app/src/main/kotlin/com/autodrive/app/feature/info/presentation/PrivacyPolicyScreen.kt",
+      "snapshot": "03__app__src__main__kotlin__com__autodrive__app__feature__info__presentation__PrivacyPolicyScreen.kt",
+      "sha256": "81a72a3603f315b10d8884bdc8d90a5c7927e714f8196502626d31a0e5786115"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/actions/ActionComponents.kt",
+      "snapshot": "04__core__designsystem__src__main__kotlin__com__autodrive__app__core__designsystem__components__actions__ActionComponents.kt",
+      "sha256": "dc28cd3efe428f3c01b82b81fcc2256d651562909daf95cd4dd43c1e81f2598a"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/feedback/FeedbackComponents.kt",
+      "snapshot": "05__core__designsystem__src__main__kotlin__com__autodrive__app__core__designsystem__components__feedback__FeedbackComponents.kt",
+      "sha256": "3848eea77a1d518baab3931d2cb125fc5f078b5d16159ac3365189e794932498"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/inputs/InputComponents.kt",
+      "snapshot": "06__core__designsystem__src__main__kotlin__com__autodrive__app__core__designsystem__components__inputs__InputComponents.kt",
+      "sha256": "164789512b062fe2bc300115f12a1101e1b0cee53baeb582b09fa2deb9caddca"
+    },
+    {
+      "path": "core/designsystem/src/main/kotlin/com/autodrive/app/core/designsystem/components/navigation/NavigationComponents.kt",
+      "snapshot": "07__core__designsystem__src__main__kotlin__com__autodrive__app__core__designsystem__components__navigation__NavigationComponents.kt",
+      "sha256": "75f9522969fc76bae8a04869b3f2e88038648919a4f6fd8852471f9f57806538"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/CodeInputScreen.kt",
+      "snapshot": "08__feature__auth__src__main__kotlin__com__autodrive__app__feature__auth__presentation__join__CodeInputScreen.kt",
+      "sha256": "2c7124596398d941629a401e8dc94e44b4cf6448b6e3f608097e492e0ec8aacc"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/join/WaitingScreen.kt",
+      "snapshot": "09__feature__auth__src__main__kotlin__com__autodrive__app__feature__auth__presentation__join__WaitingScreen.kt",
+      "sha256": "0f77936bd7f2469be778839d5d81263b6b451aa4196dfff2ac737c13977a7fa8"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/OtpInputScreen.kt",
+      "snapshot": "10__feature__auth__src__main__kotlin__com__autodrive__app__feature__auth__presentation__login__OtpInputScreen.kt",
+      "sha256": "95f367e4d61da485ee1d469dea74669f9c0646e3877ba217e622eb5dcdade924"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/PhoneInputScreen.kt",
+      "snapshot": "11__feature__auth__src__main__kotlin__com__autodrive__app__feature__auth__presentation__login__PhoneInputScreen.kt",
+      "sha256": "6155413d2889d8dad7f739a3ae99867cb24a91bbd2dbe7b633b5f30344497f8d"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/login/TermsScreen.kt",
+      "snapshot": "12__feature__auth__src__main__kotlin__com__autodrive__app__feature__auth__presentation__login__TermsScreen.kt",
+      "sha256": "e28cf7dd94d21f9553c1c00884c46316d2a96f0e3b7cd003fdec92c2a36f04a5"
+    },
+    {
+      "path": "feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/presentation/register/RegisterScreens.kt",
+      "snapshot": "13__feature__auth__src__main__kotlin__com__autodrive__app__feature__auth__presentation__register__RegisterScreens.kt",
+      "sha256": "1bf84a0baa974d0a8bf0c447ebf11e37fdded6ea0df9bbbc621e7d8de2b32e9a"
+    },
+    {
+      "path": "feature/balance/src/main/kotlin/com/autodrive/app/feature/balance/presentation/BalanceComponents.kt",
+      "snapshot": "14__feature__balance__src__main__kotlin__com__autodrive__app__feature__balance__presentation__BalanceComponents.kt",
+      "sha256": "8766c151eb4fdc653c6de8732ac526fa84eb15bd4a06a1a6caad044eb370ea9d"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatComposer.kt",
+      "snapshot": "15__feature__chat__src__main__kotlin__com__autodrive__app__feature__chat__presentation__ChatComposer.kt",
+      "sha256": "a48ac2845376f69abc8a573dec2b297c5e7ebb69f377f75a7047e3cfac0eb07f"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatImageViewer.kt",
+      "snapshot": "16__feature__chat__src__main__kotlin__com__autodrive__app__feature__chat__presentation__ChatImageViewer.kt",
+      "sha256": "397880dbb9fc3d8b2306ea60d1cc7a140b772ab0a1b5afbaea2aba4ddc7df6fc"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatMessageComponents.kt",
+      "snapshot": "17__feature__chat__src__main__kotlin__com__autodrive__app__feature__chat__presentation__ChatMessageComponents.kt",
+      "sha256": "6375b79497252cc9ee2c0fc8657358cdd07770826377980cb6cef30e7ac838e8"
+    },
+    {
+      "path": "feature/chat/src/main/kotlin/com/autodrive/app/feature/chat/presentation/ChatScreen.kt",
+      "snapshot": "18__feature__chat__src__main__kotlin__com__autodrive__app__feature__chat__presentation__ChatScreen.kt",
+      "sha256": "d31bf1fc6c41fc4a5332bb9a4e014cc90b7d5652b7b3cdbbec116d0483b7bdf0"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionEntryComponents.kt",
+      "snapshot": "19__feature__commission__src__main__kotlin__com__autodrive__app__feature__commission__presentation__CommissionEntryComponents.kt",
+      "sha256": "7dd23b0bf3a3692f472f75d741c6a4c8f3fa67c8e9701ec7c911e0b5a862b2d6"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionReportScreen.kt",
+      "snapshot": "20__feature__commission__src__main__kotlin__com__autodrive__app__feature__commission__presentation__CommissionReportScreen.kt",
+      "sha256": "667226b3d182a8f043073e523262bc32e55f001ed3d54fa2e9f28e580d5bc539"
+    },
+    {
+      "path": "feature/commission/src/main/kotlin/com/autodrive/app/feature/commission/presentation/CommissionStatusBadge.kt",
+      "snapshot": "21__feature__commission__src__main__kotlin__com__autodrive__app__feature__commission__presentation__CommissionStatusBadge.kt",
+      "sha256": "d01cae03a44545c945b2a6519ada4e73af66eaf21dc2b1e12a4b1270e11ecb22"
+    },
+    {
+      "path": "feature/notifications/src/main/kotlin/com/autodrive/app/feature/notifications/presentation/NotificationsScreen.kt",
+      "snapshot": "22__feature__notifications__src__main__kotlin__com__autodrive__app__feature__notifications__presentation__NotificationsScreen.kt",
+      "sha256": "d30172be7085bad9db3511ab78afba95a4210d571c32f49038d17c76082a880d"
+    },
+    {
+      "path": "core/designsystem/verification/designsystem-ratchet-state.json",
+      "snapshot": "23__designsystem-ratchet-state.json",
+      "sha256": "112f452fb1ecfbe8eede511f8d9134f0964345aa1b8313146bb6faf1d39b0f98"
+    }
+  ]
+}

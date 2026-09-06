@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 60,
+  "session": 60,
+  "inputSourceSha256": "c499ce72edde8572dff1eed43a4ab1aaec7a50c8e5dd8fcc52b111390e8fbf26",
+  "authorityHashes": {
+    "baseline": "906c12831752daa2f7fce190a3aab37a75817c415b055c09ab367d8207248abc",
+    "coverage": "191d4497d0433ba078fb7b71bee080763cd013cc64f34ab3220477649d568dea",
+    "contractRegistry": "ed758157e064bb1f8fc61d13e2efdd4b09938ec54640f49d603e0df18a215e0d",
+    "exceptionLedger": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  "subgates": [
+    {
+      "id": "v07",
+      "tool": "tools/verify_designsystem_v07.py",
+      "command": "python3 tools/verify_designsystem_v07.py",
+      "sha256_of_tool": "d45df921d39e496e44d424c2f795e63756f37cb6e6d4f001da4446e08ffd14c0",
+      "exit_code": 0,
+      "stdout_sha256": "4252a141eec02d6bea420f8e71cbf136f9d6e78adaa9d264fbc7d0623c103bff",
+      "status": "PASS",
+      "error_kind": null
+    },
+    {
+      "id": "v08",
+      "tool": "tools/verify_designsystem_v08.py",
+      "command": "python3 tools/verify_designsystem_v08.py",
+      "sha256_of_tool": "3b7c07d39a8555f2e57d7a957a78e1b7deccdf0bdf28ac57f205a75bdff450db",
+      "exit_code": 0,
+      "stdout_sha256": "70001b9a058bbe6cd1771de5e68ac77cc15e2ce61b0d92408cab8849897dfc2b",
+      "status": "PASS",
+      "error_kind": null
+    },
+    {
+      "id": "exceptions",
+      "tool": "tools/validate_designsystem_exceptions.py",
+      "command": "python3 tools/validate_designsystem_exceptions.py",
+      "sha256_of_tool": "090114a4cfd0c726ed6c9fd8ea0584dbc01f6a8c5bb7b313de9c5d6f7264c47e",
+      "exit_code": 0,
+      "stdout_sha256": "aebfd772f1c4ac26b7e15da8e89245cfe294b9990ed042ebb96cdb1dc8ba03f7",
+      "status": "PASS",
+      "error_kind": null
+    },
+    {
+      "id": "ratchet",
+      "tool": "tools/verify_designsystem_ratchet.py",
+      "command": "python3 tools/verify_designsystem_ratchet.py",
+      "sha256_of_tool": "965bbb1d3b5c88384dbfcfff295b0594522dae8ccd10039b27967317341884bc",
+      "exit_code": 0,
+      "stdout_sha256": "b3339cbb38175df7c0c9d579ac245f666728f16a3316af85aefb7244b837d727",
+      "status": "PASS",
+      "error_kind": null
+    },
+    {
+      "id": "fixtures",
+      "tool": "tools/test_designsystem_verification_v60.py",
+      "command": "python3 tools/test_designsystem_verification_v60.py",
+      "sha256_of_tool": "8f6a427ae3e7983b93e98b6a2a777ecdc1a5e5de640f081c7add5eb3226ec04c",
+      "exit_code": 0,
+      "stdout_sha256": "7950cfb945b08253afceec1a8b7af87c0c0ff978cd7f86a63929c88283735eb9",
+      "status": "PASS",
+      "error_kind": null
+    },
+    {
+      "id": "v58",
+      "tool": "scripts/verify-v58-static.sh",
+      "command": "bash scripts/verify-v58-static.sh",
+      "sha256_of_tool": "8ae2c183e85b498fa93cd7e664454fde497661d632d6b0083e20f8210bf38042",
+      "exit_code": 0,
+      "stdout_sha256": "7a4ee04b50471cc2909752d14a594f69dfc5e2c769f86d2b9a06b10ae261b802",
+      "status": "PASS",
+      "error_kind": null
+    }
+  ],
+  "ratchetSummary": {
+    "verdict": "PASS",
+    "confirmedTotal": 77,
+    "newViolations": 0,
+    "resolvedViolations": 0,
+    "knownCandidates": 19,
+    "newCandidates": 0,
+    "touchedFiles": 0
+  },
+  "fixtureSummary": {
+    "verdict": "PASS",
+    "fixtureCount": 40,
+    "coreRuleOutcomes": 18,
+    "candidateGuardOutcomes": 5,
+    "exceptionOutcomes": 5,
+    "toolErrorOutcomes": 12
+  },
+  "exceptionSummary": {
+    "activeCount": 0
+  },
+  "productionMutationSummary": {
+    "added": [],
+    "removed": [],
+    "changed": [],
+    "uiChanged": []
+  },
+  "uiHarnessStatus": "SOURCE_PRESENT_RUNTIME_PENDING",
+  "finalVerdict": "PASS",
+  "exitCode": 0
+}
