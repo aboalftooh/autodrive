@@ -18,6 +18,9 @@ interface AutoDriveUserDao {
     @Query("SELECT * FROM autodrive_users WHERE user_id = :userId LIMIT 1")
     suspend fun get(userId: String): AutoDriveUserEntity?
 
+    @Query("SELECT * FROM autodrive_users WHERE user_id = :userId AND client_id = :clientId AND org_id = :orgId LIMIT 1")
+    suspend fun getForScope(userId: String, clientId: String, orgId: String): AutoDriveUserEntity?
+
     @Query("UPDATE autodrive_users SET sync_status = :status WHERE user_id = :userId")
     suspend fun updateSyncStatus(userId: String, status: String)
 
