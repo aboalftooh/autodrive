@@ -1,0 +1,67 @@
+--- a/core/database/src/main/kotlin/com/autodrive/app/core/database/dao/LogoutDao.kt
++++ b/core/database/src/main/kotlin/com/autodrive/app/core/database/dao/LogoutDao.kt
+@@ -43,35 +43,35 @@
+         ))) GROUP BY t.status""")
+     suspend fun media(uid: String, client: String, org: String): List<LogoutCountRow>
+ 
+-    @Query("""SELECT 'DIRTY_ORPHAN' AS kind,'UNRESOLVED' AS status,COUNT(*) AS count FROM (
+-        SELECT 'PROFILE:'||u.id AS key FROM autodrive_users u
+-        WHERE u.user_id=:uid AND u.client_id=:client AND u.org_id=:org AND u.sync_status!='SYNCED'
+-        AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
+-            AND p.operation='UPDATE_PROFILE' AND p.status NOT IN ('RESOLVED_REJECTED','RESOLVED_REPLACED'))
+-        UNION ALL SELECT 'WITHDRAWAL:'||w.id FROM withdrawal_requests w
+-        WHERE w.user_id=:uid AND w.client_id=:client AND w.sync_status!='SYNCED'
+-        AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
+-            AND p.entity_id=w.id AND p.operation='REQUEST_WITHDRAWAL_RPC')
+-        UNION ALL SELECT 'BALANCE:'||b.id FROM balance_transactions b
+-        WHERE b.user_id=:uid AND b.client_id=:client AND b.sync_status!='SYNCED'
+-        AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org AND p.entity_id=b.id)
+-        UNION ALL SELECT 'NOTIFICATION:'||n.id FROM notifications n
+-        WHERE n.user_id=:uid AND n.client_id=:client AND n.is_read=1 AND n.read_synced=0
+-        AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
+-            AND p.entity_id=n.id AND p.operation='MARK_NOTIFICATION_READ')
+-        UNION ALL SELECT 'MESSAGE:'||m.id FROM chat_messages m JOIN conversations c ON c.id=m.conversation_id
+-        WHERE c.marketer_id=:uid AND c.client_id=:client AND m.sender_type='MARKETER' AND m.status NOT IN ('SENT','READ')
+-        AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
+-            AND p.entity_id=m.id AND p.operation='SEND_CHAT_MESSAGE')
+-        UNION ALL SELECT 'CHAT_READ:'||m.id FROM chat_messages m JOIN conversations c ON c.id=m.conversation_id
+-        WHERE c.marketer_id=:uid AND c.client_id=:client AND m.sender_type='ADMIN' AND m.is_read=1 AND m.read_synced=0
+-        AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
+-            AND p.entity_id=c.id AND p.operation='MARK_CHAT_READ')
+-        UNION ALL SELECT 'CONVERSATION:'||c.id FROM conversations c
+-        WHERE c.marketer_id=:uid AND c.client_id=:client AND c.sync_status!='SYNCED'
+-        AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
+-            AND p.entity_id=c.id AND p.operation='CREATE_CHAT_CONVERSATION')
+-    )""")
++    @Query("""SELECT 'DIRTY_ORPHAN' AS kind,'UNRESOLVED' AS status,(
++        (SELECT COUNT(*) FROM autodrive_users u
++            WHERE u.user_id=:uid AND u.client_id=:client AND u.org_id=:org AND u.sync_status!='SYNCED'
++            AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
++                AND p.operation='UPDATE_PROFILE' AND p.status NOT IN ('RESOLVED_REJECTED','RESOLVED_REPLACED')))
++        + (SELECT COUNT(*) FROM withdrawal_requests w
++            WHERE w.user_id=:uid AND w.client_id=:client AND w.sync_status!='SYNCED'
++            AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
++                AND p.entity_id=w.id AND p.operation='REQUEST_WITHDRAWAL_RPC'))
++        + (SELECT COUNT(*) FROM balance_transactions b
++            WHERE b.user_id=:uid AND b.client_id=:client AND b.sync_status!='SYNCED'
++            AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org AND p.entity_id=b.id))
++        + (SELECT COUNT(*) FROM notifications n
++            WHERE n.user_id=:uid AND n.client_id=:client AND n.is_read=1 AND n.read_synced=0
++            AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
++                AND p.entity_id=n.id AND p.operation='MARK_NOTIFICATION_READ'))
++        + (SELECT COUNT(*) FROM chat_messages m JOIN conversations c ON c.id=m.conversation_id
++            WHERE c.marketer_id=:uid AND c.client_id=:client AND m.sender_type='MARKETER' AND m.status NOT IN ('SENT','READ')
++            AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
++                AND p.entity_id=m.id AND p.operation='SEND_CHAT_MESSAGE'))
++        + (SELECT COUNT(*) FROM chat_messages m JOIN conversations c ON c.id=m.conversation_id
++            WHERE c.marketer_id=:uid AND c.client_id=:client AND m.sender_type='ADMIN' AND m.is_read=1 AND m.read_synced=0
++            AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
++                AND p.entity_id=c.id AND p.operation='MARK_CHAT_READ'))
++        + (SELECT COUNT(*) FROM conversations c
++            WHERE c.marketer_id=:uid AND c.client_id=:client AND c.sync_status!='SYNCED'
++            AND NOT EXISTS (SELECT 1 FROM pending_operations p WHERE p.user_id=:uid AND p.client_id=:client AND p.org_id=:org
++                AND p.entity_id=c.id AND p.operation='CREATE_CHAT_CONVERSATION'))
++    ) AS count""")
+     suspend fun orphans(uid: String, client: String, org: String): List<LogoutCountRow>
+ 
+     /** Preserve partial-key caches when another known owner shares the client or principal. */
