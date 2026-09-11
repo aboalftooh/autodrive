@@ -1,8 +1,0 @@
-{
-  "schemaVersion": 66,
-  "mustPassFailRules": 14,
-  "baseFixtures": 28,
-  "checks": 47,
-  "failed": [],
-  "verdict": "PASS"
-}
