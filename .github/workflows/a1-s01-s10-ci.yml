@@ -1,0 +1,202 @@
+name: AutoDrive A1 S01-S10 Full CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'AutoDrive-S10-ACCEPTANCE-BLOCKED-WIP_NOT_RELEASE_READY.zip'
+      - '.github/workflows/a1-s01-s10-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ZIP_NAME: AutoDrive-S10-ACCEPTANCE-BLOCKED-WIP_NOT_RELEASE_READY.zip
+  PROJECT_DIR: extracted/autodrive-main
+
+jobs:
+  gradle-release:
+    name: Gradle / Unit / KSP / Lint / Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Unpack candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf extracted
+          mkdir extracted
+          unzip -q "$ZIP_NAME" -d extracted
+          test -x "$PROJECT_DIR/gradlew"
+          sha256sum "$ZIP_NAME" | tee candidate-zip.sha256
+      - name: Current source contracts S08-S10
+        working-directory: ${{ env.PROJECT_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s10-evidence/source
+          python3 tools/a1/s08/source_contract.py --evidence s10-evidence/source/s08
+          python3 tools/a1/s09/source_contract.py --evidence s10-evidence/source/s09
+          python3 tools/a1/s10/source_contract.py s10-evidence/source/s10.json
+      - name: Gradle acceptance gate
+        working-directory: ${{ env.PROJECT_DIR }}
+        env:
+          A1_S10_EVIDENCE_DIR: ${{ github.workspace }}/extracted/autodrive-main/s10-evidence
+        shell: bash
+        run: bash tools/a1/s10/run_gradle_gate.sh
+      - name: Sign exact Release candidate
+        working-directory: ${{ env.PROJECT_DIR }}
+        shell: bash
+        env:
+          A1_RELEASE_KEYSTORE_B64: ${{ secrets.A1_RELEASE_KEYSTORE_B64 }}
+          A1_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.A1_RELEASE_KEYSTORE_PASSWORD }}
+          A1_RELEASE_KEY_ALIAS: ${{ secrets.A1_RELEASE_KEY_ALIAS }}
+          A1_RELEASE_KEY_PASSWORD: ${{ secrets.A1_RELEASE_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for n in A1_RELEASE_KEYSTORE_B64 A1_RELEASE_KEYSTORE_PASSWORD A1_RELEASE_KEY_ALIAS A1_RELEASE_KEY_PASSWORD; do
+            test -n "${!n:-}" || { echo "BLOCKED_ENV: missing signing secret: $n"; exit 42; }
+          done
+          unsigned="$(find app/build/outputs/apk/release -type f -name '*unsigned*.apk' | head -n1)"
+          test -s "$unsigned"
+          keystore="$RUNNER_TEMP/autodrive-s10.jks"
+          trap 'rm -f "$keystore"' EXIT
+          printf '%s' "$A1_RELEASE_KEYSTORE_B64" | base64 --decode > "$keystore"
+          chmod 600 "$keystore"
+          apksigner="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n1)"
+          test -x "$apksigner"
+          mkdir -p s10-evidence/release
+          signed="s10-evidence/release/AutoDrive-S10-release-signed.apk"
+          "$apksigner" sign --ks "$keystore" --ks-key-alias "$A1_RELEASE_KEY_ALIAS" --ks-pass env:A1_RELEASE_KEYSTORE_PASSWORD --key-pass env:A1_RELEASE_KEY_PASSWORD --out "$signed" "$unsigned"
+          "$apksigner" verify --verbose "$signed"
+          bash tools/a1/s10/collect_release_metadata.sh "$signed" s10-evidence/release/metadata.json
+      - name: Upload Gradle evidence and APKs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a1-gradle-release-${{ github.sha }}
+          path: |
+            candidate-zip.sha256
+            extracted/autodrive-main/s10-evidence/
+            extracted/autodrive-main/app/build/outputs/apk/
+          if-no-files-found: warn
+          retention-days: 30
+
+  backend-isolated:
+    name: Isolated Supabase / SQL / Auth / API
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      A1_TEST_TARGET_KIND: ${{ vars.A1_TEST_TARGET_KIND }}
+      A1_TEST_EXTERNAL_DELIVERIES_DISABLED: ${{ vars.A1_TEST_EXTERNAL_DELIVERIES_DISABLED }}
+      A1_TEST_PROJECT_REF: ${{ vars.A1_TEST_PROJECT_REF }}
+      A1_TEST_SUPABASE_URL: ${{ secrets.A1_TEST_SUPABASE_URL }}
+      A1_TEST_DATABASE_URL: ${{ secrets.A1_TEST_DATABASE_URL }}
+      A1_TEST_ANON_KEY: ${{ secrets.A1_TEST_ANON_KEY }}
+      A1_TEST_SERVICE_ROLE_KEY: ${{ secrets.A1_TEST_SERVICE_ROLE_KEY }}
+      A1_TEST_FIXTURE_ORG_ID: ${{ vars.A1_TEST_FIXTURE_ORG_ID }}
+      A1_TEST_FIXTURE_MARKETER_CLIENT_ID: ${{ vars.A1_TEST_FIXTURE_MARKETER_CLIENT_ID }}
+      A1_TEST_FIXTURE_WORKSHOP_CLIENT_ID: ${{ vars.A1_TEST_FIXTURE_WORKSHOP_CLIENT_ID }}
+      A1_SHARED_FINANCE_FIXTURE_JSON: ${{ secrets.A1_SHARED_FINANCE_FIXTURE_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Install PostgreSQL client
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y postgresql-client >/dev/null
+      - name: Unpack candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf extracted
+          mkdir extracted
+          unzip -q "$ZIP_NAME" -d extracted
+      - name: Prepare isolated synthetic fixture file
+        working-directory: ${{ env.PROJECT_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${A1_SHARED_FINANCE_FIXTURE_JSON:-}" || { echo 'BLOCKED_ENV: A1_SHARED_FINANCE_FIXTURE_JSON missing'; exit 42; }
+          mkdir -p .s10-fixtures
+          umask 077
+          printf '%s' "$A1_SHARED_FINANCE_FIXTURE_JSON" > .s10-fixtures/shared-finance.json
+      - name: Backend acceptance gate
+        working-directory: ${{ env.PROJECT_DIR }}
+        shell: bash
+        env:
+          A1_S10_EVIDENCE_DIR: ${{ github.workspace }}/extracted/autodrive-main/s10-evidence
+          A1_TEST_EVIDENCE_DIR: ${{ github.workspace }}/extracted/autodrive-main/s10-evidence/backend/sql-edge
+          A1_SHARED_FINANCE_FIXTURE_FILE: ${{ github.workspace }}/extracted/autodrive-main/.s10-fixtures/shared-finance.json
+        run: bash tools/a1/s10/run_backend_gate.sh
+      - name: Remove fixture file
+        if: always()
+        working-directory: ${{ env.PROJECT_DIR }}
+        shell: bash
+        run: rm -rf .s10-fixtures
+      - name: Upload backend evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a1-backend-${{ github.sha }}
+          path: extracted/autodrive-main/s10-evidence/backend/
+          if-no-files-found: warn
+          retention-days: 30
+
+  android-emulator:
+    name: Android emulator / Room / Compose / SMS boundary
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      A1_TEST_TARGET_KIND: ${{ vars.A1_TEST_TARGET_KIND }}
+      AUTODRIVE_SUPABASE_URL: ${{ secrets.A1_TEST_SUPABASE_URL }}
+      AUTODRIVE_SUPABASE_ANON_KEY: ${{ secrets.A1_TEST_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Unpack candidate and force isolated runtime target
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf extracted
+          mkdir extracted
+          unzip -q "$ZIP_NAME" -d extracted
+          cd "$PROJECT_DIR"
+          test "${A1_TEST_TARGET_KIND:-}" = "ISOLATED_NON_PRODUCTION" || { echo 'BLOCKED_ENV: isolated Android target acknowledgement missing'; exit 42; }
+          test -n "${AUTODRIVE_SUPABASE_URL:-}" || { echo 'BLOCKED_ENV: isolated Supabase URL missing'; exit 42; }
+          test -n "${AUTODRIVE_SUPABASE_ANON_KEY:-}" || { echo 'BLOCKED_ENV: isolated anon key missing'; exit 42; }
+          [[ "$AUTODRIVE_SUPABASE_URL" != *madkfvggyolmdberzmtb* ]] || { echo 'REFUSED: production target'; exit 44; }
+          # gradle.properties contains the production endpoint and has higher precedence than env;
+          # remove only those two test-target properties in the CI worktree so env is authoritative.
+          sed -i '/^AUTODRIVE_SUPABASE_URL=/d;/^AUTODRIVE_SUPABASE_ANON_KEY=/d' gradle.properties
+      - name: Emulator acceptance gate
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: cd extracted/autodrive-main && A1_S10_EVIDENCE_DIR="$GITHUB_WORKSPACE/extracted/autodrive-main/s10-evidence" bash tools/a1/s10/run_android_emulator_gate.sh
+      - name: Upload Android evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a1-android-${{ github.sha }}
+          path: extracted/autodrive-main/s10-evidence/android/
+          if-no-files-found: warn
+          retention-days: 30
