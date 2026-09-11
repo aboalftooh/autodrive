@@ -1,0 +1,33 @@
+name: AutoDrive A1 S02 OTP Contract
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/a1-s02-otp-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  otp-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Unpack patched candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf extracted && mkdir extracted
+          unzip -q AutoDrive-S10-ACCEPTANCE-BLOCKED-WIP_NOT_RELEASE_READY.zip -d extracted
+          cd extracted/autodrive-main
+          patch -p1 < "$GITHUB_WORKSPACE/ci-patches/s10-acceptance-fixes.patch"
+      - name: Run isolated OTP contract suite
+        working-directory: extracted/autodrive-main
+        shell: bash
+        run: deno test --allow-env --allow-read supabase/tests/a1/otp_contract_test.ts
