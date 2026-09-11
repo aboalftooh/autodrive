@@ -1,0 +1,11 @@
+--- a/core/sync/src/main/kotlin/com/autodrive/app/core/sync/outbox/IdempotentServerCommandGateway.kt
++++ b/core/sync/src/main/kotlin/com/autodrive/app/core/sync/outbox/IdempotentServerCommandGateway.kt
+@@ -77,7 +77,7 @@
+ ) {
+     suspend fun readReceipt(mutationId: String): OutboxDeliveryReceipt? {
+         val dto = supabase.client.postgrest.rpc("autodrive_get_command_receipt_v1", ReceiptLookupParams(mutationId))
+-            .decodeAs<ServerCommandReceiptDto?>() ?: return null
++            .decodeAsOrNull<ServerCommandReceiptDto>() ?: return null
+         return OutboxDeliveryReceipt(dto.mutationId,dto.commandType,dto.resultStatus,dto.serverEntityId,
+             dto.serverRevision,dto.revisionKind,dto.replayed,dto.errorCode,dto.serverCreatedAt,dto.resultCount)
+     }
