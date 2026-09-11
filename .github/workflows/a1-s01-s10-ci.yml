@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'AutoDrive-S10-ACCEPTANCE-BLOCKED-WIP_NOT_RELEASE_READY.zip'
+      - 'ci-patches/s10-acceptance-fixes.patch'
       - '.github/workflows/a1-s01-s10-ci.yml'
   workflow_dispatch:
 
@@ -27,7 +28,7 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Unpack candidate
+      - name: Unpack and patch candidate
         shell: bash
         run: |
           set -euo pipefail
@@ -35,6 +36,7 @@ jobs:
           mkdir extracted
           unzip -q "$ZIP_NAME" -d extracted
           test -x "$PROJECT_DIR/gradlew"
+          (cd "$PROJECT_DIR" && patch -p1 < "$GITHUB_WORKSPACE/ci-patches/s10-acceptance-fixes.patch")
           sha256sum "$ZIP_NAME" | tee candidate-zip.sha256
       - name: Current source contracts S08-S10
         working-directory: ${{ env.PROJECT_DIR }}
@@ -115,13 +117,14 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y postgresql-client >/dev/null
-      - name: Unpack candidate
+      - name: Unpack and patch candidate
         shell: bash
         run: |
           set -euo pipefail
           rm -rf extracted
           mkdir extracted
           unzip -q "$ZIP_NAME" -d extracted
+          (cd "$PROJECT_DIR" && patch -p1 < "$GITHUB_WORKSPACE/ci-patches/s10-acceptance-fixes.patch")
       - name: Prepare isolated synthetic fixture file
         working-directory: ${{ env.PROJECT_DIR }}
         shell: bash
@@ -168,7 +171,7 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Unpack candidate and force isolated runtime target
+      - name: Unpack, patch, and force isolated runtime target
         shell: bash
         run: |
           set -euo pipefail
@@ -176,12 +179,11 @@ jobs:
           mkdir extracted
           unzip -q "$ZIP_NAME" -d extracted
           cd "$PROJECT_DIR"
+          patch -p1 < "$GITHUB_WORKSPACE/ci-patches/s10-acceptance-fixes.patch"
           test "${A1_TEST_TARGET_KIND:-}" = "ISOLATED_NON_PRODUCTION" || { echo 'BLOCKED_ENV: isolated Android target acknowledgement missing'; exit 42; }
           test -n "${AUTODRIVE_SUPABASE_URL:-}" || { echo 'BLOCKED_ENV: isolated Supabase URL missing'; exit 42; }
           test -n "${AUTODRIVE_SUPABASE_ANON_KEY:-}" || { echo 'BLOCKED_ENV: isolated anon key missing'; exit 42; }
           [[ "$AUTODRIVE_SUPABASE_URL" != *madkfvggyolmdberzmtb* ]] || { echo 'REFUSED: production target'; exit 44; }
-          # gradle.properties contains the production endpoint and has higher precedence than env;
-          # remove only those two test-target properties in the CI worktree so env is authoritative.
           sed -i '/^AUTODRIVE_SUPABASE_URL=/d;/^AUTODRIVE_SUPABASE_ANON_KEY=/d' gradle.properties
       - name: Emulator acceptance gate
         uses: reactivecircus/android-emulator-runner@v2
