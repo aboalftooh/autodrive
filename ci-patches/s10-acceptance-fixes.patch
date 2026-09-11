@@ -76,3 +76,18 @@
          return OutboxDeliveryReceipt(dto.mutationId,dto.commandType,dto.resultStatus,dto.serverEntityId,
              dto.serverRevision,dto.revisionKind,dto.replayed,dto.errorCode,dto.serverCreatedAt,dto.resultCount)
      }
+--- a/feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/domain/session/SessionBootstrapper.kt
++++ b/feature/auth/src/main/kotlin/com/autodrive/app/feature/auth/domain/session/SessionBootstrapper.kt
+@@ -254,5 +254,10 @@
+     }
+ }
+ 
+-fun CurrentSession.scopeOrNull(): AccountScope? = if (userId.isNullOrBlank() || clientId.isNullOrBlank() || orgId.isNullOrBlank()) null
+-    else AccountScope(userId, clientId, orgId)
++fun CurrentSession.scopeOrNull(): AccountScope? {
++    val uid = userId
++    val client = clientId
++    val org = orgId
++    if (uid.isNullOrBlank() || client.isNullOrBlank() || org.isNullOrBlank()) return null
++    return AccountScope(uid, client, org)
++}
